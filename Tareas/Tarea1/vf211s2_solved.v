@@ -313,3 +313,319 @@ split.
   apply sim_oe1_o2suc.
   assumption.
 Qed.
+
+Proposition o2_sb : forall n m, 
+{n <2 m} + {~(n <2 m)}.
+Proof.
+induction n.
+- destruct m.
+  + right.
+    unfold not;intros.
+    inversion H.
+  + left.
+    constructor.
+- induction m.
+  + right.
+    unfold not;intros.
+    inversion H.
+  + destruct IHm.
+    * destruct IHn with m.
+      -- left.
+         constructor.
+         assumption.
+      -- right.
+         unfold not;intros.
+         apply n0.
+         inversion H.
+         assumption.
+    * destruct IHn with m.
+      -- left.
+         constructor.
+         assumption.
+      -- right.
+         unfold not;intros.
+         apply n1.
+         inversion H.
+         assumption.
+Qed.
+
+Definition min (n m:nat) : nat :=
+if (o2_sb n m) then n else m.
+
+Example ex1 : min 0 3 = 0.
+Proof.
+unfold min.
+destruct o2_sb.
+- reflexivity.
+- unfold not in n.
+  exfalso.
+  apply n.
+  constructor.
+Qed.
+
+Proposition ex3a: forall n m, n <=2 m -> min n m = n.
+Proof.
+intros.
+destruct H.
+- induction H.
+  + unfold min.
+    destruct o2_sb.
+    * reflexivity.
+    * exfalso.
+      apply n0.
+      constructor.
+  + unfold min.
+    destruct o2_sb.
+    * reflexivity.
+    * exfalso.
+      apply n0.
+      constructor.
+      assumption.
+- rewrite H.
+  unfold min.
+  destruct o2_sb.
+  + reflexivity.
+  + reflexivity.
+Qed.
+
+Proposition ex3b : forall m n, m <=2 n -> min n m = m.
+Proof.
+intros.
+destruct H.
+- unfold min.
+  destruct o2_sb.
+  + induction H.
+    * inversion o.
+    * inversion o.
+      apply IHord2 in H2.
+      rewrite H2.
+      reflexivity.
+  + reflexivity.
+- unfold min.
+  destruct o2_sb.
+  + symmetry.
+    assumption.
+  + reflexivity.
+Qed.
+
+Require Import PeanoNat.
+
+Proposition ex3c : forall n m, n <=2 (n + m).
+Proof.
+induction n.
+- intros.
+  apply equiv_o1_os2.
+  simpl.
+  apply sim_o1_o2z.
+- intros.
+  destruct IHn with m.
+  + unfold ords2.
+    left.
+    simpl.
+    constructor.
+    assumption.
+  + unfold ords2.
+    right.
+    simpl.
+    rewrite <- H.
+    reflexivity.
+Qed.
+
+Proposition ex3d : forall m n, m <=2 (n + m).
+Proof.
+induction m.
+- intros.
+  apply equiv_o1_os2.
+  rewrite Nat.add_0_r.
+  apply sim_o1_o2z.
+- intros.
+  destruct IHm with n.
+  + unfold ords2.
+    left.
+    rewrite Nat.add_succ_r.
+    constructor.
+    assumption.
+  + unfold ords2.
+    right.
+    rewrite Nat.add_succ_r.
+    rewrite <- H.
+    reflexivity.
+Qed.
+
+Proposition ex3e : forall p n m, n <=2 m ->
+n + p <=2 m + p.
+Proof.
+induction p.
+- intros.
+  rewrite Nat.add_0_r.
+  rewrite Nat.add_0_r.
+  assumption.
+- intros.
+  rewrite Nat.add_succ_r.
+  rewrite Nat.add_succ_r.
+  apply IHp in H.
+  destruct H.
+  + unfold ords2.
+    left.
+    constructor.
+    assumption.
+  + unfold ords2.
+    right.
+    rewrite H.
+    reflexivity.
+Qed.
+
+Proposition ex3f: forall n m, n <=2 m \/ m <=2 n.
+Proof.
+induction n.
+- intros.
+  left.
+  apply equiv_o1_os2.
+  apply sim_o1_o2z.
+- destruct m.
+  + right.
+    apply equiv_o1_os2.
+    apply sim_o1_o2z.
+  + destruct IHn with m.
+    * destruct H.
+      -- left.
+         unfold ords2.
+         left.
+         constructor.
+         assumption.
+      -- left.
+         rewrite H.
+         unfold ords2.
+         right.
+         reflexivity.
+    * destruct H.
+      -- right.
+         unfold ords2.
+         left.
+         constructor.
+         assumption.
+      -- right.
+         rewrite H.
+         unfold ords2.
+         right.
+         reflexivity.
+Qed.
+
+Proposition ex3g : forall n m, n <=2 m -> exists p, m = n + p.
+Proof.
+intros.
+destruct H.
+- induction H.
+  + exists (S n).
+    reflexivity.
+  + destruct IHord2.
+    exists x.
+    simpl.
+    rewrite <- H0.
+    reflexivity.
+- exists 0.
+  rewrite Nat.add_0_r.
+  symmetry.
+  assumption.
+Qed.
+
+Require Import List.
+
+Notation "[ ]" := nil (format "[ ]") : list_scope.
+Notation "[ x ]" := (cons x nil) : list_scope.
+Notation "[ x ; y ; .. ; z ]" := (cons x (cons y .. (cons z nil) ..)) : list_scope.
+
+Variable A : Type.
+
+Fixpoint take (n:nat) (l:list A) : list A :=
+match l with
+| [] => []
+| (x::xs) => match n with
+| 0 => []
+| 1 => [x]
+| S n => x::take n xs
+end
+end.
+
+Proposition takeSN : forall l n x, take (S n) (x::l) = x :: take n l.
+Proof.
+destruct l.
+- simpl.
+  intros.
+  destruct n.
+  + reflexivity.
+  + reflexivity.
+- intros.
+  simpl.
+  destruct n.
+  + reflexivity.
+  + reflexivity.
+Qed.
+
+Proposition Smin: forall n m, min (S n) (S m) = S (min n m).
+Proof.
+intros.
+unfold min.
+destruct o2_sb.
+- destruct o2_sb.
+  + reflexivity.
+  + exfalso.
+    apply n0.
+    inversion o.
+    assumption.
+- destruct o2_sb.
+  + exfalso.
+    apply n0.
+    constructor.
+    assumption.
+  + reflexivity.
+Qed.
+
+Proposition ex4 : forall m n l, 
+take n (take m l) = take (min n m) l.
+Proof.
+induction m.
+- intros.
+  simpl.
+  destruct l.
+  + unfold min.
+    destruct o2_sb.
+    * reflexivity.
+    * simpl.
+      destruct n.
+      -- reflexivity.
+      -- reflexivity.
+  + unfold min.
+    destruct o2_sb.
+    * destruct n.
+      -- reflexivity.
+      -- inversion o.
+    * simpl.
+      destruct n.
+      -- reflexivity.
+      -- reflexivity.
+- intros.
+  destruct l.
+  + simpl.
+    unfold min.
+    destruct o2_sb.
+    * reflexivity.
+    * simpl.
+      destruct n.
+      -- reflexivity.
+      -- reflexivity.
+  + rewrite takeSN.
+    induction n.
+    -- simpl.
+       unfold min.
+       destruct o2_sb.
+       ++ reflexivity.
+       ++ exfalso.
+          apply n.
+          constructor.
+    -- rewrite takeSN.
+       rewrite IHm.
+       rewrite Smin.
+       rewrite takeSN.
+       reflexivity.
+Qed.
