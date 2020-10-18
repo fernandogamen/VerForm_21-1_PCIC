@@ -246,7 +246,6 @@ Qed.
 
 Proposition equiv_oe1_o2: forall n m, n <1 m <-> n <2 m.
 Proof.
-unfold iff.
 split.
 - intros.
   unfold orde1 in H.
@@ -256,7 +255,7 @@ split.
     apply o2_trans with m0.
     * assumption.
     * apply o2_nSn.
-  + induction m.
+  + destruct m.
     * inversion H.
     * inversion H.
       apply o2_nSn.
@@ -268,7 +267,7 @@ split.
   + intros.
     inversion H.
   + intros.
-    induction n.
+    destruct n.
     * apply sim_oe1_o2z.
     * apply sim_oe1_o2suc.
       unfold orde1 in *.
@@ -383,9 +382,7 @@ destruct H.
       assumption.
 - rewrite H.
   unfold min.
-  destruct o2_sb.
-  + reflexivity.
-  + reflexivity.
+  destruct o2_sb;reflexivity.
 Qed.
 
 Proposition ex3b : forall m n, m <=2 n -> min n m = m.
@@ -419,13 +416,11 @@ induction n.
   apply sim_o1_o2z.
 - intros.
   destruct IHn with m.
-  + unfold ords2.
-    left.
+  + left.
     simpl.
     constructor.
     assumption.
-  + unfold ords2.
-    right.
+  + right.
     simpl.
     rewrite <- H.
     reflexivity.
@@ -440,13 +435,11 @@ induction m.
   apply sim_o1_o2z.
 - intros.
   destruct IHm with n.
-  + unfold ords2.
-    left.
+  + left.
     rewrite Nat.add_succ_r.
     constructor.
     assumption.
-  + unfold ords2.
-    right.
+  + right.
     rewrite Nat.add_succ_r.
     rewrite <- H.
     reflexivity.
@@ -465,12 +458,10 @@ induction p.
   rewrite Nat.add_succ_r.
   apply IHp in H.
   destruct H.
-  + unfold ords2.
-    left.
+  + left.
     constructor.
     assumption.
-  + unfold ords2.
-    right.
+  + right.
     rewrite H.
     reflexivity.
 Qed.
@@ -489,24 +480,20 @@ induction n.
   + destruct IHn with m.
     * destruct H.
       -- left.
-         unfold ords2.
          left.
          constructor.
          assumption.
       -- left.
          rewrite H.
-         unfold ords2.
          right.
          reflexivity.
     * destruct H.
       -- right.
-         unfold ords2.
          left.
          constructor.
          assumption.
       -- right.
          rewrite H.
-         unfold ords2.
          right.
          reflexivity.
 Qed.
@@ -549,17 +536,12 @@ end.
 
 Proposition takeSN : forall l n x, take (S n) (x::l) = x :: take n l.
 Proof.
-destruct l.
-- simpl.
-  intros.
-  destruct n.
+intros.
+destruct n.
+- destruct l.
   + reflexivity.
   + reflexivity.
-- intros.
-  simpl.
-  destruct n.
-  + reflexivity.
-  + reflexivity.
+- reflexivity.
 Qed.
 
 Proposition Smin: forall n m, min (S n) (S m) = S (min n m).
@@ -591,8 +573,7 @@ induction m.
   + unfold min.
     destruct o2_sb.
     * reflexivity.
-    * simpl.
-      destruct n.
+    * destruct n.
       -- reflexivity.
       -- reflexivity.
   + unfold min.
@@ -600,8 +581,7 @@ induction m.
     * destruct n.
       -- reflexivity.
       -- inversion o.
-    * simpl.
-      destruct n.
+    * destruct n.
       -- reflexivity.
       -- reflexivity.
 - intros.
@@ -610,8 +590,7 @@ induction m.
     unfold min.
     destruct o2_sb.
     * reflexivity.
-    * simpl.
-      destruct n.
+    * destruct n.
       -- reflexivity.
       -- reflexivity.
   + rewrite takeSN.
