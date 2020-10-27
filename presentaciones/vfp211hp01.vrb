@@ -1,0 +1,23 @@
+\titulos{Extracción de programas certificados}{}
+\bi
+\item Prueba
+  \begin{alltt}
+    Theorem sort :
+      forall l:list Z, exists (l' : list Z),
+         equiv l l' \(/\backslash\) sorted l'.
+     Proof.
+      induction l as [| a l IHl].
+      exists (nil (A:=Z)); split; auto with sort.
+      case IHl; intros l' [H0 H1].
+      exists (aux a l'); split.
+      apply equiv_trans with (a :: l'); auto with sort.
+      apply aux_equiv.
+      apply aux_sorted; auto.
+     Qed.
+  \end{alltt}
+\pause
+\item Extracción de un programa a partir de la prueba:
+\begin{alltt}
+    Extraction "insert-sort" aux sort.
+\end{alltt}
+\ei

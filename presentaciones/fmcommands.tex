@@ -1,0 +1,440 @@
+\newcommand{\bc}{\begin{center}}
+\newcommand{\ec}{\end{center}}
+\newcommand{\be}{\begin{enumerate}}
+\newcommand{\ee}{\end{enumerate}}
+\newcommand{\bi}{\begin{itemize}}
+\newcommand{\ei}{\end{itemize}}
+\newcommand{\beq}{\begin{equation}}
+\newcommand{\eeq}{\end{equation}}
+\newcommand{\beqs}{\begin{equation*}}
+\newcommand{\eeqs}{\end{equation*}}
+
+\newcommand{\ce}[1]{\boldsymbol{\parallel}\!#1\!\boldsymbol{\parallel}}
+\newcommand{\id}{\mathsf{Id}}
+\newcommand{\imp}{\rightarrow}
+\newcommand{\Imp}{\Rightarrow}
+\renewcommand{\iff}{\leftrightarrow}
+\newcommand{\Iff}{\Leftrightarrow}
+\newcommand{\G}{\Gamma}
+\newcommand{\D}{\Delta}
+\newcommand{\Gr}{\Gamma^{\tt r}}
+\newcommand{\F}{\mathcal{F}}
+\newcommand{\Fr}{\mathcal{F}^{\tt r}}
+\newcommand{\mon}{\mathop{\mathsf{mon}}}
+\newcommand{\Ge}{\mathcal{G}}
+\newcommand{\Pe}{\mathcal{P}}
+\newcommand{\wt}[1]{\widetilde{#1}}
+\newcommand{\wh}[1]{\widehat{#1}}
+\newcommand{\I}{\mathcal{I}}
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\K}{\mathcal{K}}
+\newcommand{\Kb}{\mathbb{K}}
+\newcommand{\Eb}{\mathbb{E}}
+\newcommand{\Ebs}{\mathbb{E}^\star}
+\newcommand{\Ob}{\mathbb{O}}
+\newcommand{\Ib}{\mathbb{I}}
+%\newcommand{\kb}{\mathbb{k}}
+\newcommand{\kb}{\bbkappa}
+\newcommand{\Kr}{\mathcal{K}^{\tt r}}
+\newcommand{\M}{\mathcal{M}}
+\newcommand{\Nc}{\mathcal{N}}
+\newcommand{\E}{\mathcal{E}}
+\newcommand{\R}{\mathcal{R}}
+\newcommand{\Q}{\mathcal{Q}}
+\newcommand{\Sc}{\mathcal{S}}
+\newcommand{\Sf}{\mathsf{\Sigma}}
+\newcommand{\Te}{\mathcal{T}}
+\newcommand{\Rb}{\mathbb{R}}
+\newcommand{\Qb}{\mathbb{Q}}
+\newcommand{\Kbb}{\mathbb{K}}
+\newcommand{\T}{\mathbb{\Theta}}
+\renewcommand{\L}{\mathcal{L}}
+\newcommand{\fa}{\forall}
+\newcommand{\ex}{\exists}
+\newcommand{\fs}{\exists}
+\newcommand{\inc}{\subseteq}
+\newcommand{\lb}{\lambda}
+\newcommand{\al}{\alpha}
+%\newcommand{\be}{\beta}
+\newcommand{\ga}{\gamma}
+\newcommand{\ba}{\begin{array}}
+\newcommand{\ea}{\end{array}}
+\newcommand{\val}[1]{\Lbrack #1 \Rbrack}
+
+%\newcommand{\val}[1]{\lbrack\!\lbrack #1\rbrack\!\rbrack}
+
+\def\stackunder#1#2{\mathrel{\mathop{#2}\limits_{#1}}}
+
+\newcommand{\rl}[2]{\ensuremath{#1 \;\mbox{{\tt r}}\; #2}}
+\newcommand{\rlt}[3]{\ensuremath{#1 \;\;\mbox{{\tt r}}^{\ensuremath{#3}}\; #2}}
+\newcommand{\mr}[2]{\ensuremath{#1 \;\mbox{{\tt mr}}\; #2}}
+\newcommand{\qr}[2]{\ensuremath{#1 \;\mbox{{\tt q}}\; #2}}
+
+%\renewcommand{\qed}{\hfill$\boldsymbol{\dashv}$}
+%\newcommand{\qed}{\hfill$\mathbb{Qed}$}
+
+\newcommand{\pt}[1]{\langle #1 \rangle}
+\newcommand{\co}[1]{\mathbb{c}_#1}
+\newcommand{\des}[1]{\mathbb{d}_#1}
+\newcommand{\con}{\boldsymbol{\mathbb{c}}}
+\newcommand{\unt}{\mathbb{u}}
+\newcommand{\up}{\mathbb{1}}
+\newcommand{\nat}{\mathsf{nat}}
+\newcommand{\afd}{\mathsf{AF2}}
+\newcommand{\afdcd}{\mathsf{AF2}^{\boldsymbol{\land,\lor}}}
+
+
+\renewcommand{\S}{\mathbb{\Sigma}}
+
+
+\newcommand{\doubt}{\Red{{\LARGE {\sf ??}}}}
+
+\newcommand{\coment}[1]{\hfill\\ \Big[{\bf Private Comment:} #1\Big]}
+\newcommand{\preg}[1]{\hfill\\ \BrickRed{{\bf Question:} #1}}
+\newcommand{\conjet}[1]{\hfill\\ \OliveGreen{{\bf Conjecture:} #1}}
+
+
+\newcommand{\rlv}[3]{\ensuremath{#1 \;\;\mbox{{\tt
+        r}}_{\ensuremath{#3}}\; #2}}
+\newcommand{\tf}[2]{\mathsf{t}_{#1}(#2)}
+
+\newcommand{\De}{\mathcal{D}}
+%\newcommand{\vp}[1]{#1^{\boldsymbol{+}}}
+\newcommand{\muc}{\mu X(\C_1,\ldots,\C_k)}
+\newcommand{\muk}{\mu X(\C_1,\ldots,\C_k)}
+\newcommand{\muko}{\mu Y(\De_1,\ldots,\De_l)}
+\newcommand{\mukp}{\mu X(\C'_1,\ldots,\C'_k)}
+\newcommand{\nukk}{\nu X(\De_1,\ldots,\De_k)}
+\newcommand{\nucy}{\nu Y(\De_1,\ldots,\De_k)}
+%\newcommand{\mukr}{\mu X^{+(\vec{\mathbb{u}},\bbmu)}(\C^{\tt
+%    r}_1,\ldots,\C^{\tt r}_k)}
+\newcommand{\mukr}{\mu \vp{X}(\C^{\tt r}_1,\ldots,\C^{\tt r}_k)}
+\newcommand{\Umukr}{\mu \vp{X}(\C^{\tt r}_1,\ldots,\C^{\tt r}_k)}
+%\newcommand{\Unukr}{\nu \vp{X}(\D^{\tt r}_1,\ldots,\D^{\tt r}_k)}
+\newcommand{\nukr}{\nu \vp{X}(\De^{\tt r}_1,\ldots,\De^{\tt r}_k)}
+\newcommand{\nukry}{\nu \vp{Y}(\De^{\tt r}_1,\ldots,\De^{\tt r}_k)}
+\newcommand{\mukd}{\mu X(\de_1,\ldots,\de_k)}
+\newcommand{\hamit}{\ensuremath{\mathsf{HaMIT}}}
+\newcommand{\umidc}{\ensuremath{\mathsf{UMIDC}}}
+\newcommand{\midc}{\ensuremath{\mathsf{MIDC}}}
+\newcommand{\mcict}{\ensuremath{\mathsf{MCICT}}}
+\newcommand{\mcictm}{\ensuremath{\mathsf{MCICT}^{\boldsymbol{-}}}}
+\newcommand{\mict}{\ensuremath{\mathsf{MICT}}}
+\newcommand{\mictc}{\ensuremath{\mathsf{MICTc}}}
+\newcommand{\mcicd}{\ensuremath{\mathsf{MCICD}}}
+\newcommand{\mcit}{\ensuremath{\mathsf{MCIT}}}
+\newcommand{\mcct}{\ensuremath{\mathsf{MCCT}}}
+\newcommand{\tmidc}{\ensuremath{\mathsf{TMIDC}}}
+\newcommand{\umcdd}{\ensuremath{\mathsf{UMCDD}}}
+\newcommand{\mcdd}{\ensuremath{\mathsf{MCDD}}}
+\newcommand{\umidcuu}{\ensuremath{\mathsf{UMIDC^1_1}\;}}
+\newcommand{\umidcku}{\ensuremath{\mathsf{UMIDC^k_1}\;}}
+\newcommand{\umidckm}{\ensuremath{\mathsf{UMIDC^k_m}\;}}
+\newcommand{\tmidcud}{\ensuremath{\mathsf{TMIDC^1_2}\;}}
+\newcommand{\tmidckd}{\ensuremath{\mathsf{TMIDC^k_2}\;}}
+\newcommand{\tmidckm}{\ensuremath{\mathsf{TMIDC^k_m}\;}}
+\newcommand{\nispidkm}{\ensuremath{\mathsf{NISPID^k_m}\;}}
+\newcommand{\mg}{\mathbb{m}}
+\newcommand{\amon}{\mathop{\mathsf{mon^{\boldsymbol{-}}}}}
+\newcommand{\uno}{\mathbb{1}}
+\newcommand{\unor}{\mathbb{1}^{\tt r}}
+\newcommand{\mux}{\mu X\pt{\F,\con}}
+\newcommand{\Gre}{\G^{{\tt r}_\xi}}
+\newcommand{\Frem}{\F^{{\tt r}_{\xi[X/\mu]}}}
+\newcommand{\muh}{\mu\al(\rho_1,\ldots,\rho_k)}
+\newcommand{\cg}{\mathbb{C}}
+\newcommand{\dg}{\mathbb{D}}
+\newcommand{\jg}{\mathbb{J}}
+\newcommand{\Ha}{\mathcal{H}}
+\newcommand{\A}{\mathcal{A}}
+\newcommand{\sg}{\mathbb{S}}
+\newcommand{\imitmc}{\ensuremath{\mathsf{IMIT^{\boldsymbol{-}}_C}}}
+\newcommand{\mitc}{\ensuremath{\mathsf{MITC}}}
+\newcommand{\mctd}{\ensuremath{\mathsf{MCTD}}}
+\newcommand{\mitcit}{\ensuremath{\mathsf{MITCit}}}
+\newcommand{\mitcm}{\ensuremath{\mathsf{MITC^{\boldsymbol{-}}}}}
+\newcommand{\mitcitm}{\ensuremath{\mathsf{MITCit^{\boldsymbol{-}}}}}
+\newcommand{\mctdcoitm}{\ensuremath{\mathsf{MCTDcoit^{\boldsymbol{-}}}}}
+\newcommand{\inl}{\mathop{\sf inl}}
+\newcommand{\inr}{\mathop{\sf inr}}
+\newcommand{\Inl}{\mathop{\sf INL}}
+\newcommand{\Inr}{\mathop{\sf INR}}
+\newcommand{\pendiente}{\BrickRed{{\sc Still Outstanding}}}
+\newcommand{\verifpendiente}{\BrickRed{{\sc Verification Still Outstanding}}}
+
+\newcommand{\imitc}{\ensuremath{\mathsf{IMIT_C}}}
+\newcommand{\emctc}{\ensuremath{\mathsf{EMCT_C}}}
+\newcommand{\imctc}{\ensuremath{\mathsf{IMCT_C}}}
+\newcommand{\mct}{\ensuremath{\mathsf{MCT}}}
+\newcommand{\imit}{\ensuremath{\mathsf{IMIT}}}
+\newcommand{\Lp}{\mathop{\sf fst}}
+\newcommand{\Rp}{\mathop{\sf snd}}
+\newcommand{\proj}[1]{\pi_{#1}}
+\newcommand{\Em}{E_{\boldsymbol{+}}}
+\newcommand{\Emu}{E_{\mu}}
+\newcommand{\Emup}{E^{\boldsymbol{+}}_{\mu}}
+\newcommand{\Emupp}{E_{\mu^{\boldsymbol{+}}}}
+\newcommand{\Mg}{\mathbb{M}}
+\newcommand{\Mgm}{\mathbb{M}^{\boldsymbol{-}}}
+\newcommand{\Mgp}{\mathbb{M}^{\mathsf{p}}}
+\newcommand{\Bg}{\mathbb{B}}
+\newcommand{\Lg}{\mathbb{L}}
+\newcommand{\Tg}{\mathbb{T}}
+
+\newcommand{\sketch}{\Red{{\sc sketch}}}
+
+\newcommand{\rosum}{\rho_1+\ldots+\rho_k}
+\newcommand{\roprod}{\rho_1\times\ldots\times\rho_k}
+\newcommand{\rosums}{\rho_1[\al:=\beta]+\ldots+\rho_k[\al:=\beta]}
+
+\newcommand\esmitc{\ensuremath{\mathsf{ESMIT_C}}}
+\newcommand\ismitc{\ensuremath{\mathsf{ISMIT_C}}}
+\newcommand\mtypes{\ensuremath{\mathsf{MTypes}}}
+
+\newcommand\nispostypes{\ensuremath{\mathsf{NISPosTypes}}}
+\newcommand\nispitc{\ensuremath{\mathsf{NISPIT_C}}}
+\newcommand\nispid{\ensuremath{\mathsf{NISPID}}}
+
+\newcommand{\inu}{\mathsf{\star}}
+\newcommand{\vv}{\mathsf{true}}
+\newcommand{\ff}{\mathsf{false}}
+\newcommand{\B}{\mathbb{B}}
+\newcommand{\N}{\mathbb{N}}
+
+
+
+
+%\newenvironment{leterize}{%
+%        \renewcommand{\theenumi}{\alph{enumi}}
+%        \begin{enumerate}}{\end{enumerate}}
+
+%\newenvironment{manitas}{%
+%      \renewcommand{\labelitemi}{\ding{44}}%
+%      \vspace{-0.5cm}%
+%      \begin{itemize}%
+%      \setlength{\itemsep}{0pt}\setlength{\parsep}{0pt}\setlength{\topsep}{0pt}%
+%      }{\end{itemize}}
+\newcommand{\inv}{\mathsf{Inv}}
+\newcommand{\vst}[3]{#1^#2[#3]}
+\newcommand{\types}{\mathsf{Types}}
+\newcommand{\hatypes}{\mathsf{HaTypes}}
+\newcommand{\betared}{\imp_\beta}
+\newcommand{\etared}{\imp_\eta}
+\newcommand{\betaetared}{\imp_{\beta\eta}}
+\newcommand{\betaimp}{\beta_\imp}
+\newcommand{\etaimp}{\eta_\imp}
+\newcommand{\betaimpetared}{\imp_{\betaimp\eta}}
+\newcommand{\etamu}{\eta_\mu}
+\newcommand{\etanu}{\eta_\nu}
+\newcommand{\etanuinv}{\eta_{\nu^{\boldsymbol{i}}}}
+\newcommand{\betamuit}{\beta_\mu}
+\newcommand{\betamurec}{\beta_{\mu^{\boldsymbol{+}}}}
+\newcommand{\betamuinv}{\beta_{\mu^{\boldsymbol{i}}}}
+\newcommand{\betanuinv}{\beta_{\nu^{\boldsymbol{i}}}}
+\newcommand{\betanuit}{\beta_\nu}
+\newcommand{\betanurec}{\beta_{\nu^{\boldsymbol{+}}}}
+
+\newcommand{\Fc}{\ensuremath{\mathsf{F^{Curry}}}}
+\newcommand{\Lb}{\Lambda} 
+
+\newcommand{\rhdc}{\mathop{\rhd_\mathsf{C}}}
+
+\newcommand{\pos}[1]{\mathsf{Pos}(#1)}
+\newcommand{\nega}[1]{\mathsf{Neg}(#1)}
+
+\newcommand{\Om}{\Omega}
+\newcommand{\Enu}{E_\nu}
+\newcommand{\Omp}{\Om^{\boldsymbol{+}}}
+\newcommand{\nuk}{\nu\al(\rho_1,\ldots,\rho_k)}
+\newcommand{\nuc}{\nu\al(\rho_1,\ldots,\rho_k)}
+\newcommand{\nucc}{\nu X(\C_1,\ldots,\C_k)}
+
+\newcommand{\efc}{\mathsf{eF_C}}
+
+\newcommand{\efe}{\mathsf{F}}
+\newcommand{\efec}{\mathsf{F_C}}
+\newcommand{\efesp}{\mathsf{F^{\boldsymbol{+,\times}}}}
+\newcommand{\fsp}{\mathsf{F^{\boldsymbol{+,\times}}}}
+\newcommand{\efep}{\mathsf{F^{\boldsymbol{\times}}}}
+\newcommand{\efes}{\mathsf{F^{\boldsymbol{+}}}}
+\newcommand{\vt}{\vec{t}}
+\newcommand{\vq}{\vec{q}}
+\newcommand{\vr}{\vec{r}}
+\newcommand{\vcon}[1]{\vec{\co{#1}}}
+\newcommand{\vdes}[1]{\vec{\des{#1}}}
+\newcommand{\ic}{I_\mathsf{C}}
+\newcommand{\gl}[1]{#1_\mathsf{g}}
+\newcommand{\W}{\mathcal{W}}
+
+\newcommand{\ocpos}{\mathop{\mathsf{pos}}}
+
+\newcommand{\can}{\mathsf{can}}
+
+\newcommand{\true}{\mathsf{true}}
+\newcommand{\false}{\mathsf{false}}
+\newcommand{\nil}{\mathsf{nil}}
+\newcommand{\cons}{\mathop{\mathsf{cons}}}
+\newcommand{\append}{\mathop{\mathsf{append}}}
+\newcommand{\head}{\mathop{\mathsf{head}}}
+\newcommand{\tail}{\mathop{\mathsf{tail}}}
+\newcommand{\Bc}{\mathcal{B}}
+\newcommand{\Df}{\mathfrak{D}}
+\newcommand{\Dc}{\mathcal{D}}
+\newcommand{\Tc}{\mathcal{T}}
+\newcommand{\Mf}{\mathfrak{M}}
+
+\newcommand{\Sg}{\mathbb{S}}
+
+%\newtheorem{theorem}{Theorem}[chapter]
+
+%\newtheorem{prop}{Proposition}
+
+%\newcommand{\proposition}[1]{\begin{prop} #1 \end{prop}}
+
+%\newcommand{\dem}[1]{\begin{proof} #1 \end{proof}}
+
+%\newtheorem{pf}{Proof}
+
+%\newtheorem{defn}{Definition}
+%\newcommand{\definition}[1]{\begin{defn} #1 \end{defn}}
+
+%\newtheorem{cor}{Corollary}
+%\newcommand{\corollary}[1]{\begin{cor} #1 \end{cor}}
+
+%\newtheorem{lem}{Lemma}
+%\newcommand{\lema}[1]{\begin{lem} #1 \end{lem}}
+
+%\newtheorem{ejem}{Example}
+%\newcommand{\ejemplo}[1]{\begin{ejem} #1 \end{ejem}}
+
+\newcommand{\out}{\mathop{\mathsf{out}}}
+\newcommand{\outt}{\mathop{\mathsf{out}_T}}
+\newcommand{\outni}{\mathop{\mathsf{out}_{n,i}}}
+\newcommand{\outki}{\mathop{\mathsf{out}_{k,i}}}
+\newcommand{\inm}{\mathop{\mathsf{in}}}
+\newcommand{\inmt}{\mathop{\mathsf{in}_T}}
+\newcommand{\inmni}{\mathop{\mathsf{in}_{n,i}}}
+\newcommand{\inmki}{\mathop{\mathsf{in}_{k,i}}}
+\newcommand{\ininv}{\mathop{\mathsf{in}^{\boldsymbol{-1}}}}
+
+%\newcommand{\qed}{\ensuremath{\boldsymbol{\dashv}}}
+
+%\newcommand{\proof}{\hfill\\\noindent\textit{Proof. }}
+
+
+\newcommand{\stream}[1]{\ensuremath{\mathsf{stream}(#1)}}
+\newcommand{\outinv}{\ensuremath{\mathop{\mathsf{out^{-1}}}}}
+%\newcommand{\ininv}{\ensuremath{\mathop{\mathsf{in^{-1}}}}}
+\newcommand{\outinvk}{\ensuremath{\mathsf{out}^{-1}_k}}
+\newcommand{\ininvk}{\ensuremath{\mathsf{in}^{-1}_k}}
+\newcommand{\coit}{\ensuremath{\mathsf{CoIt}}}
+\newcommand{\iter}{\ensuremath{\mathsf{It}}}
+\newcommand{\corec}{\ensuremath{\mathsf{CoRec}}}
+\newcommand{\rec}{\ensuremath{\mathsf{Rec}}}
+\newcommand{\copr}[2]{\ensuremath{\boldsymbol{[}#1,#2\boldsymbol{]}}}
+\newcommand{\bool}{\ensuremath{\mathsf{bool}}}
+
+
+\newcommand{\lista}[1]{\mathsf{list}(#1)}
+\newcommand{\tree}[1]{\mathsf{tree}(#1)}
+\newcommand{\inftree}[1]{\mathsf{inftree}(#1)}
+\newcommand{\labelt}{\mathsf{label}}
+\newcommand{\lstree}{\mathsf{lstree}}
+
+\newcommand{\muar}{{\mu\al\rho}}
+\newcommand{\nuar}{{\nu\al\rho}}
+
+\newcommand{\form}{\mathsf{Form}}
+\newcommand{\fod}{\mathsf{FoD}}
+\newcommand{\Db}{\mathbb{D}}
+\newcommand{\rk}[1]{\mathsf{ord}(#1)}
+\newcommand{\hol}[1]{\mathsf{HOL}#1}
+\newcommand{\fol}{\mathsf{FOL}}
+\newcommand{\Fb}{\mathbb{F}}
+\newcommand{\unit}{\mathsf{1}}
+\newcommand{\inj}[2]{\mathop{\mathsf{inj}^{#1}_{#2}}}
+
+\newcommand{\Mgtriv}{\ensuremath{\Mg_{\mathsf{triv}}}}
+\newcommand{\Mgid}{\ensuremath{\Mg_{\mathsf{id}}}}
+
+\newcommand{\no}{\mathsf{not}}
+\newcommand{\pred}{\mathop{\mathsf{pred}}}
+\newcommand{\Mgplus}{\Mg_{\boldsymbol{+}}}
+\newcommand{\Mgtimes}{\Mg_{\boldsymbol{\times}}}
+
+\newcommand{\restr}[2]{#1\!\!\boldsymbol{\restriction}\!#2}
+
+\newcommand{\pack}{\mathop{\mathsf{pack}}}
+\newcommand{\open}{\mathsf{open}}
+
+\newcommand{\vacio}{\varnothing}
+\newcommand{\done}{\ensuremath{\checkmark}}
+
+\newcommand{\ida}{$\Rightarrow \; )$ }
+\newcommand{\regr}{$\Leftarrow \; )$ }
+
+
+\newcommand{\ol}[1]{\overline{#1}}
+
+\newcommand{\sn}{\mathsf{SN}}
+\newcommand{\ssn}{\mathsf{sn}}
+\newcommand{\va}{\vec{a}}
+\newcommand{\vs}{\vec{s}}
+\newcommand{\vg}{\vec{\gamma}}
+\newcommand{\vx}{\vec{x}}
+\newcommand{\vy}{\vec{y}}
+\newcommand{\vz}{\vec{z}}
+\newcommand{\vm}{\vec{m}}
+\newcommand{\vf}{\vec{f}}
+
+\newcommand{\gcoit}{\ensuremath{\mathsf{MCoIt}}}
+\newcommand{\gcorec}{\ensuremath{\mathsf{MCoRec}}}
+\newcommand{\git}{\ensuremath{\mathsf{MIt}}}
+\newcommand{\grec}{\ensuremath{\mathsf{MRec}}}
+
+\newcommand{\Lan}{\mathop{\mathsf{Lan}}}
+\newcommand{\Ran}{\mathop{\mathsf{Ran}}}
+\newcommand{\sat}{\mathsf{SAT}}
+\newcommand{\Ss}{\mathsf{S}}
+\newcommand{\cl}[1]{\mathsf{cl}(#1)}
+\newcommand{\scp}[2]{\mathsf{SC}^{#1}[#2]}
+
+
+\newcommand{\ibe}{=_{\beta\eta}}
+\newcommand{\vpos}{\mathop{\mathsf{vpos}}}
+\newcommand{\admis}{\mathop{\mathsf{admis}}}
+\newcommand{\mcictg}{\mcict_{\boldsymbol{M}}}
+\newcommand{\mcictmugnu}{\mcict_{\boldsymbol{\mu M\nu}}}
+\newcommand{\mcicdmugnu}{\mcicd_{\boldsymbol{\mu M\nu}}}
+\newcommand{\mcictgnu}{\mcict_{\boldsymbol{M\nu}}}
+\newcommand{\mcicdgnu}{\mcicd_{\boldsymbol{M\nu}}}
+
+\newcommand{\from}{\mathop{\mathsf{from}}}
+\newcommand{\iga}{\approx_\A}
+\newcommand{\igb}{\approx_\Bc}
+\newcommand{\igtimes}{\approx_\times}
+\newcommand{\igsa}{\approx_{\Sc_\A}}
+\newcommand{\sa}{\Sc_A}
+\newcommand{\bblp}{\mathop{\bbpi_1}}
+\newcommand{\bbrp}{\mathop{\bbpi_2}}
+\newcommand{\ttinl}{\mathop{\mathtt{inl}}}
+\newcommand{\ttinr}{\mathop{\mathtt{inr}}}
+\newcommand{\cst}{\mathop{\mathsf{cst}}}
+\newcommand{\sss}{\mathop{\mathsf{ss}}}
+\newcommand{\Tsf}{\mathsf{T}}
+\newcommand{\term}{\mathsf{Term}}
+\newcommand{\vX}{\vec{X}}
+\newcommand{\vF}{\vec{\F}}
+
+\newcommand{\Val}{\mathsf{Val}}
+\newcommand{\Ms}{\M^\star}
+\newcommand{\nut}{\wt{\nu}}
+\newcommand{\nug}{\nu^\sharp}
+\newcommand{\app}{\mathop{\mathsf{app}}}
+\newcommand{\ift}[3]{\mathsf{if}\;#1\;\mathsf{then}\;#2\;\mathsf{else}\;#3}
+\newcommand{\filter}{\mathop{\mathsf{filter}}}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: t
+%%% End: 

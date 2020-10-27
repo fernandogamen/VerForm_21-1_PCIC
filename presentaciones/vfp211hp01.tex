@@ -1,0 +1,970 @@
+%\documentclass[xcolor=dvipsnames,table]{beamer}
+\documentclass[xcolor=dvipsnames,table,handout]{beamer}
+
+\input{fmcommands}
+\newcommand{\titulos}[2]{\frametitle{#1}\framesubtitle{#2}}
+
+\newcommand{\espc}{\vspace{0.3cm}}
+
+
+
+
+\mode<presentation>
+{
+\usetheme[secheader]{Boadilla}
+%\useinnertheme{rounded}
+\useoutertheme{infolines}
+%\usepackage{BeamerColor}
+%\usecolortheme[RGB={33,66,33}]{structure}
+\usecolortheme[named=Bittersweet]{structure}
+%\usefonttheme{}
+\setbeamercovered{invisible}
+%\setbeamertemplate{headline}{\insertshortinstitute}
+%\setbeamertemplate{footline}[page number]{\insertshortinstitute}
+%\insertshortinstitute
+}
+
+\usepackage{amssymb,amsmath,stmaryrd}
+\usepackage{mathrsfs}
+%\usepackage{anysize}
+%\usepackage{etex,m-pictex}
+%\usepackage{pictexwd,dcpic}
+%\usepackage{parsetree}
+%\usepackage{verbatim}
+\usepackage{alltt}
+%\usepackage{comment}
+\usepackage[spanish]{babel}
+\usepackage[latin1]{inputenc}
+%\usepackage{colortbl}
+%\usepackage{times}
+%\usepackage[T1]{fontenc}
+%\setbeamercolor{title}{fg=green!80!black,bg=green!20!white}
+%\setbeamercolor{footline}{fg=green!80!black,bg=green!20!white}
+
+\logo{\includegraphics[height=1cm]{fc2.png}}
+
+\title[VF 2021-1]{Verificación Formal}
+
+\subtitle{PCIC IIMAS UNAM\\Sesión 1: Introducción}
+\author[Miranda Perea]{
+  Favio Ezequiel Miranda Perea}
+\institute[FC-UNAM]{Departamento de Matemáticas \\ Facultad de Ciencias UNAM}
+\date{\today}
+
+\beamerdefaultoverlayspecification{<+->}
+
+\begin{document}
+
+\frame{\titlepage}
+
+
+% This course provides a general introduction to formal specification and verification as part of the design and implementation of critical computer systems. Students will be introduced to the underlying theory and basic techniques of verifying the correctness of algorithms with respect to specifications. They will also be introduced to techniques for using formal specifications as a system design notation and proving that the formal specifications satisfy desired properties (such as security or safety properties).
+
+% Students will get hands-on experience with several existing specification and verification systems. This subject can be considered as the combination of specification and verification techniques, programming language semantics, and formal logic.
+% La programaciÃ³n funcional es un paradigma donde los cÃ³mputos se modelan mediante funciones matemÃ¡ticas. Un programa es simplemente una sucesiÃ³n de definiciones de funciones y el proceso de ejecuciÃ³n consiste en la evaluaciÃ³n de expresiones que involucran diversas funciones en un argumento dado. En contraste con la programaciÃ³n imperativa, donde un programa es una sucesiÃ³n de instrucciones que cambian el estado de la memoria, la programaciÃ³n funcional usualmente evita el uso de estado mutable.
+
+% Siendo este un curso de posgrado revisaremos brevemente las generalidades del paradigma funcional utilizando el lenguaje de programaciÃ³n Haskell para dedicarnos la mayor parte del semestre al estudio de casos de profundizaciÃ³n que ejemplifican diversas tÃ©cnicas relevantes de la programaciÃ³n funcional.
+
+
+
+
+% \begin{frame}
+%   El análisis y la verificación de sistemas de software es un asunto importante. Los errores en sistemas cuya seguridad es crítica pueden ser desastrosos causando pérdidas financieras enormes o incluso la muerte, por lo que los métodos para evitar estos escenarios son esenciales. Un proceso de pruebas preliminares puede identificar problemas, si se realiza de manera rigurosa, pero por lo general no es suficiente para garantizar un nivel satisfactorio de calidad. Por otra parte la teoría de especificación y verificación formal ofrece metodologías que van desde la descripción formal de requerimientos, lo cual permite razonar rigurosamente sobre ellos, hasta sofisticadas técnicas automátizadas para la verificación de software. El objetivo de este curso es proporcionar un panorama de algunos métodos de especificación y verificación formal mediante el estudio de casos en semánticas formales de lenguajes de programación, haciendo énfasis en el proceso de verificación automatizada mediante el uso del asistente de prueba Coq. 
+% \end{frame}
+
+
+
+
+% \begin{frame}
+%   \titulos{Introducción}{}
+% \bi
+% \item Usualmente (cita anónima):
+% \bc
+% {\em El software es como las catedrales, primero lo construimos y luego rezamos}
+% \ec
+% \espc
+% \item Métodos formales (de una fábula de Lafontaine):
+% \bc
+% {\em Ayúdate y el cielo te ayudará}
+% \ec
+% \espc
+% \item Xavier Leroy:
+% \bc
+% {\em Un poco de programación nos aleja de la lógica matemática, mientras que mucha programación nos acerca nuevamente a ella}
+% \ec
+
+% \ei
+% \end{frame}
+
+
+\begin{frame}
+\titulos{Introducción}{}
+  \bi
+\item Objetivo principal:
+\bc
+{\em Proporcionar evidencia de que un programa o sistema tiene o cumple el comportamiento deseado.}
+\ec
+\espc
+\item Nociones centrales: 
+\bi
+\item Modelo\espc
+\item Especificación
+\ei
+\espc 
+\item Estos conceptos y su realización permiten un tratamiento \alert{matemático} del objeto de interés
+\ei
+\end{frame}
+
+
+\begin{frame}
+\titulos{Introducción}{}
+\bi
+\item El objetivo principal puede separse en dos subproblemas:
+\espc
+\bi
+\item Garantia de comportamiento: 
+\bi
+\item ?`Cómo asegurar o verificar que un modelo cumple un comportamiento dado ?
+\ei
+\espc
+\item Modelo vs. implementación: 
+\bi
+\item ?`Cómo obtener, a partir del modelo, una implementación que cumple el comportamiento ?
+\espc
+\item ?`Cómo asegurar que una implementación (un código de programa ) dada tiene el mismo comportamiento que el modelo ?
+\ei
+\ei
+\espc
+\item Buscamos una herramienta que proporcione soporte para ambos subproblemas: modela, prueba y extrae código a un lenguaje de programación.
+\ei
+\end{frame}
+
+
+\begin{frame}
+  \titulos{{\em Computer Programs for Checking Mathematical Proofs}}{John McCarthy 1962}
+\bc
+{\em
+Proof-checking by computer may be as important as proof generation. It is part of the definition of formal system that proofs be machine checkable} 
+
+\hspace{0.5cm}                          \vdots
+\pause
+{\em For example, instead of trying out computer programs on test cases until they are debugged, one should prove that they
+have the desired properties
+}
+\ec
+\end{frame}
+
+
+
+\begin{frame}
+
+\titulos{Especificación y demostración de propiedades}{}
+  \bi
+\item 3 niveles de soporte para la verificación formal (J. Rushby)
+\espc
+\bi
+\item Herramientas que proporcionan un ambiente formal únicamente: las pruebas son a mano, expresadas en lenguaje natural y se validan mediante consenso de la comunidad experta.
+\espc
+\item  Herramientas que proporcionan un sistema formal para la formulación precisa del razonamiento: las pruebas son a mano pero expresadas en un lenguaje riguroso.\espc
+\item  Herramientas que proporcionan un sistema formal y soporte computacional para la formulación precisa del razonamiento: tanto la definición del modelo como las pruebas de sus propiedades se desarrollan en el mismo marco y su verificación sistemática también.
+\ei
+\espc
+\item Necesitamos una herramienta que pertenezca al último nivel.
+\ei
+\end{frame}
+
+
+
+\begin{frame}
+  \titulos{Pruebas asistidas por computadora}{}
+\bi
+\item Una prueba formal consiste de razonamientos (reglas de inferencia) y cómputos (reducciones)
+\espc
+\item La computadora puede asistir en ambas partes:
+\espc
+\bi
+\item Cómputos: 
+\bi
+\item Numéricos (calculadoras) 
+\espc
+\item Simbólicos ({\sc Maple, Mathematica})
+\ei
+\espc
+\item Razonamiento: 
+\bi
+\item Automático: demostradores automáticos de teoremas, verificadores de modelos, solucionadores
+                  SAT/SMT
+\espc
+\item Interactivo: asistentes de prueba  
+\ei
+\ei
+\ei
+\end{frame}
+
+\begin{frame}
+\titulos{Sistemas formales de prueba}{}
+  \bi
+\item Por sistema formal entenderemos un sistema lógico deductivo (en nuestro caso el cálculo de secuentes)
+\espc
+\item Los sistemas formales en este sentido se clasifican mediante la relación entre dos factores a tomar en cuenta:
+\espc
+\bi
+\item La expresividad de la lógica
+\espc
+\item La automatización del razonamiento 
+\ei
+\espc
+\item Tenemos dos clases de importancia: los demostradores automáticos y los asistentes de prueba
+\ei
+\end{frame}
+
+
+\begin{frame}\titulos{Asistentes vs. demostradores automáticos}{}
+\bi
+\item Demostrador automático de teoremas: sistema computacional que permite al
+  usuario verificar la validez de teoremas gener\'andolos automáticamente,
+  mediante implementaciones de algoritmos adecuados como la resolución binaria.\vspace{.3cm}
+\item Asistente de prueba: sistema computacional que
+  permiten al usuario generar pruebas de manera interactiva, de manera que
+  el usuario es quien tiene el control del proceso de derivación.\vspace{.3cm}
+% \item Mediante el uso de tácticas dictadas por el usuario, el asistente genera
+%   un término de prueba  (Coq: un $\lambda$-término) que corresponde a una prueba
+%   matemática estandar (Coq: deducción natural).
+\ei
+\end{frame}
+
+
+
+\begin{frame}\titulos{?`Qué es un asistente de prueba ?}{AP}
+\bi
+\item Un sistema computacional que
+  permite al usuario generar pruebas de manera interactiva, de manera que
+  es él quien tiene el control del proceso de inferencia.
+\espc
+\item Mediante el uso de tácticas dictadas por el usuario, el asistente genera
+  un código de prueba que corresponde a una prueba matemática estandar 
+\espc
+\item Un AP asiste al humano de diversas maneras:
+\bi
+\item Formalización de teorías o especificaciones: definiciones, axiomas, etc..
+\espc
+\item Verificando y generando pruebas en un lenguaje lógico como la deducción natural, mediante la automatización de heurísticas (tácticas) de prueba.
+\espc
+\item Administración: proporcionando herramientas (editores, \\ bibliotecas, documentación, extracción de programas).
+\ei
+\ei
+\end{frame}
+
+
+
+\begin{frame}
+\titulos{Asistentes de prueba}{}
+  \bi
+\item Preferencia: expresividad lógica (lógica de orden superior)
+\espc
+\item Ventajas: se puede expresar una gran clase de conceptos, propiedades y pruebas que se requieren para una verificación formal completa de sistemas complejos. El razonamiento aquí es similar al razonamiento matemático estandar. 
+\espc
+\item Desventajas: la indecidibilidad de la lógica subyacente, lo cual implica la intervención frecuente del usuario.
+\espc
+\item Sistemas: {\sc Isabelle/Hol, Hol Light, Matita, Lean, Coq},\ldots
+\ei
+\end{frame}
+
+
+
+
+\begin{frame}
+\titulos{{\sc Coq} según {\sc Coq}}{{\url{http://coq.inria.fr}}}
+  \bi
+\item {\sc Coq} es el sistema ganador del premio ACM SIGPLAN 2013 para software de lenguajes de programación.
+ \espc
+\item De la página de {\sc Coq}: 
+{\em Coq is a formal proof management system. It provides a formal language to write mathematical definitions, executable algorithms and theorems together with an environment for semi-interactive development of machine-checked proofs. Typical applications include the formalization of programming languages semantics (e.g. the CompCert compiler certification project or Java Card EAL7 certification in industrial context), the formalization of mathematics (e.g. the full formalization of the 4 color theorem or constructive mathematics at Nijmegen) and teaching. }
+\ei
+\end{frame}
+
+
+\begin{frame}
+  \titulos{El asistente de pruebas {\sc Coq}}{\url{http://coq.inria.fr}}
+\bi
+\item ?` Qué es {\sc Coq} ?
+\bi
+\item Una lógica de orden superior (el cálculo de construcciones inductivas) implementada.
+\espc
+\item Un lenguaje de programación funcional sofisticado
+\espc
+\item Una herramienta robusta de desarrollo de pruebas
+\ei
+\espc
+\item ?` Para qué se usa {\sc Coq} ?
+\bi
+\item Para desarrollar pruebas matemáticas (Teorema de los 4 colores)
+\espc
+\item Para desarrollar software certificado (Compilador CompCert de C)
+\espc
+\item En general para desarrollar de manera interactiva \\ pruebas formales.
+\ei
+
+\ei
+\end{frame}
+
+
+
+\begin{frame}
+\titulos{{\sc Coq}}{Generalidades}
+  \bi
+\item {\sc Coq} corresponde a la clase de métodos formales pesados, de propóstio general, muy poderoso y expresivo.
+
+% \item De manera muy panorámica y general {\sc Coq} puede considerarse una especia de {\sc Mathematica} o {\sc Matlab} para pruebas formales.
+%   \espc
+\item Sus principales usos son:
+\bi
+\item Verificación y certificación formal de programas
+\item Formalización de las matemáticas.  
+\ei
+\item En su forma actual no es una herramienta que se pueda integrar en un proceso regular de desarrollo de software. Es artesanal.
+\espc
+\item Sin embargo se usa de manera exitosa en la industria.
+\espc
+\item Pertenece a la familia de herramientas recomendadas por la norma ISO/IEC 15408 para seguridad en cómputo. ({\em Common Criteria \\ for Information Technology Security Evaluation})
+\ei
+\end{frame}
+
+
+\begin{frame}[fragile]
+\titulos{Especificación/Verificación}{Mini ejemplo}
+  \bi
+\item Especificación: la función $sumh$ recibe un natural $n$ y devuelve la suma de todos los naturales hasta $n$. Es decir,
+\beqs
+sumh\;n= 0+1+2+\ldots + n
+\eeqs
+\pause
+\item Implementación: se define la función $sumn$ recursivamente como sigue:
+  \begin{alltt}
+    sumh 0 = 0
+    sumh (S n)  = sumh n + S n 
+  \end{alltt}
+\pause
+\item ?` La implementación cumple la especificación ?
+\beqs
+\fa n\;\in\mathbb{N}\;({\tt sumh}\,n = \sum_{i=0}^n i)
+\eeqs
+
+% \item Y si hubieramos definido
+%   \begin{alltt}
+%     sumh 0 = 666
+%     sumh (S n)  = 1 + 2n + \(n^2\) 
+%   \end{alltt}
+\ei
+\end{frame}
+
+
+\begin{frame}[fragile]
+\titulos{Especificación/Verificación}{Mini ejemplo}
+  \bi
+\item Especificación: la función $sumh$ recibe un natural $n$ y devuelve la suma de todos los naturales hasta $n$. Es decir,
+\beqs
+sumh\;n= 0+1+2+\ldots + n
+\eeqs
+\pause
+\item Implementación: y si hubieramos definido
+  \begin{alltt}
+    sumh 0 = 666
+    sumh (S n)  = 1 + 2n + \(n^2\) 
+  \end{alltt}% se define la función $sumn$ recursivamente como sigue:
+  % \begin{alltt}
+  %   sumh 0 = 0
+  %   sumh (S n)  = sumh n + S n 
+  % \end{alltt}
+\pause
+\item ?` La implementación cumple la especificación ?
+\beqs
+\fa n\;\in\mathbb{N}\;({\tt sumh}\,n = \sum_{i=0}^n i)
+\eeqs
+
+
+\ei
+\end{frame}
+
+
+\begin{frame}[fragile]
+\titulos{Especificación/Verificación}{Mini ejemplo}
+  \bi
+\item Especificación: la función $sumh$ recibe un natural $n$ y devuelve la suma de todos los naturales hasta $n$. Es decir,
+\beqs
+sumh\;n= 0+1+2+\ldots + n
+\eeqs
+% \item Implementación: se define la función $sumn$ recursivamente como sigue:
+%   \begin{alltt}
+%     sumh 0 = 0
+%     sumh (S n)  = sumh n + S n 
+%   \end{alltt}
+\pause
+\item Y si hubieramos definido
+  \begin{alltt}
+       sumh n  = n(n+1)/2 
+  \end{alltt}
+\pause
+\item ?` La implementación cumple la especificación ?
+\beqs
+\fa n\;\in\mathbb{N}\;({\tt sumh}\,n = \sum_{i=0}^n i)
+\eeqs
+% \pause
+% \item Al pizarrón
+\ei
+\end{frame}
+
+
+
+
+
+
+
+% \frame{\titulos{Asistentes de Pruebas}{}
+% }
+
+
+
+
+
+
+
+\begin{frame}[fragile]
+\titulos{?` Cómo usar {\sc Coq} ?}{}
+\bi  
+\item Idea fundamental: Verificación $\approx$ Teorema
+\bc
+{\em Teorema. El programa $p$ es correcto}
+\ec
+\espc\pause
+\item En el mismo ambiente se define el programa y la prueba.
+\espc\pause
+\item Etapas del proceso de certificación:
+\espc
+\bi
+\item Parte funcional: datos y sus operaciones (programa)
+\espc\pause
+\item Parte lógica: propiedades y sus pruebas (especificación)
+\ei
+% \bi
+% \item Los datos.
+
+% \item Las operaciones.
+%   % \begin{itemize}
+%   % \item Con programación funcional: cada operación es una función que manda
+%   %   entradas en salidas, sin efectos laterales.
+%   % \item La programación de las operaciones se guia por los casos que describen
+%   %   los datos (Recursión estructural).
+%   % \item Se deben cubrir todos los casos para evitar valores indefinidos, lo
+%   %   cual garantiza que los cómputos siempre terminan.
+%   % \end{itemize}
+% \item Las propiedades.
+% %   \begin{itemize}
+% %   \item Usando el lenguaje predefinido de la lógica: {\tt
+% %       and,or,forall,exists}.
+% % \item Así podemos expresar relaciones entre diversas funciones, por ejemplo:
+% %   siempre que $f(x)$ es true, $g(x)$ será un número primo.
+% % \item Mecanismo de definición de propiedades (predicados) mediante un esquema
+% %   de definiciones inductivas (generalización de la declaración {\tt data} de
+% %   {\sc Haskell}). Por ejemplo el conjunto de números pares, el ser una lista
+% %   ordenada, la relación $<$ en naturales,etc.
+% %   \end{itemize}
+% \item Las pruebas (de las propiedades, i.e., de las especificaciones)
+%   % \begin{itemize}
+%   % \item Descomponer una fórmula lógica en fórmulas más simples
+%   % \item Se usa un enfoque orientado a metas y con retroceso (a la {\sc
+%   %     Prolog})
+% \ei
+\espc\pause
+\item Caso particular: un programa para ordenar listas.\pause
+\item Datos:
+  \begin{alltt}
+    Inductive listZ: Type := nilZ | 
+                             consZ (hd:Z) (tl: listZ).
+
+    Notation ``hd::tl'' := consZ hd tl
+  \end{alltt}
+\ei
+\end{frame}
+
+
+
+\begin{frame}[fragile]
+  \titulos{Estudio de un caso}{Ordenamiento por inserción}
+\bi
+
+\item Operaciones:
+  \begin{alltt}
+     Fixpoint insert (x : Z) (l: list Z) :=
+      match l with
+       | nilZ => x::nilZ
+       | hd::tl => if x <= hd then x::l 
+                    else hd::insert x tl
+     end.
+\pause
+     Fixpoint sort l :=
+      match l with
+       | nilZ => nilZ
+       | hd::tl => insert hd (sort l)
+     end. 
+  \end{alltt}
+
+\ei
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \titulos{Estudio de un caso}{Ordenamiento por inserción}
+\bi
+\item Propiedades: ser una lista ordenada
+
+  \begin{alltt}
+
+Inductive sorted : list Z -> Prop :=
+  | sorted0 : sorted nil
+  | sorted1 : forall z:Z, sorted (z :: nil)
+  | sorted2 :
+      forall (z1 z2:Z) (l:list Z),
+        z1 <= z2 ->
+        sorted (z2 :: l) -> sorted (z1 :: z2 :: l).
+  \end{alltt}
+
+\ei
+\end{frame}
+
+
+
+% \begin{frame}[fragile]
+%   \titulos{Estudio de un caso}{Ordenamiento por inserción}
+% \bi
+% \item Pruebas: ser una lista ordenada
+
+%   \begin{alltt}
+
+% Inductive sorted : list Z -> Prop :=
+%   | sorted0 : sorted nil
+%   | sorted1 : forall z:Z, sorted (z :: nil)
+%   | sorted2 :
+%       forall (z1 z2:Z) (l:list Z),
+%         z1 <= z2 ->
+%         sorted (z2 :: l) -> sorted (z1 :: z2 :: l).
+%   \end{alltt}
+
+% \ei
+% \end{frame}
+
+
+\begin{frame}[fragile]
+  \titulos{Estudio de un caso}{Ordenamiento por inserción}
+\bi
+\item Pruebas: {\tt sort} produce una lista ordenada, insertar un elemento a una lista ordenada genera una lista ordenada
+  \begin{alltt}
+
+Theorem sort_correct : forall (l:list z), sorted (sort l).
+
+Theorem sort_ins : forall (z:Z) (l:list Z), 
+                      sorted l -> sorted (insert z l).
+
+Theorem sorted_inv : forall (z:Z) (l:list Z), 
+                       sorted (z :: l) -> sorted l.
+
+  \end{alltt}
+
+\ei
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \titulos{Equivalencia de listas}{}
+  \begin{alltt}
+    Fixpoint nb_occ (z:Z) (l:list Z) : nat :=
+      match l with
+       | nil => 0%nat
+       | x::xs => match Z_eq_dec z x with
+                   | right _ => (nb_occ z xs)
+                   | left _ => S (nb_occ z xs)
+                  end
+    end.
+
+\pause
+
+    Definition equiv (l l' : list Z) := 
+          forall (z:Z), ((nb_occ z l) = (nb_occ z l')).
+\pause
+    Lemma equiv_ref : forall (l : list Z), equiv l l.
+
+  \end{alltt}
+
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \titulos{Equivalencia de listas}{}
+  \begin{alltt}
+    Lemma equiv_sym : forall (l l' : list Z), 
+                        equiv l l' -> equiv l' l.
+    \pause
+    Lemma equiv_trans : forall (l1 l2 l3 : list Z), 
+                            equiv l1 l2 -> 
+                             equiv l2 l3 -> 
+                              equiv l1 l3.
+    \pause
+    Lemma equiv_cons : forall (l1 l2 : list Z) (z:Z), 
+                            equiv l1 l2 ->
+                               equiv (z::l1) (z::l2).
+    \pause
+    Lemma equiv_perm : forall (l1 l2 : list Z) (z1 z2 : Z), 
+                        equiv l1 l2 -> 
+                         equiv (z1::z2::l1) (z2::z1::l2). 
+
+  \end{alltt}
+
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \titulos{Extracción de programas certificados}{}
+\bi
+\item Prueba 
+  \begin{alltt}
+    Theorem sort : 
+      forall l:list Z, exists (l' : list Z), 
+         equiv l l' \(/\backslash\) sorted l'.
+     Proof.
+      induction l as [| a l IHl]. 
+      exists (nil (A:=Z)); split; auto with sort.
+      case IHl; intros l' [H0 H1].
+      exists (aux a l'); split.
+      apply equiv_trans with (a :: l'); auto with sort.
+      apply aux_equiv.
+      apply aux_sorted; auto.
+     Qed.
+  \end{alltt}
+\pause
+\item Extracción de un programa a partir de la prueba:
+\begin{alltt}
+    Extraction "insert-sort" aux sort.
+\end{alltt}  
+\ei
+\end{frame}
+
+
+\begin{frame}
+  \titulos{Aplanamiento de un árbol binario}{Casos introductorios}
+  \begin{itemize}
+  \item Sea $t$  un árbol binario $t$
+    \medskip
+  \item Sea {\tt flat} una función  que devuelve una lista con los elementos de un árbol.
+    \medskip
+  \item Verificar la propiedad de invarianza de {\tt flat} respecto a los elementos de $t$.
+    \medskip
+  \item $x$ pertenece a $t$ si y sólo si $x$ pertenece a {\tt flat} $t$.
+
+  \end{itemize}
+ \end{frame}
+
+
+
+\begin{frame}
+  \titulos{Números naturales por paridad}{Casos introductorios}
+  \begin{itemize}
+  \item Un natural {\tt nat} es el cero o bien el sucesor de un natural
+    \[
+      n ::= 0\mid s\,n
+    \]
+  \item Un natural por paridad {\tt pnat} es el cero o bien el doble de un natural más uno o bien
+    el doble de un natural más dos. Es decir, el cero, los impares y los pares no cero.
+    \[
+      p ::= 0 \mid d\;p\mid u\;p
+    \]
+  \item Mostrar la equivalencia entre {\tt nat} y {\tt pnat}
+  \item Verificar que las funciones aritméticas $+,*$ coinciden.
+  \item Definir relaciones de orden y verificar que coinciden.  
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \titulos{Propiedades de la estructura de datos lista}{Casos introductorios}
+
+Las funciones {\tt take} y {\tt drop} se especifican como sigue:
+
+\begin{itemize}
+\item {\tt take n xs} devuelve la lista con los primeros $n$ elementos de la lista $xs$.
+  \medskip
+  
+\item {\tt drop n xs} devuelve la lista resultante de eliminar los primeros $n$ elementos de $xs$.
+  \medskip
+  
+\item Demuestre las siguientes propiedades:
+  \medskip
+  \begin{enumerate}
+  \item {\tt xs = take n xs ++ drop n xs}\medskip
+
+  \item {\tt take m . drop n = drop n . take (m+n)}\medskip
+
+  \item {\tt take m . take n = take (min m n)}\medskip
+
+  \item {\tt drop m . drop n = drop (m+n)} 
+  \end{enumerate}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \titulos{Optimización de expresiones aritméticas}{Casos introductorios}
+  \[
+    e:= n\mid x\mid e+e
+    \]
+    \begin{itemize}
+    \item Definir una función {\tt simpl} que simplifique las sumas de números, al nivel sintáctico.
+    \item Por ejemplo {\tt simp} (x+(5+2)) = x+7
+    \item Verificar la corrección de {\tt simp} respecto al intérprete.
+    \item[] \[ eval\; e\; s = eval\; (simpl\; e)\; s \]
+    \item Optimizar ahora las sumas con cero y volver a verificar.  
+    \end{itemize}
+\end{frame}
+ 
+
+\begin{frame}
+  \titulos{Equivalencia en definiciones de latiz}{Casos introductorios}
+  \begin{itemize}
+  \item Def 1. Una latiz es una estructura algebraica con dos operaciones binarias $\sqcap,\sqcup$ que cumplen ciertas propiedades.
+    
+\espc
+  \item Def 2. Una latiz es un orden parcial $\leq$ donde cualesquiera dos elementos tienen supremo e ínfimo.
+    \espc
+  \item Verificar que ambas definiciones son equivalentes.
+    
+  \end{itemize}
+  
+\end{frame}
+
+
+
+
+
+
+
+%\newcommand{\no}{\mathop{\mathsf{not}}}
+\newcommand{\yy}{\mathop{\mathsf{and}}}
+\newcommand{\pair}{\mathop{\mathsf{pair}}}
+\newcommand{\suc}{\mathop{\mathsf{succ}}}
+\newcommand{\add}{\mathop{\mathsf{add}}}
+\newcommand{\por}{\mathop{\mathsf{prod}}}
+\newcommand{\iszero}{\mathop{\mathsf{iszero}}}
+
+
+% \begin{frame}
+%   \titulos{Intérpretes/Compiladores en lenguajes de programación}{Intérprete}
+
+% \bi
+% \item  Lenguaje fuente de expresiones aritméticas y booleanas:
+% %Las expresiones del lenguaje se definen como sigue: 
+% %\newcommand{\suc}{\mathop{{\sf suc}}}
+% %\newcommand{\no}{\mathop{{\sf not}}}
+% %\newcommand{\nat}{\mathsf{Nat}}
+% %\newcommand{\bool}{\mathsf{Bool}}
+% %\newcommand{\Tf}{\mathsf{T}}
+
+% \beqs
+% \ba{rll} 
+% e & ::= & %x\;|\;
+% n\;|\;\true \;|\; \false\;|\; \\ \\
+%   & & e + e \;|\;e * e \\ \\ %\;|\;\pred e \;|\; \\ \\
+%   & & e < e \;|\;\iszero e \;|\;\no e%\;|\;\lete{x=e}{e}
+% \ea
+% \eeqs
+% \espc
+% \item Intérprete: función de evaluación
+% \beqs\mathtt{eval}: {\tt Exp}\to \mathbb{N}\cup\mathbb{B}\eeqs donde
+% $\mathbb{N}=\{0,1,\ldots\}$ y $\mathbb{B}=\{t,f\}$
+% \ei
+
+% \end{frame}
+
+
+
+
+
+% \begin{frame}[fragile]
+%   \titulos{Intérpretes/Compiladores en lenguajes de programación}{Compilador}
+%   \newcommand{\ejp}{\mathop{\mathtt{ejp}}}
+% \newcommand{\ej}{\mathop{\mathtt{ej}}}
+% \newcommand{\comp}{\mathop{\mathtt{comp}}}
+% \newcommand{\eval}{\mathop{\mathtt{eval}}}
+% \newcommand{\ap}{\mathop{\mathtt{+\!\!\!+}}}
+
+% \bi
+% \item Lenguaje objeto (instrucciones):
+
+% \beqs
+% i ::= n\;|\;t\;|\;f\;|\;+\;|\;*\;|\;<\;|\;\no\;|\;\iszero
+% \eeqs
+
+% %de manera que una instrucción es un valor natural o booleano o bien un operador del lenguaje fuente de expresiones aritméticas y booleanas
+% \espc\pause
+% \item Programas: son listas de instrucciones $p=[i_1,\ldots,i_n]$
+
+% % \beqs
+% % P (nil)\;\;\;\;\;\;
+% % \fa x\fa y(I(x)\land P(y)\to P(cons x y))
+% % \eeqs
+% \espc\pause
+% \item Memoria: son listas de valores $s=[v_1,\ldots,v_n]$ donde $v_i\in\mathbb{N}\cup\mathbb{B}$
+% \espc\pause
+% \item Ejecución de un programa: se ejecutan las instrucciones en orden y se devuelve la memoria final
+
+%   \begin{alltt}
+%     ejp : Prog -> Mem -> Mem
+
+%     ejp nil s = s
+
+%     ejp (i:p) s = ejp p (ej i s)
+%   \end{alltt}
+% \ei
+
+
+% \end{frame}
+
+
+
+
+
+% \begin{frame}[fragile]
+%   \titulos{Intérpretes/Compiladores en lenguajes de programación}{Compilador}
+
+% \bi
+% \item Compilación de una expresión en un programa: el proceso de compilación convierte una expresión $e$ en un programa. 
+
+%   \begin{alltt}
+%     comp :: Exp -> Prog
+
+%     {\em Ejemplo:} 
+
+%       comp (not (2 * 3 < 4)) = [4,3,2,*,<,not]
+%   \end{alltt}
+%     % comp n = [n]
+%     % comp true = [t]
+%     % comp false = [f]
+%     % comp (e1+e2) = comp e2 ++ comp e1 ++ [+]
+%     % comp (e1*e2) = comp e2 ++ comp e1 ++ [*]
+%     % comp (e1<e2) = comp e2 ++ comp e1 ++ [<]
+%     % comp (not e) = comp e ++ [not] 
+%     % comp (iszero e) = comp e ++ [iszero] 
+% \pause
+% \item Correctud del compilador: % la ejecución del programa $p$ obtenido al compilar la expresión $e$, en la  pila vacía coincide con la pila cuyo único valor es la evaluación de la expresión $e$
+
+%   \begin{alltt}
+
+%             \(\fa\) e (ejp (comp e) nil = [eval e])
+%   \end{alltt}
+% %\fa e (ejp (comp e) nil = [eval e])
+
+% \ei
+
+
+% \end{frame}
+
+
+
+% \begin{frame}
+%   \titulos{Temario}{}
+% \bi
+% \item Introducción\espc
+% \item Panorama del asistente de prueba {\sc Coq}\espc
+% \item Estudio de casos sencillos: números naturales por paridad, lenguaje de expresiones aritméticas, permutaciones de listas.
+% \espc
+% \item Fundamentos
+% \bi
+% \item Programación funcional
+% \item Lógica constructiva
+% \item Inducción, definiciones y técnicas de prueba
+% \ei
+% \espc
+% \item Especificación: 
+% \bi
+% \item Casos sencillos
+% \item El lenguaje {\sc Postfix}
+% \item El lenguaje {\sc Imp} 
+% \ei
+% % \item Semántica de lenguajes de programación:
+% % \be
+% % \item Estilos de semántica
+% % \item Semántica operacional del lenguaje {\sc Imp}
+% % \item Semántica axiomática: lógica de Hoare, verificación pruebas de correctud.
+% % \ee
+% % \item Estudio de casos: equivalencia de semánticas, compilación del lenguaje {\sc Imp}, terminación del lenguaje {\sc Postfix}, sistemas de tipos para {\sc Imp}.
+% \ei
+% \end{frame}
+
+
+% \begin{frame}
+%   \titulos{Temario}{}
+% \bi
+% % \item Introducción
+% % \item Panorama del asistente de prueba {\sc Coq}
+% % \item Estudio de casos sencillos: números naturales por paridad, lenguaje de expresiones aritméticas, permutaciones de listas.
+% % \item Fundamentos
+% % \be
+% % \item Programación funcional
+% % \item Lógica constructiva
+% % \item Inducción, definiciones y técnicas de prueba
+% % \ee
+% % \item Especificación: casos sencillos, el lenguaje {\sc Postfix}, el lenguaje {\sc Imp} 
+% \item Semántica de lenguajes de programación:
+% \bi
+% \item Estilos de semántica\espc
+% \item Semántica operacional del lenguaje {\sc Imp}\espc
+% \item Semántica axiomática: lógica de Hoare, verificación pruebas de correctud.
+% \ei
+% \item Estudio de casos: 
+% \bi
+% \item Equivalencia de semánticas\espc
+% \item Compilación del lenguaje {\sc Imp}\espc
+% \item Terminación del lenguaje {\sc Postfix}\espc
+% \item Sistemas de tipos para {\sc Imp}.
+% \ei
+% \ei
+% \end{frame}
+
+
+
+% \begin{frame}
+% \titulos{Recursos}{}
+%   \bi
+% \item Sitio web: \url{http://coq.inria.fr}\espc
+% \item Tutorial: Coq in a Hurry, Yves Bertot.\espc
+% \item Libros: 
+% \bi
+% \item Coq' Art: \url{http://www.labri.fr/perso/casteran/CoqArt/}\espc
+% \item Software Foundations: \url{http://www.cis.upenn.edu/~bcpierce/sf/}
+% \ei
+% \espc
+% \item Wiki: \url{http://coq.inria.fr/cocorico}
+% \espc
+% \item Intérprete: {\tt coqtop} 
+% \espc
+% \item Editor de pruebas {\tt coqide} o {\sc Proof General}
+% \espc
+% \item Se recomienda el uso de {\sc Emacs} con {\sc Proof General} 
+% \ei
+% \end{frame}
+
+
+% \begin{frame}
+% \titulos{Logística}{}
+%   \bi
+% \item Página web: \url{http://sites.google.com/site/efsv142/}\espc
+% \item El curso se calificará exclusivamente con tareas y proyectos. \espc
+% \item Habrá una tarea cada 2 semanas aproximadamente.\espc
+% \item Habrá dos proyectos, uno a la mitad y otro al final del semestre, el cual se acompañara de una exposición.\espc
+% \item ?`Preguntas?
+% \ei
+% \end{frame}
+
+
+
+
+\end{document}

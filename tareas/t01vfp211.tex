@@ -1,0 +1,140 @@
+
+
+
+
+\documentclass[spanish]{article}
+\usepackage[T1]{fontenc}
+\usepackage[latin9]{inputenc}
+\usepackage{geometry}
+\geometry{verbose,tmargin=1.5cm,lmargin=1.5cm,rmargin=1.5cm,headheight=1.5cm,headsep=1.5cm,footskip=1.5cm}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{color}
+\usepackage{calc}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage[document]{ragged2e}
+%\usepackage{coloremoji}
+
+\makeatletter
+
+\providecommand{\tabularnewline}{\\}
+
+\makeatother
+
+\usepackage{babel}
+\addto\shorthandsspanish{\spanishdeactivate{~<>.}}
+
+\usepackage{listings}
+\renewcommand{\lstlistingname}{Listado de código}
+
+\definecolor{mygray}{rgb}{0.240,0.240,0.240}
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{anti-flashwhite}{rgb}{0.95, 0.95, 0.96}
+\definecolor{brightgreen}{rgb}{0.4, 1.0, 0.0}
+
+\lstset{
+ language=haskell,
+ basicstyle={\ttfamily},
+ columns=[c]fixed,
+ breaklines=true,
+ showstringspaces=false,
+ stringstyle={\color{blue}\itshape},
+ literate={'"'}{\textquotesingle "\textquotesingle}3,
+ tabsize=3,
+ otherkeywords={},
+ keywordstyle={\color{mygreen}\bfseries},
+ commentstyle={\color{gray}},
+ backgroundcolor={\color{anti-flashwhite}},
+ frame=single,
+ numbers=left,
+ rulecolor=\color{anti-flashwhite},
+ numberstyle=\footnotesize
+}
+
+
+\begin{document}
+
+\title{Verificación Formal 2021-1\\
+  PCIC IIMAS UNAM\\
+Tarea 1}
+
+\author{Favio E. Miranda Perea}
+
+\date{ \today\\
+Fecha de entrega: martes 20 de octubre de 2020, 2359hrs}
+
+\maketitle
+
+En cada caso debe entregarse la verificación de forma tradicional y la mecanización en Coq.
+Toda propiedad auxiliar debe también ser demostrada.
+\\
+Las pruebas tradicionales deben entregarse en pdf ya sea generadas en LaTex o a mano.
+Las mecanizaciones deben entregarse en un archivo por cada ejercicio con el nombre ApellidoPaternoVfp211T01-k.v para el ejercicio $k$.
+
+\bigskip
+
+\begin{enumerate}
+\item Desarrolle el caso de verificación relacionado al aplanamiento de árboles binarios y la propiedad de preservar la pertenencia de sus elementos.
+\bigskip
+\item Concluya el caso de equivalencia de las siguientes dos definiciones de órden en naturales (
+  demostrando todo lo admitido\footnote{{\tt Admitted} en el script.} en el script 2 de clase):
+  \begin{enumerate}
+  \item Definición 1:
+    \[
+      \frac{}{n\leq_1 n}(o1refl)\;\;\;\;\;\;\;\;\;\;\
+      \frac{n\leq_1 m}{n\leq_1 S\,m}(o1s) 
+    \]
+
+    
+    \[
+      \frac{S\,n\leq_1 m}{n<_1m}(oe1)
+      \]
+    \item Definición 2:
+    \[
+      \frac{}{0 <_2 S\,n}(o2z)\;\;\;\;\;\;\;\;\;\;\
+      \frac{n<_2 m}{S\,n <_2 S\,m}(o2s)
+    \]
+
+    \[
+      n \leq_2 m \Leftrightarrow_{def} n = m \;\lor\;n <_2 m
+      \]
+  \end{enumerate}
+\bigskip
+\item Demuestre las siguientes propiedades que relacionan a la relación de orden con el mínimo y la suma. Use cualquiera de las definiciones de orden del ejercicio anterior.  
+  \begin{enumerate}
+  \item $n\leq m\to min\,n\,m = n$
+  \item $m\leq n\to min\,n\,m = m$
+  \item $n \leq n + m$
+  \item $m \leq n + m$  
+  \item $n\leq m \to n+p\leq m+p$
+  \item $n \leq m \lor m \leq n$
+  \item $n\leq m \leftrightarrow \exists p(m = n + p)$
+  \end{enumerate}
+%En caso de requerir propiedades adicionales, estas deben demostrarse también.
+\bigskip
+\item Demuestre la siguiente propiedad de la función {\tt take} de listas:
+  \begin{center}
+    {\tt take} n . {\tt take} m = {\tt take} ({\tt min} m n) 
+  \end{center}
+
+\end{enumerate}  
+
+% Chon Hacker desea que se implemente un intérprete para el  siguiente lenguaje de expresiones de orden en números naturales:
+%   \[
+%     e:= n \mid e<e \mid e\leq e
+%   \]
+% Para lo cual llama a dos compañias desarrolladoras.
+%   \begin{enumerate}
+%   \item Alimaña Software resuelve que el intérprete se desarrollará implementando de forma primitiva a la relación $\leq$
+%     y definiendo $<$ como azucar sintáctica usando $\leq$, es decir como una definición usando $\leq$. La idea para implementar $n \leq m$ consiste en destruir a $m$ (es decir, ``restar uno'' o aplicar la función predecesor, hasta que $n=m$ o bien $m=0$.
+%    \item Little Duck Software resuelve que el intérprete se llevará a cabo como sigue:  se implementará $<$ de forma primitiva y posteriormente se implementará $\leq$ como azucar sintáctica usando $<$. La idea para implementar $n<m$ consiste en destruir ambos $n$ y $m$ (aplicando el predecesor) hasta que alguno de los dos sea $0$ y decidir así de manera directa. 
+%    \end{enumerate}
+
+% Antes de decidir qué compañia llevará a cabo el proyecto Chon Hacker desea verificar que las dos implementaciones son equivalentes. Ayude a Chon a verificar formalmente la equivalencia, razonando con definiciones inductivas. Si tiene éxito, Chon le otorgará un puesto de ejecutivo ``V'' en su compañia.
+
+   
+   
+
+
+
+\end{document}

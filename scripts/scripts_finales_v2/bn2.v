@@ -1,0 +1,660 @@
+Require Import Coq.Numbers.Natural.Peano.NPeano.
+Require Import Arith.
+Require Import ArithRing.
+Require Import Setoid.
+Require Import Omega.
+
+(*Datatype for our numerical system with 0, U and D*)
+Inductive BN :=
+  Z: BN
+| U: BN -> BN
+| D: BN -> BN.
+
+Check BN_ind.
+Check BN_rec.
+Check BN_rect.
+
+Lemma UInj: forall (a b:BN), U a = U b -> a = b.
+Proof.
+intros.
+inversion H.
+trivial.
+Qed.
+
+Lemma DInj: forall (a b:BN), D a = D b -> a = b.
+Proof.
+intros.
+inversion H.
+trivial.
+Qed.
+
+
+Lemma ZnotU: forall (a:BN), Z <> U a.
+Proof.
+intros.
+discriminate.
+Qed.
+
+Lemma ZnotD: forall (a:BN), Z <> U a.
+Proof.
+intros.
+discriminate.
+Qed.
+
+  (* Lemma UnotD: forall (a:BN), U a <> D a. La cambié por la siguiente. C.V. 29/nov/2016 *)
+Lemma UnotD: forall (a b:BN), U a <> D b.
+Proof.
+intros.
+discriminate.
+Qed.
+
+Lemma DnotU: forall (a b:BN), D a <> U b. (* La agregué. C.V. 29/nov/2016 *)
+Proof.
+intros.
+discriminate.
+Qed.
+
+Lemma bnotU : forall (a:BN), U a <> a.
+Proof.
+intros.
+induction a.
+(*a = Z*)
+intuition.
+inversion H.
+(*a=U a*)
+intuition.
+inversion H.
+apply IHa in H1.
+trivial.
+(*a=D a*)
+intuition.
+inversion H.
+Qed.
+
+Lemma bnotD : forall (a:BN), D a <> a.
+Proof.
+intros.
+induction a.
+(*a = Z*)
+intuition.
+inversion H.
+(*a=U a*)
+intuition.
+inversion H.
+(*a=D a*)
+intuition.
+inversion H.
+apply IHa in H1.
+trivial.
+Qed.
+
+Theorem dec_eq_BN: forall (a b:BN), {a = b} + {a <> b}.
+Proof.
+intro.
+induction a.
+intros.
+(*a = Z*)
+destruct b.
+left;trivial.
+right;intuition;inversion H.
+right;intuition;inversion H.
+(*a = U z*)
+intros.
+destruct b.
+right;discriminate.
+destruct IHa with (b:=b).
+left.
+apply f_equal;trivial.
+right.
+contradict n.
+apply UInj in n.
+trivial.
+right;discriminate.
+(*a = D a*)
+intros.
+destruct b.
+right;discriminate.
+right;discriminate.
+destruct IHa with (b:=b).
+left;rewrite e;trivial.
+right.
+contradict n.
+apply DInj in n.
+trivial.
+Qed.
+
+(* Successor function for BN numbers  *)
+Fixpoint sucBN (b:BN) : BN :=
+  match b with
+      Z => U Z
+    | U x => D x (*S(U x) = S(2x + 1) = 2x + 2 = D x*)
+    | D x => U (sucBN x) (*S(D x)= S(2x + 2) = S(S(2x + 1)) = S(2x + 1) + 1  *)
+                 (* 2(S(x)) + 1 = 2(x+1) + 1 = (2x + 2) + 1 = S(2x + 1) + 1*)  
+  end.
+
+Lemma ZnotSucBN: forall (a:BN), Z <> sucBN a.
+Proof.
+intros.
+induction a.
+simpl.
+discriminate.
+simpl.
+discriminate.
+simpl.
+discriminate.
+Qed.
+
+Lemma notSucBN : forall (a:BN), a <> sucBN a.
+Proof.
+intros.
+destruct a.
+simpl; discriminate.
+simpl; discriminate.
+simpl; discriminate.
+Qed.
+
+
+Lemma bnNonZ: forall (b:BN), b <> Z -> exists (c:BN), b = U c \/ b = D c.
+Proof.
+intros.
+destruct b.
+intuition.
+exists b;left;trivial.
+exists b;right;trivial.
+Qed.
+
+
+(* Predeccesor function with error *)
+
+Parameter (undefBN: BN). (* we assume a constant undefBN:BN representing an undefined BN number *)
+
+Fixpoint predBN (b:BN): BN :=
+ match b with
+  Z => undefBN
+ |U Z => Z
+ |U x => D (predBN x)
+ |D x => U x
+ end.
+
+
+Lemma predBNUD: forall (a:BN), a <> Z -> predBN (U a) = D (predBN a).
+Proof.
+intros.
+destruct a.
+contradict H.
+trivial.
+reflexivity.
+reflexivity.
+Qed.
+
+Lemma U_not: forall (i j :BN), U i <> U j -> i <> j.
+Proof.
+intros.
+contradict H.
+apply f_equal.
+trivial.
+Qed.
+
+Lemma D_not: forall (i j :BN), D i <> D j -> i <> j.
+Proof.
+intros.
+contradict H.
+apply f_equal.
+trivial.
+Qed.
+
+
+(* This lemma corresponds to the equation 'pred ◦ sucBN = id' stated when defining the predBN operation in Section 2: "The numeric system BNat" of our paper. *)
+Lemma predsucBNinv: forall (a:BN), predBN (sucBN a) = a.
+Proof.
+intros.
+induction a.
+simpl.
+trivial.
+simpl.
+trivial.
+change (sucBN (D a)) with (U (sucBN a)).
+rewrite predBNUD.
+rewrite IHa.
+trivial.
+SearchPattern (_ <> _ -> _ <> _).
+apply not_eq_sym.
+apply ZnotSucBN.
+Qed.
+
+(* This lemma corresponds to the equation 'sucBN ◦ predBN = id' stated when defining the predBN operation in Section 2: "The numeric system BNat" of our paper. *)
+Lemma sucpredBNinv: forall (a:BN), a <> Z -> sucBN (predBN a) = a.
+Proof.
+intros.
+induction a.
+contradict H;trivial.
+assert ({a=Z}+{a<>Z}).
+apply dec_eq_BN.
+destruct H0.
+rewrite e.
+simpl.
+trivial.
+assert (predBN (U a) = D (predBN a)).
+apply predBNUD.
+trivial.
+rewrite H0.
+simpl.
+apply IHa in n.
+rewrite n.
+trivial.
+simpl.
+trivial.
+Qed.
+
+(* Conversion functions *)
+
+(* Recursive function that converts a number of type BN
+ to its respective natural number*)
+Fixpoint toN (b:BN) : nat :=
+  match b with 
+      Z => 0
+    | U x => 2*(toN x) + 1
+    | D x => 2*(toN x) + 2
+  end.
+
+
+(* Converts a nat value to BN value. 
+   Inverse of the above one.*)
+Fixpoint toBN (n: nat) : BN :=
+  match n with
+      0 => Z
+    | S x => sucBN (toBN x)
+  end.
+
+Eval compute in (toN (predBN (toBN 47))).
+
+Eval compute in toN(D(U(U Z))).
+
+Eval compute in toN(sucBN(D(U(U Z)))).
+
+Eval compute in toBN 16.
+
+(* This lemma corresponds to the equation 'toN ◦ sucBN = S ◦ toN' stated when defining the sucBN operation in Section 2: "The numeric system BNat" of our paper. *)
+Lemma toN_sucBN : forall (b : BN), toN(sucBN b) = S(toN b).
+Proof.
+induction b.
+simpl.
+trivial.
+
+simpl.
+ring.
+
+simpl.
+rewrite IHb.
+ring.
+Qed.
+
+Lemma sucBN_toBN : forall (n : nat), sucBN (toBN n) = toBN (S n).
+Proof.
+destruct n.
+simpl.
+trivial.
+simpl.
+trivial.
+Qed.
+
+Lemma inverse_op : forall (n : nat), toN(toBN n) = n.
+Proof.
+induction n.
+simpl.
+trivial.
+simpl.
+rewrite toN_sucBN.
+rewrite IHn.
+trivial.
+Qed.
+
+(* predBN is a function, not needed anymore 
+
+Lemma PredBNfunc: forall (a b: BN), a = b -> predBN a = predBN b.
+Proof.
+intros.
+rewrite H.
+reflexivity.
+Qed.
+*)
+
+
+Lemma SucBNinj: forall (a b : BN), sucBN a = sucBN b -> a = b.
+Proof.
+intro a.
+induction a.
+intro b.
+induction b.
+trivial.
+intros.
+simpl in H.
+contradict H.
+discriminate.
+intros.
+simpl in H.
+injection H.
+intros.
+contradict H0.
+apply ZnotSucBN.
+intros.
+simpl in H.
+destruct b.
+simpl in H.
+contradict H.
+discriminate.
+simpl in H.
+injection H.
+intros.
+rewrite H0.
+trivial.
+simpl in H.
+contradict H.
+discriminate.
+intros.
+destruct b.
+simpl in H.
+injection H;intros H0;contradict H0.
+apply not_eq_sym.
+apply ZnotSucBN.
+simpl in H.
+contradict H;discriminate.
+simpl in H.
+injection H.
+intros.
+apply IHa in H0.
+rewrite H0.
+trivial.
+Qed.
+
+
+
+(* Naive definition of sum of BN elements*)
+Fixpoint plusBN (a b : BN) : BN :=
+  match a,b with
+    | Z, b => b
+    | a, Z  => a
+    | U x, U y => D(plusBN x y)
+    | D x, U y => U(sucBN (plusBN x y))
+    | U x, D y => U(sucBN (plusBN x y))
+    | D x, D y => D(sucBN (plusBN x y))                
+  end.
+
+Notation "a ⊞ b" := (plusBN a b) (at level 60). (* We changed 70 to 60. Ask Favio if that is correct. In Latex, ⊞ is obtained by the command \boxplus importing amssymb package *)
+
+(* This lemma corresponds to the equation 'toN(plusBN a b) = toN a + toN b' stated when defining the plusBN operation in Section 2: "The numeric system BNat" of our paper. *)
+Lemma plusBN_toN : forall (a b : BN), toN(a ⊞ b) = toN a + toN b.
+Proof.
+intro.
+induction a.
+simpl.
+trivial.
+intros.
+destruct b.
+simpl.
+ring.
+simpl.
+rewrite IHa.
+ring.
+simpl.
+rewrite toN_sucBN.
+rewrite IHa.
+ring.
+destruct b.
+simpl.
+ring.
+simpl.
+rewrite toN_sucBN.
+rewrite IHa.
+ring.
+simpl.
+rewrite toN_sucBN.
+rewrite IHa.
+ring.
+Qed.
+
+
+(* plus_neutro needs to be added to the pdf with the list of lemmas*)
+Lemma plus_neutro: forall (b:BN), b ⊞ Z = b.
+Proof.
+intros.
+destruct b.
+simpl;trivial.
+simpl;trivial.
+simpl;trivial.
+Qed.
+
+Lemma plus_U: forall (b : BN),  sucBN (b ⊞ b) = U b.
+Proof.
+intros.
+induction b.
+simpl.
+trivial.
+simpl.
+rewrite IHb.
+trivial.
+simpl.
+rewrite IHb.
+simpl.
+trivial.
+Qed.
+
+(*Lemma plusSucb: forall (b:BN), (sucBN b) ⊞ b = *)
+
+Lemma plus_D: forall (b : BN),  sucBN (sucBN b ⊞ b) = D b.
+Proof.
+intros.
+induction b.
+simpl.
+trivial.
+simpl.
+rewrite plus_U.
+trivial.
+simpl.
+rewrite IHb.
+trivial.
+Qed.
+
+
+Lemma plusSuc : forall (b c: BN), sucBN (b ⊞ c) = sucBN b ⊞ c.
+Proof.
+intros b.
+induction b.
+
+simpl.
+destruct c.
+simpl.
+trivial.
+simpl.
+trivial.
+simpl.
+trivial.
+
+destruct c. 
+simpl.
+trivial.
+simpl.
+trivial.
+simpl.
+trivial.
+
+destruct c.
+simpl.
+trivial.
+simpl.
+rewrite IHb.
+trivial.
+simpl.
+rewrite IHb.
+trivial.
+Qed.
+
+
+Lemma plus_toBN:  forall (n m: nat), toBN(n + m) = toBN n ⊞ toBN m.
+Proof.
+intros.
+induction n.
+simpl.
+trivial.
+simpl.
+rewrite IHn.
+rewrite <- plusSuc.
+trivial.
+Qed.
+
+Lemma inverse_op_2 : forall (b:BN), toBN(toN b) = b.
+Proof.
+induction b.
+trivial.
+simpl.
+replace (toN b + (toN b + 0) + 1) with (S(toN b + toN b)).
+rewrite <- sucBN_toBN.
+rewrite plus_toBN.
+rewrite IHb.
+rewrite plus_U.
+trivial.
+omega.
+simpl.
+replace (toN b + (toN b + 0) + 2) with (S(S(toN b) + toN b)).
+rewrite <- sucBN_toBN.
+rewrite plus_toBN.
+rewrite <- sucBN_toBN.
+rewrite IHb.
+rewrite plus_D.
+trivial.
+omega.
+Qed.
+
+
+Lemma plusComm: forall (a b:BN), (a ⊞ b) = (b ⊞ a).
+Proof.
+intros a.
+induction a.
+simpl.
+destruct b.
+simpl;trivial.
+simpl;trivial.
+simpl;trivial.
+destruct b.
+simpl;trivial.
+simpl;rewrite IHa;trivial.
+simpl;rewrite IHa;trivial.
+destruct b.
+simpl; trivial.
+simpl;rewrite IHa;trivial.
+simpl;rewrite IHa;trivial.
+Qed.
+
+Lemma plusSuc_2 : forall (b c: BN), sucBN (b ⊞ c) = b ⊞ sucBN c.
+Proof.
+intros.
+assert ((b ⊞ c) = (c ⊞ b)). 
+apply plusComm.
+rewrite H.
+assert (sucBN (c ⊞ b) = ((sucBN c) ⊞ b)).
+apply plusSuc.
+rewrite H0.
+assert ((sucBN c) ⊞ b = (b ⊞ (sucBN c))).
+apply plusComm.
+rewrite H1.
+reflexivity.
+Qed.
+
+Lemma plusBN_Z_Z: forall (x y:BN), x ⊞ y = Z -> x = Z /\ y = Z.
+Proof.
+intros.
+destruct x.
+simpl in H.
+intuition.
+destruct y.
+simpl in H;inversion H.
+simpl in H;inversion H.
+simpl in H;inversion H.
+destruct y.
+simpl in H;inversion H.
+simpl in H;inversion H.
+simpl in H;inversion H.
+Qed.
+
+Lemma UDCase: forall (x:BN), x <> Z -> exists (b:BN), x = U b \/ x = D b.
+Proof.
+intros.
+destruct x.
+intuition.
+exists x;left;trivial.
+exists x;right;trivial.
+Qed.
+
+Lemma suc_not_zero: forall (x:BN), sucBN x <> Z.
+Proof.
+intros.
+destruct x.
+simpl;discriminate.
+simpl;discriminate.
+simpl;discriminate.
+Qed.
+
+Lemma addition_a_a : forall (a b:BN), a ⊞ a = b ⊞ b -> a = b.
+Proof.
+intros.
+apply (f_equal sucBN) in H.
+rewrite plus_U in H.
+rewrite plus_U in H.
+apply UInj.
+trivial.
+Qed.
+
+Lemma addition_SucBNa_a : forall (a b:BN), sucBN a ⊞ a = sucBN b ⊞ b -> a = b.
+Proof.
+intros.
+rewrite <- plusSuc in H.
+rewrite <- plusSuc in H.
+apply SucBNinj in H.
+apply (f_equal sucBN) in H.
+rewrite plus_U in H.
+rewrite plus_U in H.
+apply UInj.
+trivial.
+Qed.
+
+SearchPattern (_=_-> _ = _).
+
+(* Inductive definition of equality, not needed until now *)
+
+Inductive eqBN : BN -> BN -> Prop :=
+ | eqBNZ : eqBN Z Z
+ | eqBNU : forall (a b :BN), eqBN a b -> eqBN (U a) (U b)
+ | eqBND : forall (a b :BN), eqBN a b -> eqBN (D a) (D b).
+
+
+
+(*Order properties of the operations 2n+1, 2n+2 *)
+
+SearchPattern (_ + _ <=  _ + _ -> _ <= _).
+
+
+(*
+Lemma pord_1: forall (n m:nat), n < m + 1 -> n <= m.
+
+Lemma pord_2: forall (n m p:nat), p * n <=  p * m -> n <= m.
+
+Lemma pord_3: forall (n m p:nat), n + p <=  m + p -> n <= m.
+
+Lemma ord_1: forall (n m:nat), 2*n + 1 < 2*m + 2 <-> n <= m.
+
+Lemma ord_2: forall (n m:nat), 2*n + 2 < 2*m + 1 <-> n < m.
+*)
+
+(* Inductive defintion of order, according to the above properties 
+
+Inductive ltBN : BN -> BN -> Prop :=
+ | ltBNZU : forall (a:BN), ltBN Z (U a)
+ | ltBNZD : forall (a:BN), ltBN Z (D a)
+ | ltBNUU : forall (a b:BN), ltBN a b -> ltBN (U a) (U b)
+ | ltBNUDeq : forall (a :BN), ltBN (U a) (D a) 
+ | ltBNUD : forall (a b:BN), ltBN a b -> ltBN (U a) (D b) 
+ | ltBNDU : forall (a b :BN), ltBN a b -> ltBN (D a) (U b)
+ | ltBNDD : forall (a b :BN), ltBN a b -> ltBN (D a) (D b).
+
+
+*)

@@ -1,0 +1,155 @@
+%%%%% Temario Semantica y Verificacion 2011-1
+\documentclass[11 pt]{article}
+\usepackage{amssymb,amsmath}
+\usepackage{mathrsfs}
+\usepackage{anysize}
+\usepackage{verbatim}
+\usepackage{hyperref}
+\usepackage[latin1]{inputenc}
+\usepackage[spanish]{babel}
+
+
+\newcommand{\bc}{\begin{center}}
+\newcommand{\ec}{\end{center}}
+\newcommand{\be}{\begin{enumerate}}
+\newcommand{\ee}{\end{enumerate}}
+\newcommand{\bi}{\begin{itemize}}
+\newcommand{\ei}{\end{itemize}}
+\newcommand{\bd}{\begin{description}} 
+\newcommand{\ed}{\end{description}}
+\newcommand{\beq}{\begin{equation}}
+\newcommand{\eeq}{\end{equation}}
+\newcommand{\beqs}{\begin{equation*}}
+\newcommand{\eeqs}{\end{equation*}}
+\newcommand{\ba}{\begin{array}}
+\newcommand{\ea}{\end{array}}
+\newcommand{\bt}{\begin{tabular}}
+\newcommand{\et}{\end{tabular}}
+\newcommand{\bal}{\begin{align*}}
+\newcommand{\eal}{\end{align*}}
+
+\newcommand{\la}{\langle}
+\newcommand{\ra}{\rangle}
+
+\newcommand{\ex}{\exists}
+\newcommand{\fa}{\forall}
+\newcommand{\imp}{\rightarrow}
+\newcommand{\Imp}{\Rightarrow}
+\newcommand{\sii}{\leftrightarrow}
+\newcommand{\Sii}{\Leftrightarrow}
+\newcommand{\ora}{\overrightarrow}
+
+
+\title{Verificaci\'on Formal\\ Posgrado en Ciencia e Ingeniería de la Computación \\ UNAM}
+\author{Dr. Favio Ezequiel Miranda Perea \\ {\tt favio@ciencias.unam.mx} \\ Facultad de Ciencias UNAM}
+\date{\today}
+
+\begin{document}
+\maketitle
+% En este curso se estudiarán diferentes métodos para la especificación formal 
+% de la semántica de los lenguajes de programación. 
+% Se presentará la  semántica operacional como medio para formalizar 
+% la ejecución de un programa, la semántica axiomática que proporciona una base 
+% para los programas de verificación y la semántica denotacional 
+% que permite especificar formalmente qué calcula un programa.\\
+% Para lo anterior es necesario que el alumno tenga conocimientos 
+% s\'olidos en temas como conjuntos y relaciones, l\'ogica de proposiciones y de primer orden,
+% inducci\'on matem\'atica y estructural as\'i como en definir objetos 
+% recursivamente e inductivamente.\\
+% Tambi\'en es necesario que se hayan cursado y aprobado las materias de An\'alisis l\'ogico,
+% Teor\'ia de la computaci\'on y Lenguajes de programaci\'on.
+
+\section{Sinopsis}
+
+El análisis y la verificación de sistemas de software es un asunto importante, los errores en sistemas cuya seguridad es crítica pueden ser desastrosos y causar pérdidas financieras enormes o incluso muertes, por lo que los métodos para evitar estos escenarios son esenciales. Un proceso de pruebas unitarias preliminares puede identificar problemas, si se realiza de manera rigurosa, pero por lo general no es suficiente para garantizar un nivel satisfactorio de calidad. Por otra parte las teorías de especificación y verificación formal ofrecen metodologías que van desde la descripción de requerimientos, lo cual permite razonar rigurosamente sobre ellos, hasta sofisticadas técnicas interactivas para la verificación de software. El objetivo de este curso es proporcionar un panorama de algunas metodologías de verificación formal mediante el  uso del asistente de pruebas Coq para desarrollar tareas de verificación en estructuras de datos, lenguajes de programación y/o matemáticas dependiendo de los intereses particulares de la audiencia.
+
+\section{Prerrequisitos}
+
+El curso intentará ser autocontenido. Es deseable tener nociones de lógica computacional y programación funcional, aunque se revisarán a detalle los conceptos necesarios. 
+
+\section{Temario}
+\be
+\item Introducción: discusión y estudio de casos simples como son:
+  \begin{itemize}
+  \item Estructuras de datos: equivalencia de distintas representaciones de números naturales;
+    operaciones en listas finitas y árboles
+  \item Lenguajes de programación: equivalencia de semánticas, optimización en el proceso de evaluación.
+  \item Matemáticas formalizadas: razonamiento en teoría de órdenes, álgebras booleanas y/o grupos.
+  \item Asistentes de pruebas: ideas generales e introducción a {\sc Coq}.
+    \url{http://coq.inria.fr}
+  \end{itemize}
+  \newpage
+\item Nociones de programación funcional:
+  \begin{itemize}
+  \item Definición de estructuras de datos
+  \item Polimorfismo
+  \item Funciones de orden superior.
+  \end{itemize}
+\item Nociones de lógica para la práctica:
+  \begin{itemize}
+  \item Sintaxis  
+  \item Lógica ecuacional
+  \item Cálculo de secuentes
+  \item Tácticas y razonamiento hacia atras.  
+  \end{itemize}
+\item Estudio de casos particulares:
+  \begin{itemize}
+  \item Semánticas operacionales en lenguajes de programación.  
+  \item Árboles binarios de búsqueda.
+  \item Arreglos flexibles.
+  \item Latices y conexiones de Galois
+  \item Casos de interes particular desarrollados por los alumnos.  
+  \end{itemize}
+\ee
+
+
+\section{Logística}
+
+El curso utilizará la plataforma Google Classroom/Meet y será mayormente autogestivo. Las sesiones síncronas serán empleadas para discutir dudas particulares. Se proporcionarán materiales para cada uno de los temas (notas, presentaciones o cuadernos interactivos (jupyter notebooks)). 
+
+\section{Evaluaci\'on}
+La calificación final se obtendrá mediante la evaluación de las siguientes actividades.
+\bi
+\item Ejercicios: uno cada dos o tres semanas: 40\% 
+\item Proyecto de medio semestre con complejidad intermedia: 25\%
+\item Proyecto de final de semestre con complejidad alta: 35\%
+\ei
+Los proyectos son de libre elección y se califican en tres aspectos: el documento asociado; la exposición; y el contenido y calidad del desarrollo en el asistente de pruebas. Se sugiere elegir en cada caso un tema del particular interés de cada alumno, quizás relacionado con su trabajo de grado.
+
+
+\section{Bibliograf\'ia}
+
+La bibliografía es sólo de apoyo y se actualizará con artículos particulares durante el avance del curso.
+
+\begin{itemize}
+\item Yves Bertot, Pierre Casteran. Interactive Theorem Proving and Program Development Coq'Art: The Calculus of Inductive Constructions. Texts in Theoretical Computer Science. An EATCS Series. Springer 2004.
+\item Adam Chlipala. Certified Programming with Dependent Types.\\
+  \url{http://adam.chlipala.net/cpdt/}
+\item Assia Mahboubi, Enrico Tassi. Mathematical Components. \url{https://math-comp.github.io/mcb/}
+  \item Software Foundations book series. \url{https://softwarefoundations.cis.upenn.edu/}
+\end{itemize}
+
+% \'Esta es la bibliograf\'ia principal para el curso:
+% \bi
+% \item Nielson H. R., Nielson F., 
+% \emph{Semantics with Applications: An Appetizer}, Springer, 2007.
+
+% \item Winskel G., \emph{The Formal Semantics of Programming Languages},
+%  The MIT Press, 1997.
+% \ei
+
+% Adem\'as de algunos otros libros complementarios y de consulta:
+% \bi
+% \item Tennent, R. D., \emph{Semantics of Programming Languages}, 
+% Prentice-Hall, 1991.
+
+% \item Gunter, C., \emph{ Semantics of Programming Languages: structures and techniques},
+% MIT Press, 1992.
+
+% \item Hennessy, M., \emph{ The Semantics of Programming Languages: An Elementary Introduction},
+% J. Wiley and sons Inc., 1990.
+ 
+% \ei
+
+
+\end{document}

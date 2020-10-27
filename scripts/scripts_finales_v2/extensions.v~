@@ -1,0 +1,377 @@
+Load accupd.
+
+Fixpoint le (x:A) (t:BTree) : BTree :=
+ match t with
+    E => N x E E
+  | N y s t => N x (le y t) s
+ end.
+
+Fixpoint he (x:A) (t:BTree) : BTree  :=
+ match t with
+  |E => N x E E
+  |N y l r => match bsize t with
+               |U b => N y (he x l) r
+               |D b => N y l (he x r)
+               |  Z => undefBTree 
+              end
+ end.
+
+(*
+Lemma le_nonE: forall (a x:A) (t1 t2:BTree), le x (N a t1 t2) =  N x (le a t2) t1.
+*)
+
+
+Lemma bsize_le: forall (t:BTree) (x:A), bsize (le x t) = sucBN (bsize t).
+Proof.
+(*intro.
+induction t.
+intro.
+simpl.
+trivial.
+intro.
+simpl.
+rewrite IHt2.
+rewrite <- plusSuc.
+rewrite plusComm.
+trivial.
+*)
+(* Proof by induction on bbal t *)
+intro.
+assert (HBal := allBal t).
+induction HBal.
+simpl.
+trivial.
+intro.
+simpl.
+rewrite IHHBal2.
+rewrite <- plusSuc.
+rewrite plusComm.
+trivial.
+Qed.
+
+
+(*Lemma bal_le: forall (t:BTree) (x:A), bbal t -> bbal (le x t).*)
+Lemma bal_le: forall (t:BTree), bbal t -> forall (x:A), bbal (le x t).
+Proof.
+(*
+intros t HtBal.
+induction HtBal.
+simpl.
+apply bbal_leaf.
+intros.
+simpl.
+constructor.
+apply IHHtBal2.
+trivial.
+rewrite bsize_le.
+trivial.
+rewrite bsize_le.
+apply lteqBN_suc.
+trivial.
+Qed.
+*)
+(* Proof by induction on t, a little longer *)
+intro t.
+induction t.
+intros.
+simpl.
+apply bbal_leaf.
+intros.
+inversion H.
+simpl.
+constructor.
+apply IHt2.
+trivial.
+trivial.
+rewrite bsize_le.
+trivial.
+rewrite bsize_le.
+apply lteqBN_suc.
+trivial.
+Qed.
+
+
+
+Lemma le_head: forall (t: BTree) (x:A),  lookup_bn (le x t) Z = x.
+Proof.
+intros.
+induction t.
+simpl.
+trivial.
+simpl.
+trivial.
+Qed.
+
+(*
+Lemma ins_idx: forall (t:BTree nat),  bbal t -> forall (j:BN), lteqBN Z j -> ltBN j (bsize t) -> forall (x:nat), bacc (ins x t) (sucBN j) = bacc t j.*)
+
+Lemma le_idx: forall (t:BTree),  bbal t -> 
+forall (j:BN), j <BN (bsize t) -> forall (x:A), lookup_bn (le x t) (sucBN j) = lookup_bn t j.
+Proof.
+intros t B.
+induction B.
+intros.
+simpl in H.
+inversion H.
+intros.
+clear IHB1.
+destruct j.
+simpl.
+apply le_head.
+simpl.
+trivial.
+simpl.
+apply IHB2.
+destruct (bbal_size_r a s t).
+rewrite H2 in H1.
+inversion H1.
+trivial.
+rewrite H2 in H1.
+inversion H1.
+trivial.
+Qed.
+
+
+
+(*
+induction t.
+intros.
+simpl in H.
+inversion H.
+inversion B.
+clear H H0 H1.
+clear IHt1.
+intros.
+destruct j.
+simpl.
+apply le_head.
+simpl.
+trivial.
+simpl.
+apply IHt2.
+trivial.
+destruct (bbal_size_r a t1 t2).
+rewrite H0 in H.
+inversion H.
+trivial.
+rewrite H0 in H.
+inversion H.
+trivial.
+Abort.
+
+Qed.
+
+
+
+intros.
+clear IHt1.
+destruct j.
+simpl.
+apply le_head.
+simpl.
+reflexivity.
+destruct (bbal_size_r a t1 t2).
+rewrite H0 in H.
+inversion H.
+simpl.
+apply IHt2.
+inversion B.
+clear H4 H5 H6.
+trivial.
+trivial.
+simpl.
+apply IHt2.
+inversion B.
+clear H1 H2 H3.
+trivial.
+rewrite H0 in H.
+inversion H.
+trivial.
+Qed.
+
+*)
+
+
+
+
+
+
+
+
+
+
+(*High Extension*)
+
+Lemma bsize_he: forall (t:BTree) (x:A), bsize (he x t) = sucBN (bsize t).
+Proof.
+intro.
+induction t.
+intro.
+simpl.
+trivial.
+intros.
+destruct (bbal_size_r a t1 t2).
+simpl.
+simpl in H.
+rewrite H.
+simpl.
+rewrite IHt1.
+rewrite <- plusSuc.
+rewrite H.
+simpl.
+reflexivity.
+simpl in H.
+simpl.
+rewrite H.
+simpl.
+rewrite IHt2.
+rewrite <- plusSuc_2.
+rewrite H.
+simpl.
+trivial.
+Qed.
+
+(*Lemma bal_he: forall (t:BTree) (x:A), bbal t -> bbal (he x t).*)
+Lemma bal_he: forall (t:BTree), bbal t -> forall (x:A), bbal (he x t).
+Proof.
+intros t Ht.
+induction t.
+simpl.
+apply bbal_leaf.
+intros.
+inversion Ht.
+clear H H0 H1.
+destruct (bbal_size_r a t1 t2).
+assert (Hsize:= size_caseU a t1 t2 (bsize t2) H).
+simpl.
+replace (sucBN ((bsize t1) ⊞ (bsize t2))) with (U (bsize t2)).
+constructor.
+apply IHt1.
+trivial.
+trivial.
+rewrite bsize_he.
+rewrite Hsize.
+apply lteqs.
+rewrite bsize_he.
+rewrite Hsize.
+apply lteqBN_refl.
+assert (Hsize:= size_caseD a t1 t2 (bsize t2) H).
+simpl.
+replace (sucBN ((bsize t1) ⊞ (bsize t2))) with (D (bsize t2)).
+constructor.
+trivial.
+apply IHt2.
+trivial.
+rewrite bsize_he.
+rewrite Hsize.
+apply lteqBN_refl.
+rewrite bsize_he.
+rewrite Hsize.
+apply lteqs.
+Qed.
+
+(* Proof od the same lemma by induction on bbal
+intros t HtBal.
+induction HtBal.
+simpl.
+apply bbal_leaf.
+intros.
+simpl.
+destruct (bbal_size_r a s t).
+assert (Hsize:= size_caseU a s t (bsize t) H1).
+replace (sucBN ((bsize s) ⊞ (bsize t))) with (U (bsize t)).
+constructor.
+apply IHHtBal1.
+trivial.
+rewrite bsize_he.
+rewrite <- Hsize.
+rewrite <- Hsize in H0.
+trivial.
+rewrite bsize_he.
+apply lteqBN_suc.
+rewrite Hsize.
+apply lteqBN_refl. (*cambia sym a refl en orderbn.v*)
+assert (Hsize:= size_caseD a s t (bsize t) H1).
+replace (sucBN ((bsize s) ⊞ (bsize t))) with (D (bsize t)).
+constructor.
+trivial.
+apply IHHtBal2.
+rewrite bsize_he.
+rewrite Hsize.
+apply lteqBN_refl.
+rewrite bsize_he.
+rewrite Hsize.
+apply lteqs.
+Qed.
+*)
+
+
+Lemma he_last: forall (t: BTree) (x:A),  lookup_bn (he x t) (bsize t) = x.
+Proof.
+intros.
+assert (B:=allBal t).
+induction B.
+simpl.
+reflexivity.
+destruct (bbal_size_r a s t).
+simpl.
+replace (sucBN ((bsize s) ⊞ (bsize t))) with (U (bsize t)).
+simpl.
+assert (Hsize:= size_caseU a s t (bsize t) H1).
+rewrite <- Hsize.
+trivial.
+assert (Hsize:= size_caseD a s t (bsize t) H1).
+rewrite H1.
+simpl.
+replace (sucBN ((bsize s) ⊞ (bsize t))) with (D (bsize t)).
+simpl.
+trivial.
+Qed.
+
+
+
+Lemma he_idx: forall (t:BTree),  bbal t -> 
+forall (j:BN), j <BN (bsize t) -> forall (x:A), lookup_bn (he x t) j = lookup_bn t j.
+Proof.
+intros t B.
+induction B.
+intros.
+simpl in H.
+inversion H.
+intros.
+destruct (bbal_size_r a s t).
+destruct j.
+simpl.
+replace (sucBN ((bsize s) ⊞ (bsize t))) with (U (bsize t)).
+simpl.
+reflexivity.
+simpl.
+replace (sucBN ((bsize s) ⊞ (bsize t))) with (U (bsize t)).
+simpl.
+apply IHB1.
+rewrite H2 in H1.
+assert (Hsize:= size_caseU a s t (bsize t) H2).
+rewrite Hsize.
+inversion H1.
+trivial.
+simpl.
+replace (sucBN ((bsize s) ⊞ (bsize t))) with (U (bsize t)).
+simpl.
+trivial.
+destruct j.
+simpl.
+replace (sucBN ((bsize s) ⊞ (bsize t))) with (D (bsize t)).
+simpl.
+reflexivity.
+simpl.
+replace (sucBN ((bsize s) ⊞ (bsize t))) with (D (bsize t)).
+simpl.
+trivial.
+simpl.
+replace (sucBN ((bsize s) ⊞ (bsize t))) with (D (bsize t)).
+simpl.
+apply IHB2.
+rewrite H2 in H1.
+inversion H1.
+trivial.
+Qed.

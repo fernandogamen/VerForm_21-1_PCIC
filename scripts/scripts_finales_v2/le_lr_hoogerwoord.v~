@@ -1,0 +1,21 @@
+Load braunT_nat.
+
+(* Definition of the low extension as proposed by Hogerwword *)
+Fixpoint le_hgrwd (b:A) (tree:BTree) : BTree :=
+  match tree with 
+      E => N b E E
+     |N a s t => N b (le_hgrwd a t) s
+  end.
+
+Lemma equiv_le : forall (t:BTree) (b:A), bal t -> bbal t -> le b t = le_hgrwd b t.
+Proof.
+intro.
+induction t.
+(* t = E *)
+reflexivity.
+(* t = N a t1 t2 *)
+intros.
+simpl.
+intuition.
+rewrite IHt2.
+

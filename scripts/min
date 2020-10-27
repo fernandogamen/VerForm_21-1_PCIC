@@ -1,0 +1,84 @@
+Check min.
+
+Lemma min_eq: forall n, min n n = n.
+Proof.
+induction n.
+- reflexivity.
+- simpl.
+  rewrite IHn.
+  reflexivity.
+Qed.
+
+Lemma min_SS: forall n m, min (S n) (S m) = S (min n m).
+Proof.
+intro.
+induction n.
+- intro.
+  simpl.
+  reflexivity.
+- intro.
+  destruct m.
+  + simpl.
+    reflexivity.
+  + simpl.
+    reflexivity.       
+Qed.
+
+
+Lemma min_s: forall n m, n <2 m -> min (S n) m = S( min n m).
+Proof.
+intros.
+induction H.
+- simpl.
+  reflexivity.
+- destruct m.
+  + inversion H.
+  + change (Nat.min (S (S n)) (S (S m))) with 
+            (S (Nat.min (S n) (S m))).
+    rewrite IHord2.
+    rewrite min_SS.
+    reflexivity.
+Qed.    
+      
+
+
+
+Proposition min_lt_l: forall n m, n <=1 m -> min n m = n.
+Proof.
+intros.
+induction H.
+- apply min_eq.
+- destruct n.
+  + reflexivity.
+  + simpl.
+    rewrite <- min_s.
+    rewrite IHord1.
+    reflexivity.
+    admit.
+Admitted.        
+
+
+Lemma min_comm: forall n m, min n m = min m n.
+Proof.
+intro.
+induction n.
+- simpl.
+  destruct m.
+  + reflexivity.
+  + reflexivity.
+- intros.
+  destruct m.
+  + reflexivity.
+  + simpl.
+    rewrite IHn.
+    reflexivity.
+Qed.      
+  
+
+Proposition min_lt_r: forall n m, m <=1 n -> min n m = m.
+Proof.
+intros.
+rewrite min_comm.
+apply min_lt_l.
+assumption.
+Qed.

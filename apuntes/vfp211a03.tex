@@ -1,0 +1,216 @@
+\documentclass[11pt,letterpaper]{article}
+%\usepackage{packageslc}
+%\usepackage{optionslc}
+\usepackage{amsthm,amssymb}
+\usepackage[margin=1.8cm,includefoot]{geometry}
+% \usepackage{lstcoq}
+%\lstset{language=Haskell}
+%\input{macroslc}
+%\newcommand{\scd}[2]{#1 \vdash #2}
+\usepackage[spanish]{babel}
+\newtheorem{theorem}{Theorem}
+
+\title{Verificaci\'on Formal PCIC 2021-2 \\
+Un pequeño ejemplo de distintos estilos de prueba.
+}
+% \title{Lógica Computacional 2020-2, nota de clase 15 \\
+% Un cálculo de secuentes
+% }
+\author{Favio Ezequiel Miranda Perea \and %Araceli Liliana Reyes Cabello\and
+Lourdes Del Carmen Gonz\'alez Huesca}  %\and Pilar Selene Linares Arévalo}
+\date{\today}
+
+\begin{document}
+\maketitle
+El texto está en inglés pues corresponde a un fragmento de un artículo sometido a publicación.
+
+\begin{theorem}\label{thm:nn01v0}
+  There does not exist a natural number $n$ such that $0<n<1$.
+\end{theorem}
+\begin{proof}
+This is an immediate consequence of the well-ordering principle.
+\end{proof}
+
+The above can be considered as a traditional ``proof'' completely correct and 
+acceptable from an advanced point of view. However, it does not provide enough 
+elements to be mechanized or written as an actual rigorous proof.
+
+Let us next present a textbook traditional proof.
+
+\begin{theorem}[A textbook proof]\label{thm:nn01v1}
+  There does not exist a natural number $n$ such that $0<n<1$.
+\end{theorem}
+\begin{proof}
+ Let $S=\{n\in\mathbb{N}\mid 0<n<1\}$ and assume $S\neq\varnothing$. Take
+ $r\in S$ to be the least element in $S$. Therefore $0<r<1$ which implies
+ $0<r^2<r<1$. Thus $r^2\in S$, which contradicts the minimality of
+ $r$. Therefore $S$ must be empty.
+\end{proof}
+
+This traditional textbook proof, though rigorous, is not suitable to be 
+directly formalized in a Proof Assitant (PA), for apart of the implicit background knowledge 
+required, it does not make explicit a train of thought useful to guide 
+the mechanization. Our experiment consisted of mechanizing the above theorem 
+according to different common strategies of reasoning. First we use forward 
+reasoning, which means going exclusively from the hypotheses towards the 
+conclusion.
+
+\begin{theorem}[Forward proof]\label{thm:nn01vf}
+  There does not exist a natural number $n$ such that $0<n<1$.
+\end{theorem}
+\begin{proof}
+  We assume that $\exists n\in\mathbb{N}$ such that $0<n<1$.
+  The well-ordering principle allow us to take a minimal $r\in\mathbb{N}$ such 
+  that $0<r<1$. Since $0<r$ we get $0=0\cdot r< r\cdot r$ and
+ as $r<1$ we obtain $r\cdot r<1\cdot r = r$. Thus $0<r^2<r$. From this, as
+ $r<1$, we get $0<r^2<1$. The minimality of $r$
+ implies now that $r\leq r^2$, which leads us to $r^2\not <r$, yielding a 
+contradiction.
+\end{proof}
+
+Let us observe that in this proof there is no reference to the set~$S$ used in 
+the proof of Theorem~\ref{thm:nn01v1}, for its use would complicate the 
+mechanization in a unnecesary way. 
+The proof looks similar to the previous one but it has an explicit forward 
+structure and it provides us with more explanations. The proof script was 
+constructed having Theorem~\ref{thm:nn01v1} as a guideline using forward 
+reasoning exclusively. This means we avoid the native backward mechanisms of 
+the PA, which resulted in an awkward computer-assisted proof.
+
+Next we explore the opposite approach by constructing a proof using 
+exclusively the backward strategy. The result is Theorem~\ref{thm:nn01vb} and 
+was obtained discarding the previous proofs as a guideline, using only the same 
+auxiliary results, namely the transitivity of the order relation, 
+its compatibility with respect to the product and the relationship between the 
+order relations % (lemmas~\ref{lem:opcomp},~\ref{lem:otrans} and~\ref{lem:nltleq} 
+% below)
+.
+Since the example is quite elementary, this proof was constructed directly in 
+the PA without resorting to pencil and paper.
+
+
+\begin{theorem}[Backward proof]\label{thm:nn01vb}
+  There does not exist a natural number $n$ such that $0<n<1$.
+% Let $S=\{n\in\mathbb{N}\mid 0<n<1\}$. Then $S=\varnothing$  
+\end{theorem}
+\begin{proof}
+  We assume that $\exists n\in\mathbb{N}$ such that $0<n<1$. Thus, the 
+well-ordering principle allow us to take a minimal $r\in\mathbb{N}$ such that 
+$0<r<1$.
+We will arrive to a contradiction by showing that $r\cdot r \not < r$ and
+  $r\cdot r < r$. To show $r\cdot r \not < r$ 
+  it suffices to show $r\leq r\cdot r$. 
+  To prove this, we use the minimality of $r$, and are required to show 
+  $0<r\cdot r < 1$. 
+  We separately prove the two inequalities: 
+  the first one ($0<r\cdot r$) is a consequence of $0\cdot r< r\cdot r$, 
+  which is solved by the known fact $0<r$. 
+  For the second inequality it is enough to prove $r\cdot r < r < 1$. 
+  Again, it suffices to prove the two inequalities separately. 
+  The first one is a consequence of $r\cdot r < 1\cdot r$, which in turn is 
+  entailed by the known fact $0<r<1$. 
+  The second inequality $r<1$ is already known. 
+  This finishes the proof of $r\cdot r\not < r$. 
+  The remaining inequality $r\cdot r < r$ was already proven within the
+  previous case. 
+ \end{proof}
+
+% en el script:
+% bajo nivel: la llamada al principio del buen orden, la definicion de 
+% negacion, la definicion de S como un predicado, la necesidad de probar False.
+% el manejo de las desigualdades por separado, es decir ,a<b y b< c y no a<b<c
+% la necesidad de probar lo mismo dos veces 
+
+Theorem~\ref{thm:nn01vb} presents a verbose proof which, in comparison with the 
+usual mathematical proof-writing style, has a cumbersome structure due to the 
+exclusive use of backward reasoning. On the other hand, its mechanization is 
+concise and more readable than the previous one.
+% \nota{QUITAR: due to the balanced use of the PA facilities.} 
+Let us also observe that the mechanization necessarily contains some mandatory 
+low-level parts, like the need to repeat the proof (that is, the sequence of 
+tactics) corresponding to show $r\cdot r < r$, which is undesirable from a 
+programmer point of view. This and some other low-level issues can be 
+partially prevented~\footnote{For instance by first proving 
+$r\cdot r < r$ as an auxiliary lemma or at the beginning of the proof as in
+Theorem~\ref{thm:nn01vbi}.}
+but others like the explicit term rewriting of term~$r$ with term $1\cdot r$ 
+are unavoidable. 
+
+% Although both theorems~\ref{thm:nn01vf} and~\ref{thm:nn01vb} have mechanized 
+% counterparts neither is a good candidate for  what we mean to be a transitional 
+% proof. 
+% In the first case the mechanized version is awkward, for the forward strategy 
+% obliges us to use the same kind of tactic, namely {\tt assert}, all the 
+% time. In the second case the traditional proof contains an informal detail in 
+% order to avoid the repetition of a subproof, namely that of $r\cdot r<r$. 
+% This part does not have an adequate counterpart in the succint mechanized 
+% proof, 
+% for instead of appealing to a result already proven in a previous subcase, we
+% have to repeat the whole command sequence or to 
+% invoke an auxiliary lemma twice.
+% % \notita{The proof duplication could be replaced by an auxiliary lemma.}
+% We also observe that in this case the traditional proof is cumbersome in 
+% comparison with that in theorem~\ref{thm:nn01vf}.
+% % In the second case the opposite happens, the mechanized proof is succint while 
+% % its traditional counterpart results cumbersome.
+
+
+Consider now the following proof, which was obtained by using 
+Theorem~\ref{thm:nn01v1} as a guideline but also mantaining a full interaction 
+with the PA.
+
+
+\begin{theorem}[Bidirectional proof]\label{thm:nn01vbi}
+  There does not exist a natural number $n$ such that $0<n<1$.
+% Let $S=\{n\in\mathbb{N}\mid 0<n<1\}$. Then $S=\varnothing$  
+\end{theorem}
+\begin{proof}
+  We assume that $\exists n\in\mathbb{N}$ such that $0<n<1$ and arrive to a 
+contradiction.
+  The well-ordering principle allow us to take a minimal $r\in\mathbb{N}$ such 
+  that $0<r<1$. We first claim that $r\cdot r<r$. 
+  Since  $0<r<1$, we get $r\cdot r<1\cdot r$, that is $r\cdot r<r$.
+  Next, we explicitly contradict the previous claim by showing 
+  $r\cdot r\not < r$. 
+  To this purpose it suffices to show $r\leq r\cdot r$. From $0<r$ we get 
+  $0=0\cdot r<r\cdot r$. Further, $r\cdot r<r$ and $r<1$ yield $r\cdot r<1$. 
+  By the minimality of $r$, to show the required $r\leq r\cdot r$, it suffices 
+  to show $0<r\cdot r<1$, but this has already been proven. 
+  % To do so, we prove 
+  % $0<r\cdot r<1$ and apply the minimality of $r$. 
+  % Since $0<r$, then $0=0\cdot r<r\cdot r$. 
+  % On the other hand we have $r\cdot r < r < 1$, which yields $r\cdot r < 1$.
+\end{proof}
+
+
+As expected this proof has the best of both worlds, namely a well organized 
+text together with a concise proof script. This structure was obtained by a 
+parallel construction of both proofs, one that adequately combines forward and 
+backward reasoning. The full interaction with the PA helped to enhance the 
+argumentation, in particular this proof lacks repeated subproofs, 
+like the one for $r\cdot r<r$ in the proof of Theorem~\ref{thm:nn01vb}.
+
+
+Finally, let us present a proof gained directly from a proof script whose motivation is to 
+show a simpler mechanization than those already presented. One that does not 
+use library theorems and which is certainly more succint than the previous ones 
+Its simplicity lies on the use of the definitions of $<$ and $\leq$ 
+given in the core library (automatically loaded when starting Coq). 
+
+
+\begin{theorem}\label{thm:nn01vauto}
+  There does not exist a natural number $n$ such that $0<n<1$.
+\end{theorem}
+\begin{proof}
+  Assuming that there is a natural $n$ such that $0<n<1$ we will arrive to a contradiction. We have
+  $0<n$ and $n<1$. According to the definition of $n<1$ we have $S\,n\leq 1$, which by definition yields two cases
+  \begin{itemize}
+  \item $S\,n=1$. Then we have $n=0$ and therefore $0<1$ and $0<0$, which yields the contradiction.
+  \item $S\,n\leq 0$. This a direct contradiction.
+  \end{itemize}
+\end{proof}
+
+
+
+
+\end{document}

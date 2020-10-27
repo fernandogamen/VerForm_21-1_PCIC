@@ -1,0 +1,245 @@
+Load braunT_nat.
+
+Lemma equiv_he : forall (t:BTree) (b:A), bal t -> bbal t -> he b t = he_hgrwd b t.
+Proof.
+intro.
+induction t.
+(* t = E *)
+reflexivity.
+(* t = N a t1 t2 *)
+intros.
+(* Cases on modulo (size (N a t1 t2) - 1) 2 *)
+destruct (mod_0_1 (size (N a t1 t2) - 1)).
+(* Case 1: (size (N a t1 t2) - 1) mod 2 = 0 *)
+(* Since (size (N a t1 t2) - 1) mod 2 = 0, we now prove that
+   size (N a t1 t2) mod 2 = 1 *)
+assert (modulo (size (N a t1 t2)) 2 = 1).
+apply even_odd_even in H1.
+simpl (S (size (N a t1 t2) - 1)) in H1.
+replace (size (N a t1 t2)) with (S (size t1 + size t2 - 0)).
+trivial.
+simpl.
+lia.
+(* Since size (N a t1 t2) mod 2 = 1, we now prove
+   (exists (b:BN), bsize (N a t1 t2) = U b) *)
+apply parity_nat_bn in H2.
+destruct H2.
+replace (he b (N a t1 t2)) with (N a (he b t1) t2).
+replace (he_hgrwd b (N a t1 t2)) with (N a (he_hgrwd b t1) t2).
+rewrite IHt1.
+trivial.
+inversion H.
+trivial.
+inversion H0.
+trivial.
+(* Since we use the tactic replace *)
+(* we need to prove that N a (he_hgrwd b t1) t2 = he_hgrwd b (N a t1 t2) *)
+simpl in H1.
+simpl.
+rewrite H1.
+trivial.
+(* Since we use the tactic replace *)
+(* we need to prove that N a (he b t1) t2 = he b (N a t1 t2) *)
+simpl in H2.
+simpl.
+rewrite H2.
+trivial.
+(* We have two pending goals because we used lemma parity_nat_bn *)
+trivial.
+discriminate.
+(* Case 2: (size (N a t1 t2) - 1) mod 2 = 1 *)
+(* Since (size (N a t1 t2) - 1) mod 2 = 1, we now prove that
+   size (N a t1 t2) mod 2 = 0 *)
+assert (modulo (size (N a t1 t2)) 2 = 0).
+apply even_odd_even in H1.
+simpl (S (size (N a t1 t2) - 1)) in H1.
+replace (size (N a t1 t2)) with (S (size t1 + size t2 - 0)).
+trivial.
+simpl.
+lia.
+(* Since size (N a t1 t2) mod 2 = 0, we now prove
+   (exists (b:BN), bsize (N a t1 t2) = D b) *)
+apply parity_nat_bn in H2.
+destruct H2.
+replace (he b (N a t1 t2)) with (N a t1 (he b t2)).
+replace (he_hgrwd b (N a t1 t2)) with (N a t1 (he_hgrwd b t2)).
+rewrite IHt2.
+trivial.
+inversion H.
+trivial.
+inversion H0.
+trivial.
+(* Since we use the tactic replace *)
+(* we need to prove that N a t1 (he_hgrwd b t2) = he_hgrwd b (N a t1 t2) *)
+simpl in H1.
+simpl.
+rewrite H1.
+simpl (if beq_nat 1 0 then N a (he_hgrwd b t1) t2 else N a t1 (he_hgrwd b t2)).
+trivial.
+(* Since we use the tactic replace *)
+(* we need to prove that N a t1 (he b t2) = he b (N a t1 t2) *)
+simpl in H2.
+simpl.
+rewrite H2.
+trivial.
+(* We have two pending goals because we used lemma parity_nat_bn *)
+trivial.
+discriminate.
+Qed.
+
+
+Lemma equiv_hr : forall (t:BTree), bal t -> bbal t -> t<>E -> hr t = hr_hgrwd t.
+Proof.
+intro.
+induction t.
+(* t=E *)
+intuition.
+(* t = N a t1 t2 *)
+intros.
+destruct (eq_btree_dec t1 E).
+(* t1 = E *)
+assert (f:=e).
+apply (leftE_leaf_nat a t1 t2) in e.
+rewrite e.
+rewrite f.
+reflexivity.
+trivial.
+(* t1 <> E *)
+destruct (eq_btree_dec t2 E).
+(* t2 = E *)
+assert (f:=e).
+apply (rightE_nat a t1 t2) in e.
+destruct e.
+intuition.
+destruct H2.
+rewrite H2.
+rewrite f.
+reflexivity.
+trivial.
+(* Cases on modulo (size (N a t1 t2) - 2) 2 *)
+destruct (mod_0_1 (size (N a t1 t2) - 2)).
+(* Case 1: (size (N a t1 t2) - 2) mod 2 = 0 *)
+(* Since (size (N a t1 t2) - 2) mod 2 = 0, we now prove that
+   size (N a t1 t2) mod 2 = 0 *)
+assert (modulo (size (N a t1 t2)) 2 = 0).
+apply suc_suc in H2.
+replace (size (N a t1 t2)) with  (S (S (size (N a t1 t2) - 2))).
+trivial.
+simpl.
+rewrite (Nat.sub_1_r (size t1 + size t2)).
+rewrite (Nat.succ_pred (size t1 + size t2)).
+trivial.
+apply size_non0.
+trivial.
+trivial.
+(* Since size (N a t1 t2) mod 2 = 0, we now prove
+   (exists (b:BN), bsize (N a t1 t2) = D b) *)
+apply parity_nat_bn in H3.
+destruct H3.
+replace (hr (N a t1 t2)) with (N a (hr t1) t2).
+replace (hr_hgrwd (N a t1 t2)) with (N a (hr_hgrwd t1) t2).
+rewrite IHt1.
+trivial.
+inversion H.
+trivial.
+inversion H0.
+trivial.
+trivial.
+(* Since we use the tactic replace *)
+(* we need to prove that N a (hr_hgrwd t1) t2 = hr_hgrwd (N a t1 t2) *)
+apply nonE_tree in n.
+destruct n.
+destruct H4.
+destruct H4.
+simpl in H2.
+simpl.
+rewrite H4.
+rewrite H4 in H2.
+rewrite H2.
+reflexivity.
+(* Since we use the tactic replace *)
+(* we need to prove that N a (hr t1) t2 = hr (N a t1 t2) *)
+destruct (bnNonZ (bsize t1)).
+apply nonE_tree in n.
+destruct n.
+destruct H4.
+destruct H4.
+rewrite H4.
+assert (Z <> bsize (N x0 x1 x2)).
+simpl.
+apply ZnotSucBN.
+intuition.
+simpl in H3.
+simpl.
+rewrite H3.
+destruct H4.
+rewrite H4.
+trivial.
+rewrite H4.
+trivial.
+(* We have two pending goals because we used lemma parity_nat_bn *)
+trivial.
+discriminate.
+(* Case 2: (size (N a t1 t2) - 2) mod 2 = 1 *)
+(* Since (size (N a t1 t2) - 2) mod 2 = 1, we now prove that
+   size (N a t1 t2) mod 2 = 1 *)
+assert (modulo (size (N a t1 t2)) 2 = 1).
+apply suc_suc in H2.
+replace (size (N a t1 t2)) with  (S (S (size (N a t1 t2) - 2))).
+trivial.
+simpl.
+rewrite (Nat.sub_1_r (size t1 + size t2)).
+rewrite (Nat.succ_pred (size t1 + size t2)).
+trivial.
+apply size_non0.
+trivial.
+trivial.
+(* Since size (N a t1 t2) mod 2 = 1, we now prove
+   (exists (b:BN), bsize (N a t1 t2) = U b) *)
+apply parity_nat_bn in H3.
+destruct H3.
+replace (hr (N a t1 t2)) with (N a t1 (hr t2)).
+replace (hr_hgrwd (N a t1 t2)) with (N a t1 (hr_hgrwd t2)).
+rewrite IHt2.
+trivial.
+inversion H.
+trivial.
+inversion H0.
+trivial.
+trivial.
+(* Since we use the tactic replace *)
+(* we need to prove that N a t1 (hr_hgrwd t2) = hr_hgrwd (N a t1 t2) *)
+apply nonE_tree in n.
+destruct n.
+destruct H4.
+destruct H4.
+simpl in H2.
+simpl.
+rewrite H4.
+rewrite H4 in H2.
+rewrite H2.
+reflexivity.
+(* Since we use the tactic replace *)
+(* we need to prove that  N a t1 (hr t2) = hr (N a t1 t2) *)
+destruct (bnNonZ (bsize t1)).
+apply nonE_tree in n.
+destruct n.
+destruct H4.
+destruct H4.
+rewrite H4.
+assert (Z <> bsize (N x0 x1 x2)).
+simpl.
+apply ZnotSucBN.
+intuition.
+simpl in H3.
+simpl.
+rewrite H3.
+destruct H4.
+rewrite H4.
+trivial.
+rewrite H4.
+trivial.
+(* We have two pending goals because we used lemma parity_nat_bn *)
+trivial.
+discriminate.
+Qed.

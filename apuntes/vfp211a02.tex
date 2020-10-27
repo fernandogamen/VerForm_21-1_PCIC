@@ -1,0 +1,1921 @@
+\documentclass[11pt,letterpaper]{article}
+\usepackage{packageslc}
+\usepackage{optionslc}
+
+\usepackage{lstcoq}
+\lstset{language=Haskell}
+\input{macroslc}
+\newcommand{\scd}[2]{#1 \vdash #2}
+
+\title{Verificaci\'on Formal PCIC 2021-2 \\
+Un cálculo de secuentes
+}
+% \title{Lógica Computacional 2020-2, nota de clase 15 \\
+% Un cálculo de secuentes
+% }
+\author{Favio Ezequiel Miranda Perea \and Araceli Liliana Reyes Cabello\and
+Lourdes Del Carmen Gonz\'alez Huesca \and Pilar Selene Linares Arévalo}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+
+% \section{Introducción}
+
+% Los sistemas de deducción natural, introducidos por Gerhard Gentzen en 1935, son
+% formalismos deductivos que modelan el razonamiento matemático ordinario de
+% manera más fiel que un sistema axiomático o que el método de tableaux.  
+
+% Un sistema de deducción natural consiste de reglas de inferencia donde las 
+% hip\'otesis se encuentran en la parte superior de una l\'inea horizontal y la 
+% conclusión en la parte inferior.
+% Los sistemas que abordaremos en este curso se distinguen por que las reglas 
+% describir\'an las formas para \textbf{introducir} y \textbf{eliminar} cada uno 
+% de los conectivos lógicos. 
+% Las pruebas o derivaciones se construyen en estos sistemas son mediante la 
+% aplicación de dichas reglas en una sucesión adecuada que relaciona conclusiones 
+% con premisas de reglas posteriores. De igual forma que en el razonamiento 
+% ordinario se pueden hacer hipótesis temporales durante la prueba, las cuales se 
+% pueden \textbf{descargar} al incorporarlas a la conclusión. 
+
+
+% La importancia del uso de los sistemas de deducción natural son variados. 
+% Los sistemas computacionales de razonamiento automatizado usualmente se basan 
+% en métodos refutacionales como los tableaux pero los asistentes de prueba 
+% interactivos son útiles para razonar acerca de las propiedades de programas y 
+% est\'an basados en los sistemas lógicos de deducción natural.
+% Adem\'as, en fundamentos de lenguajes de programación la deducción natural 
+% juega también un papel importante por medio de la llamada correspondencia de 
+% Curry-Howard también conocida como el paradigma de \textbf{fórmulas como 
+% tipos}, 
+% cuya idea a grandes rasgos es que las pruebas lógicas contienen ciertas 
+% construcciones las cuales pueden interpretarse como programas, de modo que las 
+% proposiciones lógicas se convierten en tipos de un lenguaje de programación. La 
+% última parte de nuestro curso se dedicará en gran parte a mostrar tal 
+% correspondencia.
+
+
+% \subsection{Significado de conectivos y cuantificadores}
+
+% El adjetivo \textbf{natural} dado por Gentzen a estos sistemas deductivos se
+% refiere al hecho de que modelan de manera tan cercana como sea posible el
+% razonamiento natural de un humano, o al menos el razonamiento
+% matemático hecho por personas mediante distintos juicios. 
+% Un juicio es una proposici\'on a cerca de una l\'ogica, en nuestro caso es a 
+% cerca del significado de una fórmula lógica. Este significado se entenderá si 
+% analizamos y comprendemos cu\'ando una f\'ormula es verdadera. 
+
+% Analicemos a este respecto cada clase de fórmula de acuerdo a su 
+% esquema, es decir de acuerdo a su conectivo o cuantificador principal y 
+% tambi\'en tomando en cuenta su utilidad como generador u obtenci\'on de 
+% informaci\'on:
+% \bi
+% \item Información básica: una f\'ormula~$ A$ es cierta o la proposici\'on 
+% hecha 
+% en $ A$ es verdadera, lo cual podemos denotar con $ A\,\true$. \\
+% Este juicio ser\'a el m\'as b\'asico de todos. 
+% \item Conjunción: la f\'ormula~$ A\land B$ es cierta solo sí ambas $ A$ y 
+%   $ B$ son ciertas. Lo cual nos lleva al juicio:
+%  \begin{mathpar}
+%   \inferrule*[]{
+%    A\,\true\and  B\,\true
+%   }{
+%    A\land B\,\true
+%   }
+%  \end{mathpar}
+% Esta clase de regla se conoce como regla de introducción porque introduce un
+% conectivo en la conclusión en este caso $\land$.
+
+% La siguiente cuestión es preguntarnos c\'omo usar la información
+% $ A\land B\,\true$, a cuya respuesta nos lleva de nuevo el razonamiento
+% natural:
+% \begin{mathpar}
+%  \inferrule*[]{
+%   A\land B\,\true
+%  }{
+%   A\,\true
+%  }
+ 
+%  \inferrule*[]{
+%   A\land B\,\true
+%  }{
+%   B\,\true
+%  }
+% \end{mathpar}
+
+% \item Implicación: ?`Cuando es verdadera una implicación ? El razonamiento
+%   matemático nos dice que la implicación $ A\imp B$ es cierta si al
+%   suponer el antecedente~$ A$ cierto podemos probar que el 
+%   consecuente~$ B$ es cierto. Esto nos lleva a la siguiente regla de 
+%   introducción:
+%   \begin{mathpar}
+%    \inferrule*[]{
+%    [ A\;\true] \\\\
+%    \vdots \\\\
+%     B\;\true
+%    }{
+%     A\imp B\,\true
+%    }
+%   \end{mathpar}
+% Aquí los corchetes que encierran al juicio hipotético $ A\,\true$ indican que 
+% en la conclusión tal hipotésis fue descargada, es decir despu\'es de introducir 
+% la implicación, la hipótesis hecha ya no es necesaria, es decir, se trataba de
+% una hipótesis temporal.
+
+% La regla de eliminación de la implicación modela una forma de razonamiento
+% conocida desde Aristóteles y llamada \textit{modus ponens}. De los juicios
+%  $ A\imp B\,\true$ y $ A\,\true$ podemos obtener el juicio $ B\,\true$:
+%  \begin{mathpar}
+%   \inferrule*[]{
+%    A\imp B\,\true\and  A\,\true
+%   }{
+%    B\,\true
+%   }
+%  \end{mathpar}
+
+%  \item La disyunción nos lleva a las siguientes reglas de introducción
+%  \begin{mathpar}
+%   \inferrule*[]{
+%    A\,\true
+%   }{
+%    A\lor B\,\true
+%   }
+  
+%   \inferrule*[]{
+%    B\,\true
+%   }{
+%    A\lor B\,\true
+%   }
+%  \end{mathpar}
+% Lo cual captura el hecho de que una disyunción es cierta sólo si alguna de
+% sus dos componentes lo es. 
+
+% Para obtener la regla de eliminación debemos considerar c\'omo utilizar 
+% correctamente el juicio $ A\lor B\,\true$ dado que no sabemos con certeza 
+% cu\'al de las dos componentes es cierta. 
+% Si tratamos de probar $ C\,\true$ a partir de $ A\lor B\,\true$ debemos 
+% llegar a tal juicio sin importar cu\'al de los dos casos se tome: $ A\,\true$ 
+% o $ B\,\true$ válido. 
+% Esto nos lleva a hacer una prueba por casos capturada en la siguiente regla:
+% \begin{mathpar}
+%  \inferrule*[]{
+%  \qquad \qquad \qquad [ A\;\true] \qquad [ A\;\true] \\\\
+%  \qquad \qquad \qquad \vdots \qquad \qquad \qquad\vdots \\\\
+%  \vp\lor\psi\,\true \qquad  C\;\true \qquad  C\;\true 
+%  }{
+%   C\,\true
+%  }
+% \end{mathpar}
+% Al igual que en la introducción de la implicación los corchetes indican que
+% tal hipótesis es temporal y ha sido descargada.
+
+% \item La falsedad~$\bot$ representa una contradicción y no debería ser 
+%   probable, por lo que no tiene regla de introducción. \\
+%   Inversamente si llegamos en algún momento al juicio~$\bot\,\true$ deberiamos 
+%   poder concluir cualquier cosa, lo cual genera la regla de eliminación:
+%   \begin{mathpar}
+%    \inferrule*[]{
+%    \bot\,\true
+%    }{
+%    \vp\,\true
+%    }
+%   \end{mathpar}
+
+% \item La verdad debe ser demostrable sin importar las hipótesis que tengamos, de
+%   manera que su regla de introducción es:
+%  \begin{mathpar}
+%   \inferrule*[]{
+%   }{
+%   \top\,\true
+%   }
+%  \end{mathpar}
+% Dado que no tenemos información de c\'omo introducir la verdad, tampoco podemos
+% tener información de como eliminarla, por lo que no hay regla de eliminación.
+
+
+% \item Cuantificación Universal:
+% ?`Bajo qu\'e circunstancias debe la fórmula~$\fa x\vp$ ser verdadera?,
+% la respuesta depende claramente del dominio de cuantificación. Por
+% ejemplo, si sabemos que la variable~$x$ toma como valores números naturales, 
+% entonces podemos concluir que $\fa x\vp$ es verdadera si podemos probar que las 
+% fórmulas $\vp[x:=0],\vp[x:=1],\ldots,\vp[x:=n],\ldots$.
+% Siguiendo esta idea, debemos considerar que si todas las instancias de una 
+% variable hacen que la f\'ormula sea verdadera, entonces una generalizaci\'on 
+% tambi\'en lo es, lo cual nos lleva a la siguiente regla:
+% \begin{mathpar}
+%  \inferrule*[]{
+%  \vp[x:=0]\;\true\and 
+%  \vp[x:=1]\;\true \quad\ldots \and 
+%  \vp[x:=n]\;\true \quad \ldots
+%  }{
+%  \fa x\vp\;\true
+%  }
+% \end{mathpar}
+
+% Tal regla no es efectiva dado que tendríamos un número infinito de premisas, 
+% usualmente se usa la regla de inducción en su lugar. Sin embargo la elección de 
+% tal regla depende fuertemente de un dominio de cuantificación particular 
+% mientras que lo que nos interesa es probar la verdad en cualquier dominio 
+% posible. De manera que podremos decir que la f\'ormula~$\fa x\vp$ es verdadera 
+% si al no asumir algo acerca de $x$, podemos cercioranos de la verdad de $\vp$, 
+% es decir tenemos la siguiente regla informal:
+% \begin{mathpar}
+%  \inferrule*[]{
+%  \vp\;\true\and x\;\text{ parámetrica en } \vp
+%  }{
+%  \fa x\vp\;\true
+%  }
+% \end{mathpar}
+% Por otro lado si sabemos que la fórmula~$\fa x\vp$ es cierta entonces
+% deberíamos poder concluir la verdad de $\vp[x:=t]$ para cualquier
+% objeto~$t$, lo cual nos lleva a la siguiente regla:
+% \begin{mathpar}
+%  \inferrule*[]{
+%  \fa x\vp\;\true
+%  }{
+%  \vp[x:=t]\;\true
+%  }
+% \end{mathpar}
+
+% \item Cuantificación Existencial: Si sabemos que $\vp[x:=t]$ es cierta para 
+% algún objeto~$t$ entonces podemos concluir que la f\'ormula~$\ex x\vp$ es 
+% cierta, lo cual se modela mediante la regla:
+% \begin{mathpar}
+%  \inferrule*[]{
+%  \vp[x:=t]\;\true
+%  }{
+%  \ex x\vp\;\true
+%  }
+% \end{mathpar}
+% Por otro lado cuando conocemos la verdad de $\ex x\vp$ no sabemos cu\'al
+% es el objeto~$t$ cuya existencia se asegura, de manera que sólo podemos
+% asumir $\vp$ sin hacer ninguna suposición acerca del valor
+% representado por $x$, lo cual se puede hacer sin problemas dado que la $x$ 
+% estaba ligada en $A$. La regla de eliminación para el existencial es
+% entonces similar al caso de la disyunción:
+% \begin{mathpar}
+%  \inferrule*[]{
+% [\vp\;\true] \\\\
+% \vdots \\\\
+%  \ex x\vp\;\true \and \psi\;\true \and  x\notin FV(\psi)
+% }{
+% \psi\;\true
+% }
+% \end{mathpar}
+% \ei
+
+% Se observa que no hemos hablado de la negación, conectivo de suma
+% importancia que discutiremos más tarde.
+% Una convenci\'on es la equivalencia que considera una abreviatura de falso como
+% $\vp\iff\psi  =_{def} (\vp\imp\psi) \land (\psi\imp\vp)$
+% \\%por ahora
+% %es conveniente tomar una convención para evitar ciertos
+% %conectivos, la negación entre éllos: %los cuales se definirán a partir de 
+% % otros:
+% %\beqs
+% %\ba{rll}
+% %\vp\iff\psi & := & (\vp\imp\psi) \land (\psi\imp\vp) \\
+% %\neg\vp     & := & \vp\imp\bot \\
+% %\top        & := &  \neg\bot,\mbox{es decir, } \top:=\bot\imp\bot
+% %\ea
+% %\eeqs
+
+
+% % \section{Carácter Constructivo de Conectivos y Cuantificadores}
+
+% % Para poder poner en correspondencia el mundo de las pruebas formales con el
+% % mundo de los programas computacionales debemos darle un caracter constructivo
+% % a las primeras, de manera que puedan ser implementadas más adelante. Este
+% % caracter constructivo se obtiene al olvidarnos de la noción clásica 
+% % (platónica) de
+% % verdad y en su lugar entender al juicio $\vp\,\true$ mediante la existencia
+% % de una prueba constructiva de $\vp$, es decir la existencia de un método bien
+% % definido que nos lleve a construir a $\vp$. Las siguientes reglas de
+% % construcción se conocen como la \textbf{interpretación de 
+% % Brouwer-Heyting-Kolmogorov (BHK)},
+% % y su sabor algorítmico nos llevará más tarde a la famosa correspondencia de
+% % Curry-Howard.
+% % \bi
+% % \item Una construcción de $\vp\land\psi$ consiste de una construcción de
+% %   $\vp$ y una construcción de $\psi$.
+% % \item Una construcción de $\vp\lor\psi$ consiste de una construcción de $\vp$
+% %   ó de una construcción de $\psi$.
+% % \item Una construcción de $\vp\imp\psi$ consiste de un método que transforma
+% %   cada construcción de $\vp$ en una construcción de $\psi$.
+% % \item Una construcción de $\fa x\vp$ es un método que transforma
+% %   cualquier objeto $t$ en una construcción de $\vp[x:=t]$.
+% %   \item Una construcción de $\ex x\vp$ es un par consistente de un
+% %     objeto $t$ y una construcción de $\vp[x:=t]$.
+% % \item No existe una construcción para $\bot$
+% %   \item $\top$ siempre es construible.
+% % \ei
+
+%\section{Sistemas de Deducción Natural con Contextos}
+
+En esta sección presentamos un sistema de deducción para L\'ogica de 
+Predicados, con contextos o hipótesis localizadas, es decir, en cada paso de la 
+deducción de una f\'ormula estarán disponibles todas las hipótesis 
+representadas por un contexto. Las f\'ormulas ser\'an representadas por letras 
+may\'usculas y los contextos por letras griegas may\'usculas.
+
+Este sistema permite construir derivaciones de expresiones de la forma 
+$\G\vdash A$ llamados \textbf{secuentes}, a diferencia del sistema de lógica 
+ecuacional donde las expresiones derivadas son simplemente ecuaciones 
+de fórmulas o de expresiones de un lenguaje particular. 
+Esta presentación podría parecer más complicada que otras, sin embargo la 
+disponibilidad de todo el conjunto de hipótesis en cada momento es de gran 
+utilidad. % como se verá al estudiar sistemas de tipos.
+
+% Las consideraciones hechas anteriormente se formalizan mediante un sistema de
+% deducción natural para la lógica de predicados. Existen diversas formas de
+% presentar estos sistemas, probablemente el lector ha visto con anterioridad el
+% sistema mediante el método de cajas o de hipótesis etiquetadas. Nosotros
+% usaremos una versión con hipótesis localizadas, es decir, en cada paso de la
+% deducción estarán disponibles todas las hipótesis. Esta presentación podría
+% parecer más complicada que otras, sin embargo la disponibilidad de todo el
+% conjunto de hipótesis en cada momento será de gran utilidad al pasar al mundo
+% de los programas. \\
+
+\defin{Un contexto es una colección\footnote{Esta colección puede
+    implementarse de distintas maneras, como lista, multiconjunto o
+    conjunto. Nosotros consideramos que los contextos son listas.}
+  finita de fórmulas $\vp_1,\ldots,\vp_n$.
+ Usualmente denotaremos un contexto con $\G,\Delta,\Pi$. 
+ En lugar de $\G\cup\Delta$ escribimos $\G;\D$. An\'alogamente $\G,\vp$ denota 
+ al contexto $\G\cup\{\vp\}$. Es decir, la operación de unión de contextos se
+ denota con punto y coma, mientras que la operación de agregar un elemento a
+ un contexto se denota con coma.
+}
+
+En adelante hacemos la siguiente convención: siempre que un contexto sea de la 
+forma $\G,A$, suponemos que la fórmula $A$ no figura o no aparece en $\G$.\\
+Adem\'as, si $\G=\{\vp_1,\ldots,\vp_n\}$ entonces el conjunto de variables 
+libres de~$\G$, denotado $FV(\G)$, se define como la unión de los conjuntos de
+variables libres $FV(\vp_i)$ para cada $\vp_i \in \G$.
+
+\section{Reglas de inferencia}
+Recordemos que las reglas de inferencia permiten encadenar razonamientos, de 
+esta forma se relacionan dos o varios secuentes mediante una l\'inea 
+horizontal. Las reglas pueden leerse en dos sentidos: de arriba hacia abajo y 
+viceversa, dependiendo del prop\'osito en el desarrollo de una demostraci\'on 
+(generar, derivar o deducir informaci\'on). 
+
+\medskip
+
+Un secuente representa la relación de derivabilidad o deducibilidad 
+$\mathbf{\Gamma \vdash A}$, leida como: 
+\begin{center}
+\enquote{la fórmula~$A$ es derivable o deducible en el contexto~$\G$}
+\end{center}
+Esta relaci\'on se define recursivamente a continuación mediante reglas que se 
+clasifican en izquierdas y derechas, y que enfatizan cada conectivo que est\'a 
+presente en el sistema.
+\begin{description}
+\item[Reglas derechas:] consideran cada forma sintáctica de la fórmula que
+  está a la derecha del símbolo de derivabilidad $\vdash$. Estas reglas sirven
+  para derivar fórmulas de manera directa de acuerdo a su conectivo
+  principal, también se conocen como reglas de introducción. 
+\item[Reglas izquierdas:] consideran cada forma sintáctica para una fórmula
+  particular en el contexto, es decir, a la izquierda del símbolo de
+  derivabilidad $\vdash$. 
+\end{description}
+
+
+Veamos cada regla particular:
+
+\begin{itemize}
+\item Regla\footnote{También llamado axioma.} inicial o de hipótesis:
+\begin{mathpar}
+  \inferrule*[right=(Hip)]{
+  }{
+  \scd{\G,A;\G'}{A}
+  } 
+\end{mathpar}
+Es decir, una fórmula $A$ es derivable si en el contexto figura ella misma
+como una de las hipótesis.
+
+\item Reglas derechas:
+ \begin{mathpar}
+  \inferrule*[right=($\land\,$R)]{
+  \scd{\G}{A} \and \scd{\G}{B}
+  }{
+  \scd{\G}{A\land B}
+} 
+
+\inferrule*[right=($\lor\,$R)]{
+  \scd{\G}{A}
+  }{
+  \scd{\G}{A\lor B}
+  }
+  
+  \inferrule*[right=($\lor\,$R)]{
+  \scd{\G}{B}
+  }{
+   \scd{\G}{A\lor B}
+   }\\\\
+   
+   \inferrule*[right=($\to\,$R)]{
+  \scd{\G,A}{B}
+  }{
+  \scd{\G}{A\to B}
+  }
+ 
+  \inferrule*[right=($\exists\,$R)]{
+  \scd{\G}{B[x:=t]}
+  }{
+  \scd{\G}{\ex x B}
+}
+
+  \inferrule*[right=($\fa\,$R)]{
+  \scd{\G}{B\;\;\;\;\;x\notin FV(\G)}
+  }{
+  \scd{\G}{\fa x B}
+}
+\end{mathpar}
+
+Obsérvese que estas reglas capturan el razonamiento matemático natural para
+concluir una proposición de manera directa, de acuerdo a su operador 
+principal. Tambien es importante observar que en el caso de la regla
+($\land\,$R) que tiene dos premisas, los contextos de cada una de ellas deben
+ser iguales. Esto se conoce como el estilo multiplicativo en reglas de
+inferencia\footnote{En contraste con el estilo aditivo donde se permiten
+  contextos distintos en las premisas y se construye el contexto unión en la conclusión.}. En ciertas
+ocasiones, cuando los contextos son diferentes podemos transformarlos para que
+sean iguales mediante el uso de las llamadas reglas estructurales que
+enunciamos en la proposición~\ref{prop:reglasEstr}.
+
+En el caso de la regla $(\exists R)$ el término~$t$ requerido en la premisa
+debe ser propuesto por el usuario o agente que construye la prueba. En el caso
+de $(\fa R)$ la condición lateral $x\notin FV(\G)$ corresponde al hecho de que
+para concluir $\fa xB$ basta demostrar $B$ siempre y cuando el contexto no
+\enquote{hable} de $x$, es decir, no contenga información particular acerca de 
+$x$. 
+
+\item Reglas izquierdas: 
+\begin{mathpar}
+\inferrule*[right=($\land$L)]{
+  \scd{\G,A,B;\G'}{C}
+  }{
+  \scd{\G,A\land B;\G'}{C}
+  }
+
+    \inferrule*[right=($\lor\,$L)]{
+  \scd{\G,A;\G'}{C} \and \scd{\G,B;\G'}{C}
+  }{
+  \scd{\G,A\lor B;\G'}{C}
+  } \\\\
+    
+  \inferrule*[right=($\to$L)]{
+  \scd{\G,A\to B;\G'}{A}
+  }{
+  \scd{\G,A\to B;\G'}{B}
+  }
+
+  \inferrule*[right=($\ex$L)]{
+  \scd{\G,A;\G'}{C\;\;\;\;\;x\notin FV(\G,C;\G')}
+  }{
+  \scd{\G,\ex x A;\G'}{C}
+  }
+
+  \inferrule*[right=($\fa$L)]{
+  \scd{\G,\fa x A, A[x:=t];\G'}{C}
+  }{
+  \scd{\G,\fa x A;\G'}{C}
+  }
+\end{mathpar}
+
+Obsérvese que en
+cada secuente hay dos contextos $\G$ y $\G'$ pero cualquier de ellos puede ser
+vacío. Más aún, en el caso de la regla ($\fa\,$L) las dos fórmulas en el
+contexto de la premisa se escriben juntas sin perder generalidad.
+
+Las reglas izquierdas se enfocan en una fórmula particular del contexto para 
+modificarlo y simplificar la construcción de una derivación. Por ejemplo, la
+regla $(\lor L)$ corresponde al método de análisis de casos. En los casos para
+la implicación y el cuantificador universal, las fórmulas correspondientes no desaparecen del contexto, como en los otros casos, pues
+contienen información que puede ser usada para otros propósitos
+posteriormente. El razonamiento capturado por la regla $(\exists L)$
+corresponde al método usual de usar una hipótesis existencial, es decir de la
+forma $\ex x A$, tratando al objeto $x$ que existe como una variable libre
+cuya única propiedad conocida es que cumple $A$. Por eso se requiere la
+condición de que ni el contexto $\G$ ni la conclusión $C$ \enquote{hablen} de 
+$A$, es decir se debe cumplir $x\notin FV(\G,C)$. 
+\end{itemize}
+
+
+% \bi
+% \item Implicación:
+% \begin{mathpar}
+% \inferrule*[right=($\to$ I)]{
+% \Gamma,\vp\vdash \psi
+% }{
+% \Gamma\vdash \vp\to \psi
+% }
+
+% \inferrule*[right=($\to$ E)]{
+% \Gamma\vdash \vp\to \psi\and 
+% \Gamma\vdash \vp
+% }{
+% \Gamma\vdash \psi
+% }
+% \end{mathpar}
+
+% \item Conjunción:
+% \begin{mathpar}
+% \inferrule*[right=($\land$ I)]{
+% \G\vdash \vp\and \G\vdash\psi
+% }{
+% \G\vdash\vp\land \psi
+% }
+
+% \inferrule*[right=($\land$ E)]{
+% \G\vdash\vp\land\psi
+% }{
+% \G\vdash\psi
+% }
+
+% \inferrule*[right=($\land$ E)]{
+% \G\vdash\vp\land\psi
+% }{
+% \G\vdash\vp
+% }
+% \end{mathpar}
+
+% \item Disyunción
+% \begin{mathpar}
+% \inferrule*[right=($\lor$ I)]{
+% \G\vdash\vp
+% }{
+% \G\vdash\vp\lor\psi
+% }
+
+% \inferrule*[right=($\lor$ I)]{
+% \G\vdash\psi
+% }{
+% \G\vdash\vp\lor\psi
+% }
+
+% \inferrule*[right=($\lor$ E)]{
+% \G\vdash\vp\lor\psi \and \G,\vp\vdash \chi \and
+% \G,\psi\vdash\chi
+% }{
+% \G\vdash\chi
+% }
+% \end{mathpar}
+
+% \item Cuantificador Universal:
+% \begin{mathpar}
+% \inferrule*[right=($\fa$ I)]{
+% \G\vdash \vp \and x\notin FV(\G)
+% }{
+% \G\vdash\fa x\vp
+% }
+
+% \inferrule*[right=($\fa$ E)]{
+% \G\vdash \fa x\vp
+% }{
+% \G\vdash \vp[x:=t]
+% }
+% \end{mathpar}
+
+% \item Cuantificador Existencial:
+% \begin{mathpar}
+% \inferrule*[right=($\ex$ I)]{
+% \G\vdash \vp[x:=t]
+% }{
+% \G\vdash \ex x\vp
+% }
+
+% \inferrule*[right=($\ex$ E)]{
+% \G\vdash\ex x\vp\and \G,\vp\vdash \psi\and x\notin FV(\G,\psi)
+% }{
+% \G\vdash\psi
+% }
+% \end{mathpar}
+
+% \item Verdadero %(regla derivada):
+% \beqs
+% \inferrule*[]{}{\;\;\G\vdash \top\;\;}\;(\top I)
+% \eeqs
+%\ei
+
+% Obsérvese que mediante estas reglas de inferencia no estamos derivando
+% fórmulas sino expresiones de la forma $\G\vdash A$, conocidas como {\em 
+% secuentes}.
+% En particular las reglas de inferencia son correctas con respecto a la 
+% consecuencia lógica, es decir transforman secuentes válidos
+% (respecto a $\models$) en secuentes válidos como lo asegura la siguiente
+
+% \begin{proposition}\label{prop:rdnsem}
+% Sean $\G$ un contexto y $A,B,C$ fórmulas. 
+% Se cumple lo siguiente
+% \bi
+% \item Si $\G,A\models B$ entonces $\G\models A\to B$.
+% \item Si $\G\models A$ y $\G\models A\to B$ entonces $\G\models B$.
+% \item $\G\models A\land B$ si y sólo si $\G\models A$ y $\G\models B$.
+% \item Si $\G\models A$ entonces $\G\models A\lor B$.
+% \item Si $\G\models B$ entonces $\G\models A\lor B$.
+% \item Si $\G\models A\lor B,\;\G,A\models C$ y $\G,B\models C$ entonces 
+% $\G\models C$.
+% \item Si $\G\models A$ y $x\notin FV(\G)$ entonces $\G\models \fa xA$.
+% \item Si $\G\models \fa xA$ entonces $\G\models A[x:=t]$ siendo $t$ cualquier 
+% término.
+% \item Si $\G\models A[x:=t]$ para algún término $t$ entonces 
+% $\G\models\ex xA$.
+% \item Si $\G\models\ex x A$ y $\G,A\models B$ donde $x\notin FV(\G,B)$ 
+% entonces $\G\models B$.
+% \ei
+% \end{proposition}
+% \proof Ejercicio \qed
+
+\bigskip
+
+La noción de prueba o derivación formal es similar a la usada en la lógica ecuacional:
+
+\defin{Una derivación del secuente $\G\vdash A$ es una sucesión finita de 
+secuentes $\G_1\vdash A_1,\ldots,\G_n\vdash A_n$ tal que:
+\bi
+\item $\G_i\vdash A_i$ es instancia de la regla $(Hip)$ ó
+\item $\G_i\vdash A_i$ es conclusión de alguna regla de inferencia tal que 
+las 
+premisas necesarias figuran antes en la sucesión.
+\item $\G\vdash A$ es el último elemento de la sucesión.
+\ei
+}
+
+% \newpage
+ 
+\noindent También es común ver a la derivaci\'on de un secuente como un
+\'arbol, de acuerdo a la siguiente
+
+\begin{definition}
+  Una prueba formal de $\G\vdash A$ es un árbol finito, cuyos nodos están
+  etiquetados por expresiones $\G'\vdash A'$ y satisfacen las siguientes
+  condiciones:
+  \begin{itemize}
+  \item La etiqueta de la raíz es $\G\vdash A$.
+  \item Todas las hojas están etiquetadas con instancias de la regla $(Hip)$.
+  \item La etiqueta de un nodo padre se obtiene mediante la aplicación de una
+  de las reglas de inferencia a los nodos hijos.
+  \end{itemize}
+\end{definition}
+
+Las pruebas más relevantes son aquellas donde el contexto final está
+vacío. Para esto introducimos la siguiente
+
+
+\begin{definition}
+  Si $\vdash A$ es derivable, es decir si $\varnothing\vdash A$ es
+  derivable ($ A$ es derivable sin hipótesis) entonces decimos que $ A$ es 
+  un teorema.
+\end{definition}
+
+Mostramos ahora algunas reglas estructurales que pueden ser de ayuda en la 
+construcción de derivaciones:
+
+\prop~\label{prop:reglasEstr}{Las siguientes reglas de inferencia son válidas:
+  \bi
+  \item Intercambio de premisas: 
+  \begin{mathpar}
+  \inferrule*[]{\G, A, B ;\G'\vdash  C}
+    {\G, B, A;\G'\vdash  C} 
+  \end{mathpar}
+
+  \item Monotonía o debilitamiento: 
+   \begin{mathpar}
+    \inferrule*[]{\G;\G'\vdash A}
+      {\G, B;\G'\vdash A}
+   \end{mathpar}
+
+  \item Contracción:
+    \begin{mathpar}
+    \inferrule*[]{\G, A, A;\G'\vdash B}
+    {\G, A;\G'\vdash B}     
+    \end{mathpar}
+
+  \item Sustitución o Corte:
+   \begin{mathpar}
+    \inferrule*[]{\G, A;\G'\vdash B \and \G;\G'\vdash A}
+    {\G;\G'\vdash B}    
+   \end{mathpar}
+  \ei
+}
+
+La regla de sustituci\'on o corte es de especial importancia ya que permite 
+utilizar una f\'ormula o lema auxiliar~$ A$ en la demostraci\'on de la 
+f\'ormula principal~$ B$. Al igual que el caso de la regla $(\ex R)$, la 
+f\'ormula auxiliar~$ A$ debe ser propuesta por el usuario. 
+
+
+\section{La Negación}
+
+La negación es quizás el conectivo lógico más importante, recordemos
+por ejemplo que para definir en lógica clásica todos los conectivos y
+cuantificadores o para tener un conjunto completo de conectivos, basta 
+quedarnos con uno de los conectivos binarios, un cuantificador y la negación, 
+la cual es imprescindible. Sin embargo, el símbolo de negación $\neg$ puede
+definirse dando distintas reglas de inferencias o axiomas y de acuerdo a los
+mismos hablamos de distintas clases de negación. Sin importar que otros
+conectivos estén presentes, discutimos hoara tres clases distintas de
+negación: minimal, intuicionista o constructiva y clásica.
+
+%\begin{itemize}
+%\item Negación fuerte: $\dnp$ mas la regla $\lnot C$, lo cual recupera el
+%  principio del tercero excluido. En tal caso decimos que la lógica es
+%  clásica y denotamos al sistema con $\dnc$.
+%\end{itemize}
+
+%En particular en $\dnm$ el símbolo $\bot$ es una constante más sin
+%propiedades particulares de manera que una fórmula con presencias de $\bot$
+%puede o no ser demostrable en el sistema. En $\dnp$ la constante $\bot$ tiene
+%una regla de eliminación de manera que algunas fórmulas que involucran a
+%$\bot$ no demostrables en $\dnm$ lo serán en $\dnp$, pero no todas,  
+%algunos ejemplos de fórmulas clásicas (es decir demostrables en
+%$\dnc$) que NO son derivables en $\dnp$ son:
+%\bi
+%\item $\vp\lor\lnot\vp,\quad \; \lnot\lnot\vp\imp\vp$
+%\item $\big((\vp\imp\psi)\imp\vp\big)\imp\vp$ 
+%\item $(\lnot \psi\imp\lnot\vp)\imp (\vp\imp\psi)$
+%\item $\lnot(\vp\land\psi)\imp\lnot\vp\lor\lnot\psi$
+%\ei
+
+\subsection{Lógica Minimal}
+
+Se dice que la lógica es minimal si en el sistema de deducci\'on no hay 
+reglas específicas para la negación~$\neg$ ni para la constante de falsedad~$\bot$. 
+En un sistema minimal, la constante~$\bot$ está presente pero no tiene 
+propiedades particulares. \\
+
+En la presencia de $\bot$, el símbolo de negación se define como 
+$$ \neg A =_{def} A\to\bot $$
+% \noindent en cuyo caso hablamos de la negación constructiva, cuyas reglas de
+% inferencia son:
+En el caso de la negación no es sencillo definir un cálculo de secuentes con
+reglas izquierdas y derechas. En su lugar definimos reglas de
+introducción\footnote{Estas corresponden a las reglas 
+derechas}, denotadas con {\sc I}, que permiten concluir una negación y reglas 
+de eliminación, denotadas con {\sc E}, que permiten usar, de
+manera indirecta, una negación para obtener más información. 
+Las reglas de inferencia derivadas son:
+
+\begin{mathpar}
+\inferrule*[right=($\neg$ I)]{
+\G,A\vdash\bot
+}{
+\G\vdash\neg A
+}
+% \G,A;\G'\vdash\bot
+% }{
+% \G;\G'\vdash\neg A
+% }
+
+\inferrule*[right=($\neg$ E$_m$)]{
+\G\vdash A\and \G\vdash\neg A
+}{
+\G\vdash\bot
+}
+\end{mathpar}
+Obsérvese que, de acuerdo a la definición de $\neg A$,  estas reglas
+no son más que casos particulares de la regla derecha de implicación
+\textsc{($\to$ R)} y la regla derivada correspondiente a 
+\textit{modus ponens}, respectivamente.
+
+%\item Ausencia de negación: $\dnp$ menos la regla $\bot E$, lo cual
+%  nos lleva a eliminación de las reglas derivadas. $\lnot I,\lnot
+%  E$. Si bien la regla $\lnot I$ es derivable, su contraparte $\lnot
+%  E$ no lo es por lo que eliminamos ambas reglas para mantener la
+%  simetría del sistema.\\
+%  En tal caso decimos que la lógica es minimal y denotamos al sistema con 
+%$\dnm$.
+
+\subsection{Lógica Intuicionista}
+
+La lógica intuicionista~\footnote{El nombre se debe a una corriente lógica
+para fundamentar las matemáticas desarrollada a principios del siglo
+XX.}  se obtiene al agregar a la lógica minimal la regla de eliminación de lo 
+falso~$(\bot E)$ conocida también como \textit{ex-falso-quodlibet}.
+\begin{mathpar}
+\inferrule*[right=(EFQ)]{
+\G\vdash\bot
+}{\G\vdash A
+}
+\end{mathpar}
+
+% La lógica intuicionista, al
+% ser una extensión de la lógica minimal, respeta la interpretación BHK para
+% los conectivos dados. Más aún, la lógica intuicionista modela la 
+% intepretación BHK para la
+% negación dada por: \textbf{ una construcción de $\lnot A$ consiste en un
+%   método que convierte cada construcción de $ A$ en un objeto
+%   inexistente},
+% la cual puede modelarse definiendo a la negación como
+% $\neg A:= A\imp\bot$.
+% Obsérvese que esta interpretación es mucho más
+% fuerte que pedir sólamente que no haya una construcción para $ A$. 
+% La negación se rige por las siguientes reglas
+
+% %\item Negación (reglas derivadas)
+% \beqs
+% \inferrule*[]{\G, A\vdash\bot}{\G\vdash\neg A}\;(\neg I)\quad \quad \;
+% \inferrule*[]{\G\vdash\neg A\quad \G\vdash A}{\G\vdash B}\;(\neg E)
+% \eeqs 
+
+Se observa que cualquier fórmula derivada en la lógica minimal sigue
+siendo derivable en la lógica intuicionista. Las reglas $(\neg I)$ y $(\neg
+E_m)$ siguen siendo válidas. Además se pueden derivar
+nuevas fórmulas, en particular una regla de eliminación de la negación:
+% puede modificarse como sigue en la lógica intuicionista:
+\begin{mathpar}
+\inferrule*[right=($\neg$ E)]{
+\G\vdash A\and \G\vdash \neg A
+}{
+\G\vdash B
+}
+\end{mathpar}
+                                
+Más aún, el carácter constructivo de la negación restringe a la lógica de una 
+manera importante, en particular el sistema no permite probar la tautología 
+clásica $  A\lor\lnot A $
+conocida como el principio del tercero excluido. Para convencernos de tal
+situación basta recordar qué significa el hecho de que una disyunción sea
+demostrable. En el caso del tercero excluido tendríamos que construir 
+una prueba de $ A$ o bien una prueba de $\neg A$ lo cual no es posible en
+general. Este hecho implica igualmente que la fórmula~$\lnot\lnot A\imp A$
+\textbf{NO} es válida. Por otro lado es fácil dar una derivación
+de $ A\imp\lnot\lnot A$ desde la lógica minimal. \\
+Otras fórmulas \textbf{NO} válidas en la lógica intuicionista son:
+\bi
+%\item $ A\lor\lnot A$.
+\item $(\lnot A\imp\lnot B)\imp( B\imp A)$.
+\item $( A\imp B)\lor( B\imp A)$.
+\item $\lnot\fa x A\imp\ex x\neg A$.
+\item $\fa x( A\lor B)\imp A\lor\fa x B$ con $x\notin FV( A)$.
+\item $( B\imp\ex x A)\iff \ex x( B\imp A)$ con $x\notin FV( B)$.
+\item $(\fa x A\imp B)\iff \ex x( A\imp B)$ con $x\notin FV( B)$.
+\item $\fa x\lnot\lnot A\imp \lnot\lnot\fa x A$.
+\ei
+
+Las demostraciones de la invalidez intuicionista de tales fórmulas utilizan 
+técnicas de semánticas de Heyting ó forzamiento mediante marcos que no 
+pertenecen a nuestro curso.\\
+
+Las lógicas minimal e intuicionista también se conocen como lógicas 
+constructivas porque toda fórmula se puede construir o derivar directamente,
+en particular se tienen las siguientes propiedades no válidas en la lógica 
+clásica, donde $\vdash_i$ denota a la relación de derivabilidad en la lógica intuicionista:
+\bi
+ \item Propiedad Disyuntiva: Si $\vdash_{i} A\lor B$ entonces
+  $\vdash_{i} A$ ó $\vdash_{i} B$.
+ \item Propiedad Existencial: Si $\vdash_{i} \ex x A$ entonces existe un
+  término $t$ tal que $\vdash_{i} A[x:=t]$.
+\ei
+
+
+\subsection{Lógica clásica}
+Para recuperar a la lógica clásica tenemos que postular alguna de las
+siguientes reglas:
+\bi
+\item Tercero Excluido~\footnote{También conocidacomo $(TND)$ por
+  su nombre en latín \textit{Tertium non datur}.}
+\begin{mathpar}
+\inferrule*[right=(TE)]{
+}{
+\;\;\G\vdash A\lor\neg A \;\;
+}
+\end{mathpar}
+
+\item Reducción al absurdo
+\vspace*{-5pt}
+\begin{mathpar}
+\inferrule*[right=(RAA)]{
+\G,\neg A\vdash\bot
+}{
+\G\vdash A}
+% \G,\neg A;\G'\vdash\bot
+% }{
+% \G\vdash A}
+\end{mathpar}
+Esta última regla es muy utilizada en razonamientos matemáticos y se conoce
+como reducción al absurdo. Cómparese con la regla $(\neg I)$ y reflexione por
+qué son reglas distintas y en qué lógica son equivalentes.
+
+\item Eliminación de la doble negación~\footnote{La regla dual para
+    introducción de la doble negación es válida desde la lógica minimal:
+\begin{mathpar}\inferrule*[]{\G\vdash A}{\G\vdash\neg\neg A}\;(\neg\neg I)\end{mathpar}}
+\begin{mathpar}
+\inferrule*[right=($\neg\neg$ E)]{
+\G\vdash\neg\neg A
+}{
+\G\vdash A
+}
+\end{mathpar}
+% \[
+% %\inferrule*[]{A}{\neg\neg A}\;(\neg\neg I)\quad \quad \;\;
+% \inferrule*[]{\neg\neg A}{A}\;(\neg\neg E)
+% \]
+\ei
+
+
+% principio del tercero excluido, agregando la regla inicial del tercero 
+% excluido
+% \beqs
+% \inferrule*[]{}{\G\vdash A\lor\lnot A}\;(TE)
+% \eeqs
+%  o equivalentemente agregando la ley de doble negación mediante la
+%  siguiente regla:
+% \beqs
+% \inferrule*[]{\G\vdash\lnot\lnot A}{\G\vdash A}\;\;(\lnot C)
+% \eeqs
+
+Obsérvese que la regla \textsc{(TE)} permite probar $\vdash A\lor\lnot A$
+situación imposible de motivar en el ámbito constructivo. Esta situación
+rompe con la simetría de los conectivos dada por las reglas izquierdas y
+derechas. En particular en la lógica clásica podemos deducir disyunciones
+por medio de una regla distinta a la regla derecha para la
+disyunción, a saber mediante el uso de la regla del tercero excluido. 
+% En lugar de la
+% regla anterior también podemos usar la regla de prueba por
+% contradicción o reducción al absurdo:
+% \beqs
+% \inferrule*[]{\G,\lnot\vp \vdash\bot}{\G\vdash\vp}\;\;(\neg RAA)
+% \eeqs
+%\\ La
+%interpretación de la negación en el mundo de los programas es un punto muy
+%discutido todavía en el ámbito de la investigación. %Al nivel de este curso
+%podemos decir con ciertos riesgos que la correpondencia entre el múndo de las
+%pruebas y el de los programas se rompe al agregar la negación.
+% En este sistema podemos seguir viendo a la negación $\neg A$ como una 
+% abreviatura de $A\to\bot$ o bien considerar que la negación es primitiva en 
+% cuyo caso la regla de eliminación de la negación no es un caso particular del 
+% modus ponens y debe agregarse al sistema:
+% \[
+% \inferrule*[]{A\quad \;\;\neg A}{B}\;(\neg E)
+% \]
+% A continuación damos las reglas correspondientes a la falsedad y a las
+% negaciones constructiva y clásica.
+
+%\bi
+%  \item Lógica minimal: negación constructiva $\neg A=_{def} A\to\bot$.
+% \beqs
+% \inferrule*[]{\G,A\vdash\bot}{\G\vdash\neg A}\;(\neg I)\quad \quad \quad 
+% \inferrule*[]{\G\vdash A\quad \;\;\G\vdash\neg A}{\G\vdash\bot}\;(\neg E)
+% \eeqs
+% \item Lógica intuicionista: ex-falso-quodlibet
+% \beqs
+% \inferrule*[]{\G\vdash\bot}{\G\vdash\vp}\;(\bot E)
+% \eeqs
+% \item Lógica clásica: alguna de las siguientes
+% \bi
+% \item Tercero excluido:
+% \beqs
+% \inferrule*[]{}{\G\vdash A\lor\neg A}\;(TE)
+% \eeqs
+% \item Reducción al absurdo:
+% \beqs
+% \inferrule*[]{\G,\neg A\vdash\bot}{\G\vdash A}\;(RAA)
+% \eeqs
+% \item Eliminación de la doble negación:
+% \beqs
+% \inferrule*[]{\G\vdash\neg\neg A}{\G\vdash A}\;(\neg\neg E)
+% \eeqs
+% \ei
+% \ei
+
+% también debe agregarse la regla de eliminación de la negación:
+
+% \[
+% \inferrule*[]{\G\vdash A\quad \;\;\G\vdash\neg A}{\G\vdash B}\;(\neg E)
+% \]
+
+
+\subsection{Otras reglas de la negación clásica}
+
+Las siguientes reglas son de utilidad en la lógica clásica. Se deja como 
+ejercicio mostrar que son derivables a partir de las reglas de negación dadas.
+
+\begin{itemize}
+\item Modus Tollens:
+\begin{mathpar}
+\inferrule*[right=MT]{
+\G\vdash A\to B\and \G\vdash \neg B
+}{
+\G\vdash \neg A}
+\end{mathpar}
+\item Silogismo disyuntivo:
+\begin{mathpar}
+\inferrule*[right=SD]{
+\G\vdash A\lor B\and 
+\G\vdash \neg A
+}{
+\G\vdash B
+}
+\end{mathpar}
+\end{itemize}
+
+
+\section{Ejemplos de derivaciones}
+
+En lo que sigue denotamos con $\vdash_m,\vdash_i,\vdash_c$ a las
+relaciones de derivación en los sistemas minimal, intuicionista y clásico, 
+respectivamente.
+De las definiciones, es claro que el sistema intuicionista es una
+extensión conservativa del minimal y el clásico del intuicionista. Es
+decir, $\G\vdash_m A$ implica $\G\vdash_i A$ implica $\G\vdash_c A$. Sin
+embargo ninguna de las afirmaciones recíprocas es válida en
+general. En los ejemplos siguientes debe entenderse que el sistema
+correspondiente es estrictamente necesario, es decir,  para las
+derivaciones en $\vdash_i$ (respectivamente $\vdash_c$) no existe una 
+derivación en $\vdash_m$ (respectivamente $\vdash_i$), aunque para mostrar 
+formalmente estas afirmaciones se necesitan técnicas semánticas que van más
+allá del alcance de nuestro curso.
+
+Las derivaciones siguientes se presentan de forma lineal, a diferencia de los 
+\'arboles de derivaci\'on introducidos al inicio de la nota.
+En una derivaci\'on lineal, el \'ultimo paso es el secuente a demostrarse
+y cada paso es justificado al ser la conclusic\'on de la regla aplicada 
+junto con los pasos usados como premisas.
+% \prop{Se cumplen las siguientes derivaciones:
+% \bi
+% \item $\vdash_m A\imp \neg\neg A$
+% \item $\vdash_m \neg\neg(A\lor\neg A)$
+% \item $\vdash_m (A\imp B)\imp (A\imp\neg B)\imp \neg A$
+% \item $\vdash_m \neg(A\land\neg A)$
+% \item $\vdash_m (\neg A\imp A)\imp \neg\neg A$
+% \item $\vdash_m A\land\neg B\imp \neg(A\imp B)$
+% \item $\vdash_m (A\imp\neg A)\imp\neg A$
+% \item $\vdash_m (A\imp B)\imp (\neg B\imp \neg A)$
+% \item $\vdash_m (A\imp\neg B)\iff (B\imp\neg A)$
+% \item $\vdash_m\neg(A\lor B)\iff \neg A\land\neg B$
+% \item $\vdash_m \neg A\lor\neg B\imp \neg(A\land B)$
+% \item $\vdash A\imp \neg A\imp B$
+% \item $\vdash A\lor B\imp \neg A\imp B$
+% \item $\vdash \neg A\lor B\imp A\imp B$
+% \item $\vdash A\lor\neg A\imp \neg\neg A\imp A$
+% \item $\vdash \neg\neg A\imp \neg A\imp A$
+% \item $\vdash A\imp (B\iff \neg A\lor B)$
+% \item $\vdash_c \neg\neg A\iff A$
+% \item $\vdash_c (A\imp B)\iff \neg B\imp\neg A$
+% \item $\vdash_c \neg(A\land B)\iff \neg A\lor\neg B$
+% \item $\vdash_c (A\imp B)\iff \neg A\lor B$
+% \item $\vdash_c (A\imp B)\lor (B\imp A)$
+% \item $\vdash_c ((A\imp B)\imp A)\imp A$
+% \ei
+% }
+% \proof Probamos sólo algunos incisos, dejando los restantes como ejercicio.
+
+\bi
+\item Mostrar que: \hspace{0.5cm} $\vdash_m (p \land q \to r) 
+\to p \to q \to r$ 
+% Basta mostrar:  $ (p \land q \to r) \; , \;  p \; , \; q \vdash r$ 
+\[
+\begin{array}{rll}
+1\quad & p \land q \to r \; , \; p \; , \; q \vdash p & 
+(Hip) \\
+2\quad & p \land q \to r \; , \; p \; , \; q \vdash q & 
+(Hip)\\
+3\quad & p \land q \to r \; , \; p \; , \; q \vdash p \land q & 
+( \land R) \;\; 1,2\\
+4\quad & p \land q \to r \; , \; p \; , \; q \vdash  r 
+& (\to L) \;\; 3\\
+5\quad & p \land q \to r \; , \; p  \vdash q \to r 
+& (\to R) \;\; 5 \\
+6\quad & p \land q \to r  \vdash p \to q \to r &
+(\to R) \;\; 6\\
+7\quad &  \vdash (p \land q \to r) \to p \to q 
+\to r &(\to R) \;\; 7
+\end{array}
+\]
+
+\item Sea $\G=\{p \to q \lor r \; , \; q\to r \; , \; r\to s\}$, queremos 
+mostrar $\G\vdash_m p\to s$ 
+\[
+\begin{array}{rll}
+1 \quad & \G,\;p,\;q \vdash \; q & \qquad (Hip) \\
+2 \quad & \G,\;p,\;q\vdash\; r & \qquad (\to L) \; 1 \\
+3 \quad & \G,\;p,\;q\vdash\; s & \qquad ( \to L) \; 2 \\
+4 \quad & \G,\;p,\;r \vdash\; r & \qquad (Hip)    \\
+5 \quad & \G,\;p,\;r \vdash \; s & \qquad (\to L) \; 4 \\
+6 \quad & \G,\;p,\; q\lor r \; \vdash \; s & \qquad  (\lor L) \;3,5\\
+7 \quad & \G,\;p\; \vdash \; p & \qquad  (Hip)  \\
+8 \quad & \G,\;p\; \vdash \; q\lor r & \qquad  (\to L) \; 6 \\
+9 \quad & \G,\;p \;\vdash \; s & \qquad  (cut)\; 5,7 \\
+10\quad & \G\;\vdash \; p\to s &\qquad (\to R) \; 8
+\end{array}
+\]
+
+
+
+\item Demostrar que $\vdash_m A\imp \neg\neg A$, aplicando la definición de 
+negación y la regla derecha de la implicaci\'on basta mostrar que  
+$A,A\imp\bot\vdash\bot$:
+\[
+\ba{rll}
+1 & A, A\imp\bot\vdash A & (Hip)\\
+2 & A, A\imp\bot\vdash \bot & (\imp L) \; 1\\
+\ea
+\]
+
+\item Demostrar que $\vdash_m\neg\neg(A\lor\neg A)$, aplicando la definición de 
+negación y la regla derecha de la implicaci\'on basta derivar
+$A\lor\neg A\imp \bot\vdash_m\bot$:
+\[
+\ba{rll}
+1. & A\lor \neg A\imp\bot,A\vdash A & (Hip)\\
+2. & A\lor \neg A\imp\bot,A\vdash A\lor\neg A & (\lor R)\;1\\
+3. & A\lor \neg A\imp\bot,A\vdash \bot & (\imp L)\;2\\
+4. & A\lor \neg A\imp\bot\vdash A\imp \bot & (\imp R)\;3 \quad \lnot 
+A=_{def}A\to \bot\\
+5. & A\lor \neg A\imp\bot\vdash A\lor \neg A & (\lor R)\;4\\
+6. & A\lor \neg A\imp\bot\vdash \bot & (\imp L)\; 5\\
+\ea
+\]
+
+\begin{comment}
+
+\item Demostrar el siguiente teorema 
+$\vdash_m \neg(A\lor B)\iff \neg A\land\neg B$. Hay que mostrar ambas 
+implicaciones:
+\be
+\item $\vdash_m \neg(A\lor B)\imp \neg A\land\neg B$. Basta mostrar
+$A\lor B\imp \bot,A\vdash_m\bot$ y $A\lor B\imp \bot,B\vdash_m\bot$.
+\[
+\ba{rll}
+1. & A\lor B\imp\bot,A\vdash A & (Hip)\\
+2. & A\lor B\imp\bot,A\vdash A\lor B & (\lor I)\;1\\
+3. & A\lor B\imp\bot,A\vdash A\lor B\imp\bot & (Hip)\\
+4. & A\lor B\imp\bot,A\vdash \bot & (\imp E)\;2,3\\
+\ea
+\]
+La derivación faltante es análoga.
+
+
+
+
+\item Para demostrar que $\vdash_m \neg A\land\neg B\imp \neg(A\lor B)$, basta 
+mostrar $\neg A\land\neg B,A\lor B\vdash \bot$.
+\[
+\ba{rll}
+1. & \neg A\land \neg B, A\lor B\vdash A\lor B & (Hip)\\
+2. & \neg A\land \neg B, A\lor B,A\vdash \neg A\land\neg B & (Hip)\\
+3. & \neg A\land \neg B, A\lor B,A\vdash A & (Hip)\\
+4. & \neg A\land \neg B, A\lor B,A\vdash \neg A & (\land E)\;2\\
+5. & \neg A\land \neg B, A\lor B,A\vdash \bot & (\imp E)\;3,4\\
+6. & \neg A\land \neg B, A\lor B,B\vdash \neg A\land\neg B & (Hip)\\
+7. & \neg A\land \neg B, A\lor B,B\vdash B & (Hip)\\
+8. & \neg A\land \neg B, A\lor B,B\vdash \neg B & (\land E)\;6\\
+9. & \neg A\land \neg B, A\lor B,B\vdash \bot & (\imp E)\;7,8\\
+10. & \neg A\land \neg B, A\lor B\vdash \bot & (\lor E)\;1,5,9\\
+\ea
+\]
+\ee
+
+\end{comment}
+
+\item Demostrar el teorema $\vdash_i \neg A\lor B\imp A\imp B$.
+\[
+\ba{rll}
+1 & \neg A,\; A \vdash A & (Hip)\\
+2 & \neg A,\; A \vdash \neg A & (Hip)\\
+3 & \neg A, \;A \vdash B & (\bot E)\; 1,2\\
+4 & B,\; A\vdash B & (Hip)\\
+5 & \neg A\lor B,\; A\vdash B & (\lor L)\; 3,4\\
+6 & \neg A\lor B \vdash A \to B & (\to R) \;6  \\
+7 &      \vdash \neg A\lor B \to A \to B & (\to R) \; 6
+\ea
+\]
+
+\begin{comment}
+
+\item Para demostrar $\vdash_i A\lor\neg A\imp \neg\neg A\imp A$ basta mostrar
+$A\lor\neg A,\neg\neg A\vdash A$.
+\[
+\ba{rll}
+1. & A\lor \neg A,\neg \neg A\vdash A\lor \neg A & (Hip)\\
+2. & A\lor \neg A,\neg \neg A,A\vdash A & (Hip)\\
+3. & A\lor \neg A,\neg \neg A,\neg A\vdash \neg A & (Hip)\\
+4. & A\lor \neg A,\neg \neg A,\neg A\vdash \neg\neg A & (Hip)\\
+5. & A\lor \neg A,\neg \neg A,\neg A\vdash \bot & (\imp E)\;3,4\\
+6. & A\lor \neg A,\neg \neg A,\neg A\vdash A & (\bot E)\;5\\
+7. & A\lor \neg A,\neg \neg A\vdash A & (\lor E)\;1,2,6\\
+\ea
+\]
+
+\item El teorema $\vdash_c \neg\neg A\iff A$ se demuestra en dos partes. La 
+parte $\vdash A\imp\neg\neg A$ ya fue probada. Basta probar 
+entonces $\vdash\neg\neg A\imp A$, es decir, $\neg\neg A\vdash
+A$. Pero esto es inmediato por la regla $(\neg\neg E)$.\\
+
+\end{comment}
+
+\item Para el teorema $\vdash_c \neg(A\land B)\iff \neg A\lor\neg B$ se tienen 
+dos partes: la parte \enquote{$\leftarrow$} es válida minimalmente y por lo 
+tanto v\'alida en l\'ogica cl\'asica (se deja como ejercicio); para la otra 
+parte hay que derivar 
+$\neg(A\land B)\vdash_c \neg A\lor \neg B$ :
+
+\[
+\ba{rll}
+1 & \neg(A\land B), A,B\vdash A & (Hip)\\
+2 & \neg(A\land B), A,B\vdash B & (Hip)\\
+3 & \neg(A\land B), A,B\vdash A\land B & (\land R)\;1,2\\
+4 & \neg(A\land B), A,B\vdash \neg(A\land B) & (Hip)\\
+5 & \neg(A\land B), A,B\vdash \neg A\lor\neg B & (\lnot E )3,4\;\\
+6 & \neg(A\land B), A,\neg B\vdash \neg B & (Hip)\\
+7 & \neg(A\land B), A,\neg B\vdash \neg A\lor\neg B & (\lor R)\; 6 \\
+8 & \neg(A\land B), A,B\lor\neg B\vdash \neg A\lor\neg B & (\lor L)\; 5,7 \\
+9 & \neg(A\land B), A\vdash B\lor\neg B & (TE)\\
+10 & \neg(A\land B), A\vdash \neg A\lor\neg B & (cut)\; 8,9 \\
+11 & \neg(A\land B), \neg A\vdash \neg A & (Hip)\\
+12 & \neg(A\land B), \neg A \vdash \neg A\lor\neg B & (\lor R)\; 11 \\
+13 & \neg(A\land B), A\lor \neg A \vdash \neg A\lor\neg B & (\lor L)\; 10,12\\
+14 & \neg(A\land B)\vdash A\lor \neg A & (TE)\\
+15 & \neg(A\land B)\vdash \neg A\lor\neg B & (cut)\; 14,13\\
+\ea
+\]
+
+\item $\vdash_c ((A\imp B)\imp A)\imp A$. Por la ley de 
+contrapositiva~\footnote{Se puede mostrar que esta ley es un teorema, es decir 
+que $\vdash (A\imp B) \iff (\lnot B\imp \lnot A)$.} basta 
+mostrar  $\neg A\vdash_c \neg((A\imp B)\imp A)$. Por otra parte, se puede
+probar que $C\land\neg D\vdash_m \neg (C\imp D)$ para cualesquiera f\'ormulas 
+$C$ y $D$.
+Por lo que basta mostrar $\neg A\vdash_c (A\imp B)\land\neg A$, lo 
+cual se sigue de $\neg A, A\vdash_c B$ y que es inmediato de la 
+regla~$(\bot E)$.
+
+\ei
+
+
+Veamos ahora algunos ejemplos con cuantificadores:
+
+\bi
+\item Mostrar que:
+\[
+\vdash_m \forall w (Pw \to Qw) 
+\to \forall x (\exists y (P y \land Rxy) \to \exists z (Qz 
+\land Rxz))
+\]
+\[
+\begin{array}{rll}
+1 \quad & \forall w (Pw \to Qw) \, , \, \exists y (P y \land Rxy) \, , 
+\, P y,\, Rxy,\, P y \to Qy  \vdash Rxy  & (Hip)\\
+2 \quad & \forall w (Pw \to Qw) \, , \, \exists y (P y \land Rxy) \, , 
+\, P y ,\, Rxy,\, P y \to Qy  \vdash Py  & (Hip) \\
+3 \quad & \forall w (Pw \to Qw) \, , \, \exists y (P y \land Rxy) \, , 
+\, P y ,\, Rxy,\, P y \to Qy  \vdash Q y  & (\to L) \; 2\\
+4 \quad & \forall w (Pw \to Qw) \, , \, \exists y (P y \land Rxy) \, , 
+\, P y ,\, Rxy,\, P y \to Qy  \vdash Q y \land Rxy & (\land R) \; 1,3\\
+5 \quad & \forall w (Pw \to Qw) \, , \, \exists y (P y \land Rxy) \, , 
+\, P y \land Rxy ,\, P y \to Qy \vdash Qy \land Rxy  & (\land L) \; 4 \\
+6 \quad &  \forall w (Pw \to Qw) \, , \, \exists y (P y \land Rxy)\, , 
+\, P y \land Rxy,\, P y \to Qy  \vdash \exists z ( Qz \land Rxz) & (\exists R) 
+\; 5\\
+& \quad \quad z\notin FV(\{\forall w (Pw \to Qw) \, , \, \exists y (P y \land 
+Rxy)\, , \, P y \land Rxy,\, P y \to Qy \}) & \\
+7 \quad &  \forall w (Pw \to Qw) \, , \, \exists y (P y \land Rxy)\, , 
+\, P y \land Rxy \vdash \exists z ( Qz \land Rxz) & (\forall L) \; 6 [w:=y]\\
+8\quad &  \forall w (Pw \to Qw) \, , \, \exists y (P y \land Rxy) \vdash 
+\exists z ( Qz \land Rxz)  & (\exists L) \; 7 \\
+& \quad \quad y\notin FV(\{\forall w (Pw \to Qw) \, , \, \exists y (P y \land 
+Rxy),\exists z ( Qz \land Rxz)\}) &\\
+9\quad &  \forall w (Pw \to Qw)  \vdash 
+\exists y (P y \land Rxy) \to \exists z ( Qz \land Rxz)  & (\to R \; ) 8 \\
+10\quad &  \forall w (Pw \to Qw)  \vdash 
+\forall x (\exists y (P y \land Rxy) \to \exists z ( Qz \land Rxz)) 
+    & (\forall R)\; 9 \\
+& \quad \quad x\notin FV(\{\forall w (Pw \to Qw)\})\\
+11\quad & \vdash 
+\forall w (Pw \to Qw) \to \forall x (\exists y (P y \land Rxy) 
+\to \exists z ( Qz \land Rxz)) & (\to R) \; 10\\
+\end{array}
+\]
+
+
+% \item $\vdash_m  A\lor\fa x B\imp\fa x( A\lor B)$ con $x\notin FV( A)$.
+% \[
+% \ba{rll}
+% 1. &  A\lor\fa x B, A\vdash  A\lor\fa x B & (Hip)\\\vspace*{5pt}
+% 2. &  A\lor\fa x B, A\vdash  A & (Hip)\\\vspace*{5pt}
+% 3. &  A\lor\fa x B, A\vdash  A\lor B & (\lor I,2)\\\vspace*{5pt}
+% 4. &  A\lor\fa x B, A\vdash \fa x( A\lor B) 
+%   & (\fa I,3),\;x\notin FV(\{ A\lor\fa x B, A\})\\\vspace*{5pt}
+% 5. &  A\lor\fa x B,\fa x B\vdash \fa x B & (Hip)\\\vspace*{5pt}
+% 6. &  A\lor\fa x B,\fa x B\vdash  B & (\fa E,5)\\\vspace*{5pt}
+% 7. &  A\lor\fa x B,\fa x B\vdash  A\lor B & (\lor I,6)\\\vspace*{5pt}
+% 8. &  A\lor\fa x B,\fa x B\vdash \fa x( A\lor B) 
+%   & (\fa I,7),\;x\notin FV(\{ A\lor\fa x B,\fa x B\})\\\vspace*{5pt}
+% 9. &  A\lor\fa x B\vdash \fa x( A\lor B) & (\lor E,1,4,8)
+% \ea
+% \]
+% 
+% \item Para demostrar que 
+% $\vdash_c\fa x( A\lor B)\imp A\lor\fa x B$ con $x\notin FV( A)$, basta derivar 
+% $\fa x( A\lor B),\neg A\vdash_c\fa x B$
+% \[
+% \ba{rll}
+% 1. & \fa x( A\lor B),\neg A\vdash \fa x( A\lor B) & (Hip)\\
+% 2. & \fa x( A\lor B),\neg A\vdash \neg A & (Hip)\\
+% 3. & \fa x( A\lor B),\neg A\vdash  A\lor B & (\fa E,1)\\
+% 4. & \fa x( A\lor B),\neg A\vdash  B & (RB,2,3)\text{\footnotemark}\\
+% 5. & \fa x( A\lor B),\neg A\vdash \fa x B & (\fa I,4),x\notin FV(\{\fa 
+% x( A\lor B),\neg A\})
+% \ea
+% \]
+% \footnotetext{Aquí $RB$ denota a la regla de resolución binaria, válida en 
+% lógica clásica, se deja como ejercicio su demostraci\'on.}
+% %\item $( B\imp\ex x A)\iff \ex x( B\imp A)$ con $x\notin FV( B)$.
+
+
+\item Demostrar que para cualesquiera f\'ormulas $A$ y $B$ 
+con $x\notin FV( B)$, se cumple que 
+  $\vdash_m \ex x( A\imp B)\imp (\fa x A\imp B)$
+%   Basta ver que $\ex x( A\imp B),\;\fa x A\vdash_m  B$
+
+\[
+\ba{rll}
+1. &  A\imp B,\;\fa x A,  A\vdash  A & (Hip)\\
+2. &  A\imp B,\;\fa x A,  A\vdash  B & (\to L) 1\\
+3. &  A\imp B,\;\fa x A \vdash  B & (\fa L) 2\\
+4. & \ex x( A\imp B),\;\fa x A\vdash   B 
+ & (\ex E) 3 \;x\notin FV(\{\ex x( A\imp B), B\})\\
+5. & \ex x( A\imp B)\vdash \fa x A \to  B  & (\to R) 4\\
+6. & \vdash \ex x( A\imp B) \to \fa x A \to   B  & (\to R) 5 \\
+\ea
+\]
+
+\begin{comment}
+% \item $\vdash_c(\fa x A\imp B)\iff \ex x( A\imp B)$ con $x\notin
+%   FV( B)$.
+% \bi
+\item $\vdash_c (\fa x A\imp B)\imp \ex x( A\imp B)$ con $x\notin
+  FV( B)$.  Puesto que estamos en lógica clásica basta probar
+$\fa x A\imp B\vdash_c \neg\fa x\neg( A\imp B)$, es decir, 
+$\fa x A\imp B,\;\fa x\neg( A\imp B)\vdash_c \bot$.
+
+\[
+\ba{rll}
+1. & \fa x A\imp B,\;\fa x\neg( A\imp B)\vdash \fa
+x\neg( A\imp B)  & (Hip)\\
+2. & \fa x A\imp B,\;\fa x\neg( A\imp B)\vdash \neg( A\imp B)
+& (\fa E,1)\\
+3. & \fa x A\imp B,\;\fa x\neg( A\imp B)\vdash  A\land\neg  B & 
+(equiv.\;
+logica, 2) \\
+4. & \fa x A\imp B,\;\fa x\neg( A\imp B)\vdash  A  & (\land E,3)
+\\
+5. & \fa x A\imp B,\;\fa x\neg( A\imp B)\vdash \fa x A  & (\fa
+I,4),\;x\notin FV(\{\fa x A\imp B,\;\fa x\neg( A\imp B)\}) \\
+6. & \fa x A\imp B,\;\fa x\neg( A\imp B)\vdash \fa x A\imp B
+& (Hip)\\
+7. & \fa x A\imp B,\;\fa x\neg( A\imp B)\vdash  B  & (\imp
+E,5,6)\\
+8. & \fa x A\imp B,\;\fa x\neg( A\imp B)\vdash\neg  B & (\land E,
+3) \\
+9. & \fa x A\imp B,\;\fa x\neg( A\imp B)\vdash\bot & (\imp E, 7,8) \\
+\ea
+\]
+%\item $\fa x\lnot\lnot A\imp \lnot\lnot\fa x A$.
+
+\item $\vdash_m\fa xA\imp\neg\ex x\neg A$. 
+Basta ver que $\fa xA,\;\ex x\neg A\vdash_m\bot$
+\[
+\ba{rll}
+1. & \fa x A,\ex x\neg A\vdash \ex x\neg A & (Hip).\\
+2. & \fa x A,\ex x\neg A,\neg A\vdash \neg A & (Hip).\\
+3. & \fa x A,\ex x\neg A,\neg A\vdash \fa x A & (Hip).\\
+4. & \fa x A,\ex x\neg A,\neg A\vdash A & (\fa E,3).\\
+5. & \fa x A,\ex x\neg A,\neg A\vdash \bot & (\imp E,2,4).\\
+6. & \fa x A,\ex x\neg A\vdash \bot & (\ex E,1,5),\;x\notin FV(\{\fa x A,\ex 
+x\neg A,\bot\}).\\
+\ea
+\]
+\end{comment}
+
+\item $\vdash_c \neg\ex x\neg A\imp \fa x A$. 
+Basta ver que $\neg\ex x\neg A\vdash_c\fa xA$ y como 
+$x\notin FV(\neg\ex x\neg A)$ basta con $\neg\ex x\neg A\vdash_c A$, para lo 
+cual mostramos $\neg\ex x\neg A\vdash_c \neg\neg A$, es decir 
+$\neg\ex x\neg A,\neg A\vdash_c \bot$
+\[
+\ba{rll}
+1 & \neg\ex x\neg A,\neg A\vdash \neg A & (Hip)\\
+2 & \neg\ex x\neg A,\neg A\vdash \ex x\neg A & (\ex R) 1 \quad [x:=x]\\
+3 & \neg\ex x\neg A,\neg A\vdash \bot & (\imp L) 2 \quad \neg\ex x\neg A 
+=_{def} \ex x\neg A \to \bot \\
+\ea
+\]
+
+
+\ei
+
+
+\section{Estrategias de derivación}
+Las siguientes estrategias se basan en las reglas derechas y permiten 
+construir una fórmula de acuerdo a su conectivo principal. 
+
+\begin{itemize}
+\item Para derivar $\G\vdash A\to B$ basta derivar $\G,A\vdash B$.
+\vspace*{5pt}
+\item Para derivar  $\G\vdash A\land B$ basta derivar $\G\vdash A$ y 
+$\G\vdash B$
+\vspace*{5pt}
+\item Para derivar $\G\vdash A\lor B$ basta derivar $\G\vdash A$ o bien 
+$\G\vdash B$
+\vspace*{5pt}
+\item Para derivar $\G\vdash \forall x A$ basta derivar $\G\vdash A$ donde 
+s.p.g. $x\notin FV(\G)$
+\vspace*{5pt}
+\item Para derivar $\G\vdash \exists x A$ basta encontrar un término $t$ tal 
+que $\G\vdash A[x:=t]$
+\end{itemize}
+
+
+Las siguientes estrategias se basan en las reglas izquierdas y permiten 
+construir una fórmula $C$ usando una premisa particular:
+\bi
+\item Para derivar $\G,A\to C;\G'\vdash C$, basta derivar 
+$ \G,A\to C;\G'\vdash A $
+
+\item Para derivar $\G,A\land B;\G'\vdash C$ basta derivar 
+$ \G,A,B;\G'\vdash C $
+
+\item Para derivar $\G,A\lor B;\G'\vdash C$ basta derivar
+$\G,A;\G'\vdash C\text{ y }\G,B;\G'\vdash C $
+
+% \item Para derivar $\G,A\to B\vdash B$ basta derivar  $\G,A\to B\vdash A$
+% \vspace*{5pt}
+%\item Para derivar $\G,\exists x A\vdash C$ basta derivar $\G,A[x:=t]\vdash C$
+\item Para derivar $\G,\ex x A;\G'\vdash C$ basta derivar 
+$ \G,A;\G'\vdash C$ donde s.p.g. $x\notin FV(\G;\G',C)$
+\item Para derivar $\G,\fa x A;\G'\vdash C$ basta proponer un término $t$ y derivar 
+$\G,\fa x A, A[x:=t];\G'\vdash C$.
+
+\ei
+% \item Corte: Para derivar $\G\vdash C$ basta proponer $A$ y derivar
+% \be
+% \item $\G\vdash A\to C$
+% \vspace{0.1cm}
+% \item $\G\vdash A$
+% \vspace*{5pt}
+% \ee
+
+
+% Las siguientes estrategias se basan en las reglas de eliminación y permiten 
+% construir una fórmula $C$ usando una premisa particular:
+% \bi
+% \item Aplicación: para derivar $\G,A\to C\vdash C$, basta derivar 
+% $ \G,A\to C\vdash A $
+
+% \item Para derivar $\G,A\land B\vdash C$ basta derivar 
+% $ \G,A,B\vdash C $
+
+% \item Para derivar $\G,A\lor B\vdash C$ basta derivar
+% $\G,A\vdash C\text{ y }\G,B\vdash C $
+
+% % \item Para derivar $\G,A\to B\vdash B$ basta derivar  $\G,A\to B\vdash A$
+% % \vspace*{5pt}
+% %\item Para derivar $\G,\exists x A\vdash C$ basta derivar $\G,A[x:=t]\vdash C$
+% \item Para derivar $\G,\ex x A\vdash C$ basta derivar 
+% $ \G,A\vdash C$ donde $x\notin FV(\G,C)$
+% \ei
+% % \item Corte: Para derivar $\G\vdash C$ basta proponer $A$ y derivar
+% % \be
+% % \item $\G\vdash A\to C$
+% % \vspace{0.1cm}
+% % \item $\G\vdash A$
+% % \vspace*{5pt}
+% % \ee
+
+La siguiente estrategia corresponde al uso de un lema, la fórmula~$A$, como 
+se usa en matemáticas al demostrar un teorema usando resultados previos. 
+Se recomienda utilizarla cuando las anteriores no funcionan directamente.
+\bi
+\item Aserción: Para derivar $\G\vdash C$ basta proponer $A$ y derivar tanto
+$\G\vdash A$  como  $\G,A\vdash C$ .
+\ei
+
+El uso adecuado de las estrategias anteriores nos llevar eventualmente  a 
+buscar pruebas más sencillas que las originales. Las siguientes estrategias 
+permiten reducir el número de pruebas buscadas y terminar el proceso de búsqueda.
+% permiten concluir 
+% pruebas o disminuir el número de subpruebas en una prueba particular.
+\bi
+\item Para derivar $ \G,A;\G'\vdash A $
+ no hay nada más que hacer pues esta es una derivación válida.
+\item Para derivar $\G,\forall xA;\G'\vdash A[x:=t]$ no hay nada más que 
+hacer pues esta es una derivación válida.
+%\vspace{2cm}
+% \item Si $\G,A\vdash C$ entonces $\G,\exists x A\vdash C$ donde $x\notin 
+% FV(\G,C)$
+% \espc
+% \item 
+\ei
+
+\section{Tácticas}
+Las estrategias anteriores pueden mecanizarse mediante un procedimiento de 
+búsqueda de pruebas orientado a metas. Una meta es simplemente un 
+secuente~$\G\vdash A$ correspondiente a la prueba deseada. Usando las 
+estrategias definidas en la sección anterior, este secuente se transforma en 
+una secuencia de uno o más secuentes digamos 
+$\G_1\vdash A_1;\ldots ;\G_k\vdash A_k$ siendo la nueva meta a 
+resolver el secuente $\G_1\vdash A_1$, el cual genera nuevas submetas, y así 
+sucesivamente. El proceso de búsqueda se simplifica con las siguientes 
+definiciones:
+\bi
+\item $\Sc$ denota a una secuencia finita de metas (posiblemente vacía, 
+denotada $\square$) 
+$$ \Sc=_{def}\Ge_1;\ldots;\Ge_k $$
+
+\item El proceso de búsqueda aplica una estrategia a la primera meta de la 
+secuencia actual Si al aplicar cierta estrategia a la meta $\Ge_1$ se generan 
+las submetas 
+$\Ge'_{11};\Ge'_{12};\ldots;\Ge'_{1k}$ entonces escribimos
+$$ \Ge_1;\Sc\;\rhd\;\Ge'_{11};\Ge;_{12};\ldots;\Ge_{1k};\Sc $$
+y a este proceso le llamamos táctica.
+
+\item La relación $\Sc\rhd \Sc'$ puede leerse como \enquote{para demostrar la 
+secuencia~$\Sc$ es suficiente demostrar la secuencia~$\Sc'$}. Por ejemplo:
+\bi
+ \item Para demostrar que $p,q\vdash (q\lor r) \land p$ \\
+  es suficiente demostrar que $p,q\vdash q\lor r$  y que $p,q\vdash p$
+  por lo que escribimos 
+  $p,q\vdash (q\lor r) \land p\;\rhd\;p,q\vdash q\lor r\;; \;p,q\vdash p$.
+  
+ \item Para demostrar que $p,q\vdash q\lor r$ y $p,q\vdash p$ \\
+  es suficiente demostrar $p,q\vdash q$  y $p,q\vdash p$
+  por lo que escribimos 
+  $p,q\vdash q\lor r\; ; \;p,q\vdash p\;\rhd\; p,q\vdash q\; ; \;p,q\vdash p$.
+
+ \item Para demostrar que $p,q\vdash q$ y $p,q\vdash p$ \\
+ es suficiente demostrar $p,q\vdash p$ (pues $p,q\vdash q$ es inmediato)
+por lo que escribimos 
+$p,q\vdash q\; ; \;p,q\vdash p\;\rhd\;p,q\vdash p$.
+
+ \item Para demostrar $p,q\vdash p$ \\
+  hemos terminado pues $p,q\vdash p$ es inmediato por lo que escribimos 
+  $p,q\vdash p\;\rhd\; \Box$ ,  donde el símbolo $\Box$ denota a la secuencia vacía de metas.
+\ei
+\ei
+
+A continuación definimos las tácticas particulares. Aquí $\Sc$ denota a una 
+secuencia arbitraria de metas y una expresión de la forma $H:A$ denota a 
+una hipótesis etiquetada con el nombre $H$ el cual se usa como referencia en la 
+definición de la táctica. En general un contexto tiene todas las hipótesis 
+etiquetadas, es decir, es de la forma $\G=\{H_1:A_1,\ldots,H_n:A_n\}$.
+
+
+\begin{itemize}
+ \item \texttt{intro}: $\quad \G\vdash A\to B;\Sc\;\rhd\; \G,A\vdash B;\Sc$
+\vspace*{5pt}
+ \item \texttt{split}: 
+ $\quad \G\vdash A\land B;\Sc\;\rhd\; \G\vdash A; \G\vdash B;\Sc$
+\vspace*{5pt}
+ \item \texttt{left}: $\quad \G\vdash A\lor B;\Sc\;\rhd\; \G\vdash A;\Sc$
+\vspace*{5pt}
+ \item \texttt{right}: $\quad \G\vdash A\lor B;\Sc\;\rhd\; \G\vdash B;\Sc$
+\vspace*{5pt} 
+ \item \texttt{intro}: 
+ $\quad \G\vdash \forall x A;\Sc\;\rhd\;\G\vdash A;\Sc$ donde s.p.g 
+ $x\notin FV(\G)$
+\vspace*{5pt}
+ \item \texttt{exists t}: 
+ $\quad \G\vdash \exists x A;\Sc\;\rhd\;\G\vdash A[x:=t];\Sc$ para algún $t$.
+\vspace*{5pt}
+ \item \texttt{apply} H: 
+ $\quad \G,H: A\to B;\G'\vdash B;\Sc\;\rhd\; \G,H:A\to B;\G'\vdash A;\Sc$
+ \item \texttt{destruct} H: 
+ $\quad \G,H:A\land B;\G'\vdash C;\Sc\;\rhd\; \G,H_1:A, H_2: B;\G'\vdash C;\Sc$
+\vspace*{5pt}
+ \item \texttt{destruct} H: 
+ $\quad \G,H:A\lor B;\G'\vdash C;\Sc\;\rhd\;\G,H_1: A;\G'\vdash C\;\;;\;\;\G,H_2:B;\G'\vdash C;\Sc$
+\vspace*{5pt}
+ \item \texttt{apply} H: 
+ $\quad \G, H:\forall xA;\G'\vdash A[x:=t];\Sc\;\rhd\;\Sc$
+\vspace*{5pt}
+ \item \texttt{destruct} H: 
+ $\quad \G, H: \exists x A;\G'\vdash C;\Sc\;\rhd\; \G, H_1:A;\G'\vdash C;\Sc$
+ donde s.p.g. 
+  $x\notin FV(\G)$
+\vspace*{5pt}
+ \item \texttt{destruct} H \texttt{with} t: 
+ $\quad \G, H: \fa x A;\G'\vdash C;\Sc\;\rhd\; \G, H:\fa x A, H_1 : A[x:=t];\G'\vdash C;\Sc$
+\vspace*{5pt}
+ \item \texttt{assumption}: $\quad \G,H:A\vdash A;\Sc \;\rhd\; \Sc$ 
+ en particular $\G,A\vdash A\;\rhd\;\Box$
+\vspace*{5pt}
+ \item \texttt{assert} 
+ $A$: $\quad \G\vdash C;\Sc\;\rhd\; \G\vdash A\;\;;\;\;\G,\;H:A\vdash C;\Sc$
+	% \vspace*{5pt}
+	% \item \texttt{cut}: $\G\vdash C;\Sc\;\rhd\; \G\vdash A\to C;\G\vdash 
+% A;\Sc$
+	% \vspace{0.3cm}
+\end{itemize}
+
+% Los nombres de las tácticas corresponden al nombre del comando en el 
+%asistente 
+% de prueba {\coq} visto en el laboratorio.
+
+
+\medskip
+
+Veamos algunos ejemplos de derivación mediante tácticas.
+\bi
+\item Probar que: \hspace{0.5cm} 
+$\vdash (p \land q \to r) \to p \to q \to r$  
+\[
+\begin{array}{lr}
+ \quad \vdash p \land q \to r \imp  p  \to q \to r &   
+ intro\\  \vspace*{5pt}
+ H_1: p \land q \to r \vdash  p  \to q \to r &  
+ intro\\ \vspace*{5pt}
+ H_1: p \land q \to r \; , \; H_2: p  \vdash q \to r & 
+ intro \\ \vspace*{5pt}
+ H_1: p \land q \to r \; , \; H_2: p \; , \; H_3: q \vdash  r &
+ apply \;\; H_1\\ \vspace*{5pt}
+ H_1: p \land q \to r \; , \; H_2: p \; , \; H_3: q \vdash p \land q &
+ split \\ \vspace*{5pt}
+ H_1: p \land q \to r \; , \; H_2: p \; , \; H_3: q \vdash p \; ; \; 
+ H_1: p \land q \to r \; , \; H_2: p \; , \; H_3: q \vdash q & 
+ assumption \\ \vspace*{5pt}
+ H_1: p \land q \to r \; , \; H_2: p \; , \; H_3: q \vdash q & 
+ assumption \\ \vspace*{5pt}
+ \square & 
+\end{array}
+\]
+
+\item Sea
+$\G=\{H:p \to q \lor  r ,\; H': q\to r,\;H'': r\to s\}$. 
+Queremos mostrar que $\G\vdash p\to s $ 
+\[
+\begin{array}{rll}
+1\quad & \G\vdash p\to s &  \qquad \mbox{intro} \\
+2 \quad & \G,\;H_1: p \vdash s & \qquad \mbox {apply}\; H'' \\ %\;\; r\to s \\
+3 \quad & \G,\;H_1: p \vdash r & \qquad \mbox{assert} \;\; q \lor r \\
+4 \quad & \G,\;H_1: p\vdash q\lor r\quad  ; \quad  \G,\;H_1: p,\;H_2: q\lor 
+r\vdash r &  \qquad \mbox{apply}\; H \\ %\;p\to q\lor r \\
+5 \quad & \G,\;H_1: p\vdash p\quad  ; \quad  \G,\;H_1: p,\;H_2: q\lor r\vdash 
+r& \qquad \mbox{assumption} \\ 
+6 \quad & \G,\;H_1: p,\;H_2: q\lor r\vdash r & \qquad \mbox{destruct} \;H_2 \\ 
+%\;\; q\lor r \\
+7\quad & \G,\;H_1: p,\;H_2: q \vdash r \quad  ; \quad  \G,\;H_1: p,\;H_3: r 
+\vdash r &  \qquad \mbox{apply}\; H' \\ %\; q\to r \\ 
+8 \quad & \G,\;H_1: p,\;H_2: q \vdash q \quad  ; \quad  \G,\;H_2: p,\;H_3: r 
+\vdash r & \qquad \mbox{assumption} \\
+9 \quad & \G,\;H_1: p,\;H_3: r \vdash r & \qquad  \mbox{assumption} \\
+10 \quad & \square & 
+\end{array}
+\]
+\ei
+
+
+\subsection{Tácticas para la negación}
+Las siguientes tácticas son útiles cuando hay que razonar con negación:
+
+\begin{itemize}
+%\item \texttt{exfalso}: $\;\;\G\;\vdash A \; ;\Sc\;\rhd\;\G\vdash \bot\; ;\; 
+% \Sc$
+
+ \item \texttt{absurd (A) : }  
+  $\G \vdash B \, ; \, \Sc\;\rhd\;\;\G \vdash A \, \; ;\;\G\vdash \neg A\; ;\Sc$
+ \item \texttt{contradict H: } 
+  $\quad \G, H:\neg A\vdash B \,;\Sc\;\rhd\;\G\vdash A\; ;\Sc$
+ \item \texttt{contradict H: } 
+  $\quad \G, H:\neg A\vdash \neg B \,;\Sc\;\rhd\;\G, H:B\vdash A\; ;\Sc$
+ \item \texttt{contradict H: } 
+  $\quad \G, H: A\vdash B \, ;\Sc\;\rhd\;\G\vdash \neg A\; ;\Sc$
+ \item \texttt{contradict H: } 
+  $\quad \G, H: A\vdash \neg B \, ;\Sc\;\rhd\;\G, H:B\vdash \neg A\; ;\Sc$
+\end{itemize}
+
+Las siguientes tácticas sólo están disponibles en la lógica clásica al importar 
+la biblioteca \texttt{Classical}
+\bi
+	% \item \texttt{contradict} H: $\quad \G, H:\neg A\vdash 
+% B;\Sc\;\rhd\;\G\vdash A\; ;\Sc$
+	% \item \texttt{contradict} H: $\quad \G, H:\neg A\vdash \neg 
+% B;\Sc\;\rhd\;\G, H:B\vdash A\; ;\Sc$
+	% \vspace*{5pt}
+ \item \texttt{exact (classic (A))}: 
+  $\quad \G\vdash A\lor\neg A\;;\Sc \;\rhd\;\Sc$
+ \item \texttt{exact (NNPP (A))}: 
+  $\quad \G\vdash \neg\neg A\to A\;;\Sc \;\rhd\;\Sc$
+\ei
+
+La primera de estas tácticas es útil en combinación con \texttt{assert} para 
+agregar una instancia del tercero excluido al contexto y la segunda para 
+agregar una instancia de la parte clásica de la ley de doble negación . Otras 
+tácticas útiles derivada de éstas son:
+\bi
+ \item \texttt{destruct (classic (A))}: 
+  $\quad \G\,\vdash B\;;\Sc\;\rhd\; \G,A\vdash B\;;\;\G,\neg A\vdash B;\;\Sc$.
+ \item \texttt{apply (NNPP(A))}: 
+  $\quad \G\vdash A\;;\;\Sc\;\rhd\;\G\vdash\neg\neg A\;;\;\Sc$
+\ei
+
+
+% \section{Los teoremas de completud y correctud para la lógica clásica}
+
+% Finalizamos nuestras consideraciones acerca de los sistemas de deducción
+% natural mencionando los teoremas de correctud y completud para la lógica
+% clásica $\Dnc$ que vinculan el mundo de la semántica con el de la sintáxis 
+% de manera biunívoca.
+
+% \teo{[Correctud de $\Dnc$] Sean $\G$ un conjunto de fórmulas y $ A$ una
+%   fórmula. La relación $\vdash_c$ es correcta con respecto a la
+%   consecuencia lógica,es decir:
+% \bc
+% Si $\G\vdash_c A$ entonces $\G\models A$.
+% \ec
+% }
+% \proof Inducción sobre $\G\vdash_c A$. Lo cual equivale a probar
+% que todas las reglas del sistema $\Dnc$ preservan la noción $\models$ pero esto 
+% es justo lo que dice la proposición 
+% \ref{prop:rdnsem}.
+
+
+% \teo{[Completud de $\Dnc$] Sean $\G$ un conjunto de fórmulas y $ A$ una
+%   fórmula. El sistema $\Dnc$ es completo con respecto a la relación $\vdash_c$,
+%   es decir:
+% \bc
+%  Si $\G\models A$ entonces $\G\vdash_c A$.
+% \ec
+% }
+% \proof
+% Omitimos la demostración dado que las técnicas necesarias pertenecen al
+% ámbito de la lógica matemática pura.
+
+
+
+
+% %Cabe observar que dado que los sistemas $\dnm$ y $\dnp$ son restricciones de
+% %$\Dnc$ los teoremas recién enunciados son válidos haciendo las restricciones
+% %necesarias a la noción de consecuencia lógica.
+
+% %Ya hemos hecho las consideraciones generales acerca de los sistemas de
+% %deducción natural en la nota cuatro, de manera que ahora sólo nos
+% %limitaremos a presentar la extensión de los sistemas proposicionales
+% %de deducción natural $\dnm,\dnp,\Dnc$ a la lógica de primer orden.
+
+
+% %El sistema de deducción natural para la lógica {\bf clásica} de predicados,
+% %consta de todas las reglas de la nota 4 junto con las reglas para los
+% %cuantificadores recién definidas. Más adelante veremos las restricciones
+% %minimal e intuicionista.
+
+% % Obsérvese que las estrategias sirven sólo como guia, y puede que no siempre
+% % sean el mejor camino para llegar a una conclusión. En particular no tenemos
+% % una estrategia adecuada para probar existenciales directamente dado que según
+% % las reglas la única manera posible de probar $\ex x A$ es probando
+% % $ A[x:=t]$ para algún término $t$, pero dicho término tendría que adivinarse 
+% % en general
+% % puesto que desaparece en la conclusión de la regla $(\ex E)$. La mejor
+% % estrategia en este caso es probar por contradicción, es decir:
+% % \bi
+% % \item Si $ A=\ex x B$ basta probar $\G,\neg\ex x B\vdash\bot$, o
+% %   equivalentemente, usando las leyes de negación,
+% % $\G,\fa x\neg B\vdash\bot$. Por supuesto esto prueba $\ex x  B$
+% % sólo en la lógica clásica.
+% % \ei
+
+% \section{Reglas del sistema de Fitch (con cajas)}
+
+% Una presentación común del sistema de deducción natural es usando el llamado 
+% sistema de Fitch o sistema de cajas. Enunciamos aquí sus reglas por ser un 
+% sistema importante, aunque no lo usaremos en este curso. En este sistema las 
+% derivaciones son sucesiones de fórmulas y no de secuentes.
+% \bi
+% \item Conjunción:
+% \begin{mathpar}
+% \inferrule*[right=($\land$ I)]{A\quad \;\;B}{A\land B}
+
+% \inferrule*[right=($\land$ E)]{A\land B}{A}
+
+% \inferrule*[right=($\land$ E)]{A\land B}{B}
+% \end{mathpar}
+
+% \item Implicación:
+% \begin{minipage}{.3\textwidth}
+%  \centering
+% \[
+% \frac{
+% \begin{tabular}{|c|}
+% \hline
+% A \\
+% \vdots \\
+% B \\
+% \hline
+% \end{tabular}}
+% {A\to B}\;(\to I)
+% \]
+% \end{minipage}
+% \begin{minipage}{.3\textwidth}
+% \centering
+% \begin{mathpar}
+% \inferrule*[right=(MP)]{
+% A\to B\quad \;\;A}{B}
+% \end{mathpar}
+% \end{minipage}
+
+
+% \item Disyunción
+% \begin{minipage}{.4\textwidth}
+%  \centering
+% \begin{mathpar}
+% \inferrule*[right=($\lor$ I)]{A}{A\lor B}
+
+% \inferrule*[right=($\lor$ I)]{B}{A\lor B}
+% \end{mathpar}
+% \end{minipage}
+% \begin{minipage}{.4\textwidth}
+% \centering
+% \[
+% \frac{\text{A}\lor \text{B}\quad 
+% \begin{tabular}{|c|}
+% \hline 
+% A \\
+% \vdots \\
+% C \\
+% \hline
+% \end{tabular}\quad \;
+% \begin{tabular}{|c|}
+% \hline 
+% B \\
+% \vdots \\
+% C \\
+% \hline
+% \end{tabular}
+% }
+% {\text{C}}\;(\lor E)
+% \]
+% \end{minipage}
+
+% \item Verdad:
+% \begin{mathpar}
+% \inferrule*[right=($\top$ I)]{
+% }{
+% \quad\top\quad
+% }
+% \end{mathpar}
+
+% \item Cuantificación universal:
+% \[
+% \frac{\quad 
+% \begin{array}{|c|}
+% \hline \\
+% x_0\;\text{parámetro}\\ 
+% \vdots \\
+% A[x:=x_0]\\
+% \\
+% \hline
+% \end{array}\quad 
+% }{\fa x A}\;(\fa I)
+% \]
+
+% La condición de que $x_0$ sea un parámetro significa que $x_0$ no puede figurar 
+% libre fuera de su caja.
+% % \beqs
+% % \inferrule*[]{
+% % \begin{array}{|c|}
+% % \hline
+% % x_0\;\text{parámetro}\\
+% % \vdots \\
+% % A[x:=x_0] \\
+% % \hline
+% % \end{array}\quad \;\;
+% % %x_0%\text{parámetro}
+% % }{} %{\fa x\text{A}}\;(\fa I)
+% % \eeqs
+% \begin{mathpar}
+% \inferrule*[right=($\fa$ E)]{\fa x\text{A}}
+% {\text{A}[x:=t]}
+% \end{mathpar}
+
+% \item Cuantificación existencial:
+% \begin{minipage}{.3\textwidth}
+%  \centering
+% \begin{mathpar}
+% \inferrule*[right=($\ex$ I)]{A[x:=t]}{\ex x A}
+% \end{mathpar}
+% \end{minipage}
+% \begin{minipage}{.3\textwidth}
+% \centering
+% \[
+% \frac{\ex x A\quad \;\begin{array}{|c|}
+% \hline \\
+% A[x:=x_0] \\
+% \vdots\\
+% B\\
+% \hline
+% \end{array}\quad \;\;
+% x_0\;\;\text{parámetro}}
+% {B}\;(\ex E)
+% \]
+% \end{minipage}
+
+% $x_0$ parámetro significa que $x_0$ no puede estar libre fuera de su caja, en 
+% particular $x_0$ no debe estar libre en $B$.
+% \ei
+
+
+\end{document}

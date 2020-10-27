@@ -1,0 +1,571 @@
+\documentclass[letterpaper, 11 pt]{article}
+\usepackage{amssymb,amsmath,stmaryrd}
+\usepackage{mathrsfs}
+\usepackage{epsfig}
+\usepackage{anysize}
+\usepackage{verbatim}
+\usepackage[latin1]{inputenc}
+\usepackage[spanish]{babel}
+
+\usepackage[margin=2.5cm,includefoot]{geometry}
+
+\include{macrosleng}
+%\include{macros2007}
+
+\renewcommand{\R}{\ensuremath{\mathcal{R}}}
+
+
+\title{Verificación Formal PCIC, 2021-1\\
+  Definiciones Inductivas}
+\author{Favio E. Miranda Perea
+\\ Facultad de Ciencias UNAM}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+
+
+
+
+
+\section{Objetos y Juicios}
+
+
+Las nociones fundamentales en la clase de definiciones inductivas que
+trataremos son objetos y juicios.
+\bi
+\item Objetos: se consideran como primitivos y previamente dados. Por
+  ejemplo números, árboles, tipos, valores, etc.
+  \item Juicios: Un juicio es una afirmación acerca de un objeto
+    particular cumple cierta
+    propiedad o bien que dos o más objetos pertenecen a una
+    relación. Por ejemplo:
+
+    \bc
+    \begin{tabular}{rl}
+      $n\;\nat$ & $n$ es un número natural \\
+      $n=m+k$   & $n$ es la suma de $m$ con $k$  \\
+      $t\;${\sf asa} & $t$ es un árbol sintáctico \\
+      $3+4*5\;${\sf ExpAr} & $3+4*5\;$ es una expresión aritmética
+      válida \\
+      0.1234$\;${\sf float} & 0.1234 es un valor flotante\\
+      ``aba'' {\sf pal} &   ``aba'' es una cadena palíndrómo\\
+      $T\;${\sf type} & $T$ es un tipo \\
+      $e:T$ &  La expresión $e$ tiene tipo $T$ \\
+      $e\to e'$ & la expresión $e$ se reduce a $e'$ \\
+      $e\Downarrow v$ & la expresión $e$ se evalua al valor $v$.
+      \end{tabular}
+    \ec
+\ei
+
+Por lo general usaremos notación infija de la forma $s\;P$ para
+expresar que $s$ cumple el juicio $P$ o notación infija, cuando el
+juicio involucra a dos objetos, como $n=k,e:T,e\to e'$. Obsérvese que
+los juicios son esencialmente predicados en lógica, escritos de manera
+postfija, por ejemplo en lugar de $P(s)$ escribimos $s\;P$. % La
+                                % conveniencia
+
+% en el uso de notación postfija se verá más adelante cuando los objetos
+% se vuelvan complicados.
+
+
+\section{Reglas de Inferencia}
+
+
+Una regla de inferencia es un esquema de la forma
+\beqs
+\frac{J_1\;\;J_2\ldots J_n}{J}
+\eeqs
+donde $J_i,J$ son juicios.
+
+Ya hemos manejado esta clase de reglas en lógica.  Los juicios
+$J_1\ldots J_n$ son las \emph{premisas} y $J$ es la \emph{conclusión}
+de la regla. Si no hay premisas la regla es un \emph{axioma}.
+Algunos ejemplos son:
+
+\beqs
+\frac{}{0\;\nat}\;\;\;\;\;\;\;\;\;\;\frac{n\;\nat}{suc(n)\;\nat}
+\eeqs
+
+\beqs
+\frac{}{1\;{\sf impar}}\;\;\;\;\;\;\;\;\;\;\frac{n\;{\sf
+    impar}}{suc(suc(n))\;{\sf impar}}
+\eeqs
+
+\beqs
+\frac{n\;{\sf par}\;\;\;m\;{\sf par}}{n+m\;{\sf par}}\;\;\;\;\;\;\;\
+\frac{n\;{\sf par}\;\;\;m\;{\sf impar}}{n+m\;{\sf impar}}
+\eeqs
+
+
+\beqs
+\frac{p\;{\sf varp}}{p\;{\sf form}}\;\;\;\;\;
+\frac{\vp\;{\sf form}\;\;\psi\;{\sf form}}{\vp\lor\psi\;{\sf form}}
+\eeqs
+
+
+\beqs
+\frac{\vp\;\true\;\;\;\psi\;\true}{\vp\land\psi\;\true}\;\;\;\;\;\;\;\;
+\frac{\vp\;\true}{\vp\lor\psi\;\true}
+\eeqs
+
+
+\section{Definiciones Inductivas}
+
+Una regla de inferencia %\beqs
+$\;\;\displaystyle\frac{J_1\;\;J_2\ldots J_n}{J}\;\;$
+%\eeqs
+es inductiva si al menos uno de los juicios $J_i$ es de la misma forma
+que el juicio $J$, es decir, ambos se refieren a la misma propiedad o
+relación.
+
+
+Una definición inductiva es un conjunto finito de reglas de
+inferencia donde al menos una de ellas es inductiva. Por ejemplo
+considérese la siguiente definición de árboles binarios no etiquetados.
+\bi
+\item $void$  es un árbol binario.
+  \item Si $t,s$ son árboles binarios entonces $nodo(t,s)$ es un árbol
+    binario.
+    \item Son todos.
+\ei
+Esta definición inductiva corresponde a la siguiente definición 
+mediante reglas de inferencia:
+
+\beqs
+\frac{}{void\;{\sf btree}}\;\;\;\;\;\;\;\;\frac{t\;{\sf btree}\;\;\;\;s\;{\sf btree}}{nodo(t,s)\;\;{\sf btree}}
+\eeqs
+Mas adelante puntualizaremos a que corresponde, en la definición por
+reglas de inferencia, la cláusula \emph{son
+  todos} en la definición original. 
+
+\espc
+
+
+Como otro ejemplo veamos la definición inductiva del tipo de datos
+$\lista_A$ de listas cuyos elementos son objetos de un conjunto o
+tipo $A$, definido aquí por el juicio  $x\;A$:
+
+\beqs
+\frac{}{nil\;\lista_A}
+\;\;\;\;\;\;\;\;\frac{x\;A\;\;\;\;\ell\;\lista_A}{(a:\ell)\;\;\lista_A}
+\eeqs
+
+\espc
+
+El siguiente ejemplo es de un clásico lenguaje libre de contexto
+definido mediante la siguiente gramática en forma BNF
+
+\beqs
+M ::= \cv\;|\; (M)\;|\; MM
+\eeqs
+
+
+Esta definición puede reescribirse mediante reglas de inferencia como
+sigue:
+
+\beqs
+\frac{}{\cv\;M}(m1)\;\;\;\;\;\;\;\;\frac{s\;M}{(s)\;M}(m2)
+\;\;\;\;\;\;\;\;\frac{s_1\;M\;\;\;\;\;s_2\;M}{s_1s_2\;M}(m3)
+\eeqs
+
+En resumen:
+
+\bi
+\item Las definiciones inductivas nos sirven para definir relaciones
+  de manera mecánica.
+  \item Es importante notar que no todas las relaciones pueden
+    definirse mediante una definición inductiva. Por ejemplo la
+    relación de ser una lista infinita.
+    % \item Sin embargo, la mayor\'ia de relaciones necesarias para el
+    %   estudio de lenguajes de programación se sirven de una definición
+    %   inductiva.
+\ei
+
+
+
+
+
+
+
+\section{Derivaciones}
+
+
+\bi
+\item Para mostrar que una instancia de una relación definida
+  inductivamente es válida basta mostrar una derivación de dicha
+  instancia.
+  \item Una derivación es una composición o encadenamiento de reglas
+    de inferencia a partir de axiomas la cual termina con la instancia
+    que se quiere demostrar.
+    \item Una derivación tiene una estructura de árbol donde la
+      derivación de las premisas de una regla son los hijos de un nodo
+      que representa una instancia de dicha regla.
+      \item Dichos árboles se suelen desarrollar con la ra\'iz hasta abajo. 
+\ei
+Veamos un par de ejemplos:
+\bi
+\item  $\suc(\suc(\suc 0)))\;\nat$
+\beqs %\normalsize
+\displaystyle\frac{\frac{0\;\nat}{\suc (0)\;\nat}}{\frac{\suc(\suc (0))\;\nat}{\suc(\suc(\suc (0)))\;\nat}}
+\eeqs
+
+
+%\beqs
+%\ba{c}                                %\normalsize
+%\frac{0\;\nat}{\suc 0)\;\nat} \\
+%\hline \\
+%\frac{\suc(\suc 0))\;\nat}{\suc(\suc(\suc 0)))\;\nat}
+%\ea
+%\eeqs
+
+\espc
+\item $nodo(nodo(void,void),void)\;{\sf btree}$
+\beqs
+\displaystyle\frac{\frac{void\;{\sf btree}\;\;\;\;\;\;void\;{\sf btree}}{nodo(void,void)\;{\sf btree}}\;\;\;\;\;void\;{\sf btree}}{nodo(nodo(void,void),void)\;{\sf btree}}
+\eeqs
+  
+\ei
+
+
+Existen dos formas principales para construir derivaciones de un
+juicio dado:
+
+\bi
+\item \emph{Encadenamiento hacia adelante o construcción de abajo hacia
+  arriba}: se inicia con los axiomas siendo la meta el juicio
+  deseado. En este caso se mantiene un conjunto de juicios derivables
+  que inicialmente es vacío, extendiendolo con la conclusión de
+  cualquier regla cuyas premisas ya están en el conjunto. El proceso
+  termina cuando el juicio deseado entra al conjunto. Este es un
+  método indirecto en el sentido de que no se toma en cuenta el juicio
+  meta al decidir como proceder en cada paso. Si el juicio es
+  derivable entonces la aplicación exhaustiva del proceso terminará
+  eventualmente con la conclusión deseada, en caso contrario es
+  imposible en general decidir cuando parar en la construcción del
+  conjunto y concluir que el juicio no es derivable.
+
+\item \emph{Encadenamiento hacia atr\'as o construcción de arriba hacia
+    abajo}: Se inicia con el juicio deseado buscando encadenar reglas
+  hasta terminar en axiomas. Esta búsqueda mantiene una serie de
+  metas actuales que son juicios cuyas derivaciones se
+  buscan. Inicialmente este conjunto contiene únicamente el juicio
+  deseado. En cada etapa se elimina un juicio del conjunto de metas y
+  consideramos todas las reglas cuya conclusión es dicho juicio. Para
+  cada regla agregamos sus premisas al conjunto de metas. El proceso
+  termina cuando el conjunto de metas es vacío. Si el juicio es
+  derivable eventualmente terminará este proceso. Sin embargo en el
+  caso contrario, no hay en general un algoritmo para decidir que el
+  juicio no es derivable.
+  \ei
+
+
+\section{Inducción}
+
+La gran mayoría de las demostraciones en este curso se harán usando
+inducción estructural sobre alguna definición inductiva, dicho
+principio puede resumirse como sigue:\\
+{\it Suponga que una propiedad o relación  $A$ está definida inductivamente
+por un conjunto de reglas de inferencia $S_A$. Para mostrar que una
+segunda propiedad $P$ es válida para todos los elementos $x$ de $A$
+basta probar que para cualquier regla que pertenezca a $S_A$, digamos
+\beqs
+\frac{x_1\; A\ldots x_n\; A }{x\; A}
+\eeqs
+se cumple que:
+\bc
+Si $P$ es válida para $x_1,\ldots,x_n$ entonces $P$ es válida para $x$.
+\ec
+Es decir, basta mostrar que cada regla
+\beqs
+\frac{x_1\; P\ldots x_n\; P}{x\; P}
+\eeqs
+obtenida al sustituir $A$ por $P$ en las reglas de $S_A$, es una regla válida.}\\
+  
+Observemos que las reglas de $S_A$ que son axiomas corresponden a los
+casos base de la inducción mientras que las otras reglas corresponden
+a pasos inductivos donde las premisas corresponden a la hipótesis de
+inducción.\\
+
+Algunos ejemplos específicos son:
+
+\bi
+\item Números naturales $\nat$: el principio usual de inducción para
+  naturales es el siguiente:
+\bi
+\item Base de la inducción: probar $P(0)$
+  \item Hipótesis de inducción (H.I.): suponer $P(x)$ 
+\item Paso inductivo: probar, usando la H.I., que $P(\suc(x))$
+\ei
+lo cual en forma de reglas corresponde a :
+\beqs
+\frac{}{0\;P}\;\;\;\;\;
+\frac{n\;P}{\suc(n)\;P}
+\eeqs
+
+\item Listas $\lista_A$: %Para el caso del tipo $\lista{(A)}$ tenemos:
+\bi
+\item Base de la inducción: probar $P(nil)$
+  \item H.I. suponer $a\;in A$ y $P(\ell)$ 
+\item Paso inductivo: probar, usando la H.I., $P((a:\ell))$
+\ei
+lo cual en forma de reglas corresponde a :
+\beqs
+\frac{}{nil\;P}\;\;\;\;\;
+\frac{a\;A\;\;\;\;\;\ell\;P}{(a:\ell)\;P}
+\eeqs
+
+\item Árboles binarios sin etiquetas {\sf btree}:
+  \bi
+  \item Base de la inducción: probar $P(void)$.
+    \item H.I. suponer $P(t),P(s)$ 
+\item Paso inductivo: probar $P(nodo(t,s))$
+  \ei
+lo cual en forma de reglas corresponde a :
+\beqs
+\frac{}{void\;P}\;\;\;\;\;
+\frac{t\;P\;\;\;s\;P}{nodo(s,t)\;P}
+\eeqs
+\ei
+
+
+
+\section{Reglas derivables y admisibles}
+
+Es importante observar que el número de reglas en una definición
+inductiva debe ser mínimo, esto facilitará las pruebas inductivas al
+haber menos casos que verificar en el paso inductivo. Respecto a este
+punto una vez que se tiene un conjunto de reglas primitivas o básicas
+$\Phi$ debemos distinguir otras clases de reglas, las derivables y las admisibles.
+
+\bi
+\item \emph{Reglas derivables}: Una regla $\R$ es derivable respecto a
+  un conjunto de reglas básicas $\Phi$ si y sólo si $\R$ puede
+  obtenerse usando las reglas primitivas de $\Phi$, es decir si se
+  sigue de una derivación parcial de reglas de $\Phi$. Formalmente,
+  la regla
+  \beqs
+  \frac{J_1\ldots J_n}{K} 
+  \eeqs
+  es derivable si al suponer válidos los juicios $J_1,\ldots,J_k$
+  podemos concluir el juicio $K$ mediante reglas de $\Phi$. Por
+  ejemplo la regla
+  \beqs
+  \frac{s\;M}{((s))\;M}
+  \eeqs
+es derivable con respecto a $\Phi_M=\{(m1),(m2),(m3)\}$ porque se tiene la siguiente derivación parcial que
+utiliza la regla $(m2)$ dos veces.
+\beqs
+\displaystyle\frac{\displaystyle\frac{s\;M}{(s)\;M}}{((s))\;M}
+\eeqs
+
+\item \emph{Reglas admisibles} Una regla es admisible respecto a
+  $\Phi$ si y sólo si el hecho de
+  que sus premisas sean derivables a partir de $\Phi$ implica que su
+  conclusión también es derivable a partir
+  de $\Phi$. Es decir, la regla
+    \beqs
+  \frac{J_1\ldots J_n}{K} 
+  \eeqs
+  es admisible si cada vez que podemos derivar $J_1\ldots J_n$
+  entonces necesariamente derivaremos $K$.\\
+  Puede observarse que una regla admisible no cambia el contenido del
+  lenguaje, es decir, no genera mas cadenas. Por ejemplo la regla
+  \beqs
+  \frac{()s\;M}{s\;M}
+  \eeqs
+  es admisible con respecto a $\Phi_M$ pues si derivamos $()s\;M$
+  entonces usamos la regla $(m3)$ necesariamente pero esto implica que
+  tuvimos que derivar primero $s\;M$ que es lo que necesitabamos para
+  probar la admisibilidad de la regla.
+\ei
+
+  Obsérvese que una regla derivable es admisible mas no al rev\'es. La
+  regla anterior no es derivable pues no tenemos en las reglas
+  primitivas una regla que elimine expresiones.\\
+  En contraste la siguiente regla
+  \beqs
+  \frac{(s)\;M}{s\;M}
+  \eeqs
+  no es admisible con respecto a $\Phi_M$ pues podemos derivar por ejemplo $()()\;M$ pero no
+  $)(\;M$.
+
+\espc
+
+Para afianzar los conceptos veamos unos ejemplos con números pares
+e impares. Las reglas primitivas son:
+\beqs
+\frac{}{0\;{\sf par}}\;(0p)\;\;\;\;\;\;\;\;\;\;
+\frac{n\;{\sf par}}{suc(n)\;{\sf impar}}\;(si)
+\;\;\;\;\;\;\;\;\;\;
+\frac{n\;{\sf impar}}{suc(n)\;{\sf par}}\;(sp)
+\eeqs
+
+Por cierto, esta es una definición inductiva simult\'anea, estamos
+definiendo dos juicios {\sf par} e {\sf impar} al mismo tiempo
+dependiendo uno del otro. \\
+Se deja como ejercicio verificar que la siguiente regla es derivable
+\beqs
+\frac{n\;{\sf par}}{suc(suc(n))\;{\sf par}}\;(ssp)
+\eeqs
+
+Además la siguiente regla es admisible pero no derivable:
+\beqs
+\frac{suc(n)\;{\sf impar}}{n\;{\sf par}}\;(invsi)
+\eeqs
+Veamos por qu\'e: no es derivable pues no hay una regla que pase de impar a par
+eliminando una aplicación de sucesor. Es admisible pues si derivamos 
+$suc(n)\;{\sf impar}$ necesariamente fue mediante la regla $(si)$ de
+manera que también derivamos $n\;{\sf par}$.\\
+
+Debemos enfatizar que las nociones de derivabilidad y admisibilidad
+dependen siempre de un conjunto fijo de reglas primitivas $\Phi$. Al
+cambiar éste los conceptos pueden cambiar de igual forma.
+
+
+
+\section{Formalización con puntos fijos}
+
+
+Considérese nuevamente la definición de números naturales
+\beqs
+\frac{}{0\;\nat}\;(0n)\;\;\;\;\;\;\;\;\;\;\frac{n\;\nat}{suc(n)\;\nat}\;(sn)
+\eeqs
+ 
+Es claro que el conjunto de números naturales $\N$ es cerrado bajo
+estas reglas, pero también lo es el conjunto de enteros, de racionales
+y de reales. Entonces ?`Qué conjunto están definiendo las reglas? 
+Esto es de gran importancia para poder justificar formalmente la
+definición así como los principios de inducción correspondientes. La
+idea es que un conjunto de reglas $\Phi$ va a definir al conjunto más
+pequeño cerrado bajo ellas. Esto corresponde al caso ``son todos''
+dado en la definición por cláusulas.
+
+A continuación formalizamos estas observaciones mediante el uso de puntos fijos en
+conjuntos.
+
+
+
+\begin{defin} Formalmente una regla de inferencia
+ \beqs
+ \frac{a_1\;X\ldots a_n\;X}{a\;X}\;(\R) 
+ \eeqs
+es un par $\R=\pt{\Pe,a}$ donde $\Pe=\{a_1,\ldots,a_n\}$ son las
+premisas y $a$ es la conclusión de $\R$. 
+% %donde $a_1,\ldots,a_n\in A$ define una relación $X\inc A$
+% es un par $\R=\pt{\Pe,c}$ donde $\Pe$ es el conjunto de premisas $\Pe=\{a_1\;X,\ldots\;,a_n\;X\}$ y $c=a\;X$ es la conclusión.
+\end{defin}
+Por ejemplo $\Phi_{\nat}=\{\pt{\vacio,0},\pt{n,suc(n)}\}$ es una definición
+inductiva de $\nat$ donde $\pt{\vacio,0}$ corresponde a la regla
+$(0n)$ y $\pt{n,suc(n)}$ a la regla $(sn)$.
+
+
+\begin{defin} Sean $\Phi$ un conjunto de reglas de inferencia y $B$ un
+  conjunto cualquiera. Definimos la aplicación de $\Phi$ a $B$,
+  denotada $\widehat{\Phi}(B)$, como:
+
+\beqs
+\widehat{\Phi}(B)=\{x\;|\;\exists H\;(H,x)\in\Phi \land H\inc B\}
+\eeqs
+Es decir, $\widehat{\Phi}(B)$ es el conjunto de todas aquellas
+conclusiones de instancias de reglas de $\Phi$ tales que las
+premisas respectivas pertenecen a $B$. 
+\end{defin}
+Por ejemplo si $B=\{3,6,10\}$ entonces
+$\widehat{\Phi}_{\nat}(B)=\{0,suc(3),suc(6),suc(10)\}$.
+
+\espc
+
+Es facil ver que $\widehat{\Phi}$ es un operador monótono, es decir, se cumple que 
+si $A\inc B$ entonces $\widehat{\Phi}(A)\inc\widehat{\Phi}(B)$.
+
+
+\begin{defin} Un conjunto $B$ es $\Phi$-cerrado si $\widehat{\Phi}(B)\inc B$. 
+Es decir que para cualquier instancia $\pt{H,x}$ de una regla de
+  $\Phi$, si $H\inc B$ entonces $x\in B$.
+\end{defin}
+%Es fácil ver que $\vacio$ es un conjunto $\Phi$-cerrado y que la
+%intersección de dos conjuntos $\Phi$-cerrados es nuevamente un
+%conjunto $\Phi$-cerrado. Por lo que la 
+La siguiente definición es
+correcta.
+% \defin{Si $\Phi=\{\R_1,\ldots,\R_n\}$ es un conjunto de reglas de inferencia entonces decimos que el conjunto $A$ es cerrado con respecto a $\Phi$ o $\Phi$-cerrado si para cualquier $\R_i\in\Phi$ digamos
+%  \beqs
+%  \frac{a_1\;X\ldots a_n\;X}{a\;X}\;(\R_i) 
+%  \eeqs
+% podemos probar que si $a_1,\ldots,a_n\in A$ entonces $a\in A$.
+% }
+
+
+\begin{defin} Sea $\Phi=\{\R_1,\ldots,\R_n\}$ una definición inductiva.
+El conjunto definido por $\Phi$ 
+es el conjunto $\Phi$-cerrado más pequeño con respecto a la inclusión. Es decir, el conjunto
+\beqs
+S(\Phi)=\bigcap\{B\;|\;B\;\mbox{es}\;\Phi-\mbox{cerrado}\}
+\eeqs
+Si $\Phi_X$ define a un juicio $X$ entonces definimos $X=S(\Phi_X)$. 
+Es decir $w\;X$ significa $w\in S(\Phi_X)$ .
+\end{defin}
+
+La definición anterior no es adecuada computacionalmente, pues la
+intersección es díficil de calcular al tener que calcular todos los
+conjuntos $\Phi$-cerrados. En su lugar usamos una definición por
+aproximaciones observando que $X$ es el mínimo conjunto que cumple
+$\widehat{\Phi}(X) = X$. Es decir, $X$ es el mínimo punto fijo del
+operador $\widehat{\Phi}$. \\
+
+Dejamos como ejercicio mostrar que ambas definiciones de $X$ son equivalentes.\\
+La ventaja de la segunda definición es que el punto fijo puede calcularse iterativamente como sigue:
+
+\beqs
+\ba{rll}
+X_0 & = & \vacio \\ \\
+X_{n+1} & = & \widehat{\Phi}(X_n) \\ \\
+X & = & \bigcup_{i=0}^\infty X_i
+\ea
+\eeqs
+
+
+En el caso de nuestra definición de $\nat$ se tiene:
+
+\beqs
+\ba{rll}
+X_0 & = & \vacio \\ \\
+X_1 & = & \widehat{\Phi}(X_0) = \widehat{\Phi}(\vacio)=\{0\} \\ \\
+X_2 & = & \widehat{\Phi}(X_1) = \{0,suc(0)\} \\
+    & \vdots & \\
+X_{n+1} & = & \widehat{\Phi}(X_n)=\{0,suc(0),\ldots, suc^{n}(0)\} \\ \\
+    & \vdots & 
+\ea
+\eeqs
+
+De modo que
+\beqs
+\nat = \{0,suc(0),\ldots,suc^{n}(0),suc^{n+1}(0),\ldots\}
+\eeqs
+
+\espc
+
+
+Obsérvese que $X_1$ es el conjunto de conclusiones de instancias de axiomas de $\Phi$ y que en general $X_{n+1}$ es el conjunto de conclusiones de instancias de reglas de $\Phi$ cuyas premisas pertenecen a $X_n$. Más aún, se tiene que
+\beqs
+X_0\inc X_1\inc\ldots\inc X_n\inc X_{n+1}\inc\ldots
+\eeqs
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}
+
+%% tarea1.tex termina aquí.

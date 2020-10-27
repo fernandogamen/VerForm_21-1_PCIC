@@ -1,0 +1,565 @@
+Load bn2.
+
+Inductive ltBN : BN -> BN -> Prop :=
+ | ltBNZU : forall (a:BN), ltBN Z (U a)
+ | ltBNZD : forall (a:BN), ltBN Z (D a)
+ | ltBNUU : forall (a b:BN), ltBN a b -> ltBN (U a) (U b)
+ | ltBNUDeq : forall (a :BN), ltBN (U a) (D a) 
+ | ltBNUD : forall (a b:BN), ltBN a b -> ltBN (U a) (D b) 
+ | ltBNDU : forall (a b:BN), ltBN a b -> ltBN (D a) (U b)
+ | ltBNDD : forall (a b:BN), ltBN a b -> ltBN (D a) (D b).
+
+
+Inductive lteqBN: BN -> BN -> Prop :=
+ | lteqBNref: forall (a:BN), lteqBN a a
+ | lteqBNl: forall (a b: BN), ltBN a b -> lteqBN a b.
+
+
+Notation "a <BN b" := (ltBN a b) (at level 70).
+Notation "a <BN b <BN c" := (ltBN a b /\ ltBN b c) (at level 70, b at next level).
+
+Notation "a ≤BN b" := (lteqBN a b) (at level 70).
+
+
+Lemma ltBN_arefl: forall (a:BN), ~ a <BN a.
+Proof.
+intros.
+induction a.
+unfold not.
+intros.
+inversion H.
+contradict IHa.
+inversion IHa.
+trivial.
+contradict IHa.
+inversion IHa.
+trivial.
+Qed.
+
+
+Lemma ltBN_asym: forall (a b:BN), a <BN b -> ~ b <BN a.
+Proof.
+intros.
+induction H.
+unfold not;intros.
+inversion H.
+unfold not;intros.
+inversion H.
+contradict IHltBN.
+inversion IHltBN.
+trivial.
+unfold not;intros.
+inversion H.
+apply (ltBN_arefl a).
+trivial.
+(*exact (ltBN_arefl a H2).*)
+unfold not;intros.
+inversion H0.
+intuition.
+contradict IHltBN.
+inversion IHltBN.
+rewrite H2 in H.
+trivial.
+trivial.
+contradict IHltBN.
+inversion IHltBN.
+trivial.
+Qed.
+
+
+(*Lemma ltBN_antisym: forall (a b:BN), ltBN a b -> ltBN b a -> *)
+
+Lemma ltBN_tr: forall (b c:BN), b <BN c -> forall (a:BN), a <BN b -> a <BN c.
+Proof.
+intros b c H.
+induction H.
+intros.
+inversion H.
+intros.
+inversion H.
+intros.
+destruct a0.
+constructor.
+constructor.
+apply IHltBN.
+inversion H0.
+trivial.
+constructor.
+apply IHltBN.
+inversion H0.
+trivial.
+intros.
+destruct a0.
+constructor.
+constructor.
+inversion H.
+trivial.
+constructor.
+inversion H.
+trivial.
+intros.
+destruct a0.
+constructor.
+constructor.
+apply IHltBN.
+inversion H0.
+trivial.
+constructor.
+apply IHltBN.
+inversion H0.
+trivial.
+intros.
+destruct a0.
+constructor.
+inversion H0.
+constructor.
+trivial.
+constructor.
+apply IHltBN.
+trivial.
+constructor.
+apply IHltBN.
+inversion H0.
+trivial.
+intros.
+destruct a0.
+constructor.
+inversion H0.
+constructor.
+trivial.
+constructor.
+apply IHltBN.
+trivial.
+inversion H0.
+constructor.
+apply IHltBN.
+trivial.
+Qed.
+
+
+Lemma ltBN_trans: forall (a b c:BN), a <BN b -> b <BN c -> a <BN c.
+Proof.
+intros.
+eapply ltBN_tr.
+eexact H0.
+trivial.
+Qed.
+
+Lemma lt_lteqBN_trans: forall (a b c:BN), a <BN b -> b ≤BN c -> a <BN c.
+Proof.
+intros.
+inversion H0.
+rewrite H2 in H.
+trivial.
+eapply ltBN_trans.
+eexact H.
+trivial.
+Qed.
+
+Lemma lteqBN_trans: forall (a b c:BN), a ≤BN b -> b ≤BN c -> a ≤BN c.
+Proof.
+intros.
+inversion H.
+trivial.
+inversion H0.
+rewrite H5 in H.
+trivial.
+constructor.
+eapply ltBN_trans.
+eexact H1.
+trivial.
+Qed.
+
+Lemma ltDs: forall (a:BN), (D a) <BN (U (sucBN a)).
+Proof.
+intros.
+induction a.
+simpl.
+constructor.
+constructor.
+simpl.
+constructor.
+constructor.
+simpl.
+constructor.
+trivial.
+Qed.
+
+Lemma lts: forall (a:BN), a <BN (sucBN a).
+Proof.
+intros.
+induction a.
+constructor.
+simpl.
+constructor.
+simpl.
+constructor.
+trivial.
+Qed.
+
+Lemma lteqs: forall (a:BN), a ≤BN (sucBN a).
+Proof.
+intros.
+induction a.
+constructor.
+constructor.
+simpl.
+constructor.
+constructor.
+simpl.
+constructor.
+constructor.
+inversion IHa.
+contradict H0.
+apply notSucBN.
+trivial.
+Qed.
+
+Lemma ltpred : forall (a:BN), a <> Z -> (predBN a) <BN a.
+Proof.
+intro a.
+induction a.
+intuition.
+intros.
+destruct (dec_eq_BN a Z).
+rewrite e.
+simpl;constructor.
+rewrite (predBNUD a).
+constructor.
+apply IHa.
+trivial.
+trivial.
+intros.
+destruct (dec_eq_BN a Z).
+rewrite e.
+simpl;constructor.
+simpl.
+constructor.
+Qed.
+
+Lemma lt1: forall (b a:BN), a <BN (sucBN b) -> a ≤BN b.
+Proof.
+intro b.
+induction b.
+intros.
+simpl in H.
+inversion H.
+constructor.
+inversion H2.
+inversion H2.
+intros.
+simpl in H.
+inversion H.
+constructor;constructor.
+constructor.
+constructor;constructor.
+trivial.
+constructor;constructor.
+trivial.
+intros.
+simpl in H.
+inversion H.
+constructor;constructor.
+constructor.
+apply (IHb a0) in H2.
+inversion H2.
+constructor.
+constructor.
+trivial.
+apply (IHb a0) in H2.
+inversion H2.
+constructor.
+constructor;constructor.
+trivial.
+Qed.
+
+
+Lemma lt2: forall (b a:BN), a ≤BN b -> a <BN (sucBN b).
+Proof.
+intro b.
+induction b.
+intros.
+inversion H.
+simpl.
+constructor.
+inversion H0.
+intros.
+simpl.
+inversion H.
+constructor.
+eapply ltBN_trans.
+eexact H0.
+constructor.
+intros.
+simpl.
+inversion H.
+constructor.
+apply lts.
+eapply ltBN_trans.
+eexact H0.
+apply ltDs.
+Qed.
+
+Lemma lteqBN_suc_pred : forall (a b:BN), a <> Z -> a ≤BN (sucBN b) -> (predBN a) ≤BN b.
+Proof.
+intros.
+assert ((predBN a) <BN a).
+apply ltpred.
+trivial.
+assert (predBN a <BN sucBN b).
+eapply lt_lteqBN_trans.
+eexact H1.
+trivial.
+apply lt1.
+trivial.
+Qed.
+
+
+Lemma ltaux1: forall (j:BN), Z ≤BN (D j) -> Z ≤BN j.
+Proof.
+intros.
+inversion H.
+clear H1.
+clear H2.
+clear a.
+clear b.
+destruct j.
+constructor.
+constructor.
+constructor.
+constructor.
+constructor.
+Qed.
+
+Lemma lteqBN_refl : forall (b:BN), b ≤BN b.
+Proof.
+intros.
+constructor.
+Qed.
+
+Lemma lteqBN_Z : forall (b:BN), Z ≤BN b.
+Proof.
+intros.
+destruct b.
+constructor.
+constructor;constructor.
+constructor;constructor.
+Qed.
+
+Theorem not_lt_suc: forall (a:BN), ~ exists (b:BN), a <BN b /\ b <BN (sucBN a).
+Proof.
+intros.
+induction a.
+simpl.
+unfold not.
+intros.
+destruct H.
+destruct H.
+inversion H.
+rewrite <- H2 in H0.
+inversion H0.
+inversion H4.
+rewrite <- H2 in H0.
+inversion H0.
+inversion H4.
+unfold not.
+intros.
+destruct H.
+destruct H.
+simpl in H0.
+inversion H.
+rewrite <- H3 in H0.
+inversion H0.
+rewrite <- H6 in H2.
+apply ltBN_arefl in H2.
+trivial.
+apply ltBN_asym in H2.
+apply H2 in H6.
+trivial.
+rewrite <- H1 in H.
+rewrite <- H1 in H0.
+inversion H0.
+apply ltBN_arefl in H5.
+trivial.
+rewrite <- H3 in H0.
+inversion H0.
+apply ltBN_asym in H2.
+apply H2 in H6.
+trivial.
+unfold not.
+intros.
+destruct H.
+destruct H.
+simpl in H0.
+inversion H.
+rewrite <- H3 in H0.
+inversion H0.
+assert (exists (bb:BN), a <BN bb /\ bb <BN (sucBN a)).
+exists b.
+intuition.
+apply IHa in H7.
+trivial.
+rewrite <- H3 in H0.
+inversion H0.
+assert (exists (bb:BN), a <BN bb /\ bb <BN (sucBN a)).
+exists b.
+intuition.
+apply IHa in H7.
+trivial.
+Qed.
+
+Lemma tricotomy: forall (a b:BN), a <BN b \/ a=b \/ b <BN a.
+Proof.
+intro.
+induction a.
+intros.
+destruct b.
+right;left.
+trivial.
+left;constructor.
+left;constructor.
+(*b = U b*)
+intros.
+destruct b.
+right;right;constructor.
+destruct IHa with (b:=b).
+left;constructor;trivial.
+destruct H.
+right;left.
+apply f_equal;trivial.
+right;right;constructor;trivial.
+destruct IHa with (b:=b).
+left;constructor;trivial.
+destruct H.
+left.
+rewrite H.
+constructor.
+right;right;constructor;trivial.
+(*b = D b*)
+intros.
+destruct b.
+right;right;constructor.
+destruct IHa with (b:=b).
+left;constructor;trivial.
+destruct H.
+right;right.
+rewrite H; constructor.
+right;right;constructor; trivial.
+destruct IHa with (b:=b).
+left; constructor; trivial.
+destruct H.
+right;left.
+apply f_equal;trivial.
+right;right;constructor;trivial.
+Qed.
+
+Lemma not_lt: forall (a b:BN), b ≤BN a -> ~ a <BN b.
+Proof.
+intros.
+unfold not.
+intros.
+inversion H.
+rewrite H2 in H0.
+apply ltBN_arefl in H0.
+trivial.
+assert (a <BN a).
+eapply ltBN_trans.
+eexact H0.
+trivial.
+apply ltBN_arefl in H4.
+trivial.
+Qed.
+
+Lemma sucBN_lt: forall (a b:BN), sucBN a <> b -> a <BN b -> (sucBN a) <BN b.
+Proof.
+intros.
+destruct tricotomy with (a:=sucBN a) (b:=b).
+trivial.
+destruct H1.
+contradict H.
+trivial.
+contradict H0.
+apply lt1 in H1.
+apply not_lt in H1.
+trivial.
+Qed.
+
+Lemma lt_suc_lteq: forall (a b:BN), a <BN b -> (sucBN a) ≤BN b.
+Proof.
+intros.
+assert ({sucBN a = b}+{sucBN a <> b}).
+apply dec_eq_BN.
+destruct H0.
+rewrite e.
+constructor.
+constructor.
+apply sucBN_lt.
+trivial.
+trivial.
+Qed.
+
+Lemma lteqBN_suc: forall (a b:BN), a ≤BN b -> (sucBN a) ≤BN (sucBN b). 
+Proof.
+intros.
+inversion H.
+constructor.
+apply lt_suc_lteq.
+apply lt2.
+trivial.
+Qed.
+
+(* Next lemmas are used in okasaki_size.v *)
+
+Lemma lteqBN_U_U:forall (a b:BN), (U a) ≤BN (U b) -> a ≤BN b.
+Proof.
+intros.
+inversion H.
+constructor.
+inversion H0.
+constructor.
+trivial.
+Qed.
+
+Lemma lteqBN_D_D : forall (a b : BN), (D a) ≤BN (D b)-> a ≤BN b.
+Proof.
+intros.
+inversion H.
+constructor.
+inversion H0.
+constructor.
+trivial.
+Qed.
+
+Lemma lteqBN_U_D:forall (a b:BN), (U a) ≤BN (D b) -> a ≤BN b.
+Proof.
+intros.
+inversion H.
+inversion H0.
+constructor.
+constructor.
+trivial.
+Qed.
+
+Lemma lteqBN_D_U:forall (a b:BN), (D a) ≤BN (U b) -> a ≤BN b.
+Proof.
+intros.
+inversion H.
+inversion H0.
+constructor.
+trivial.
+Qed.
+
+Lemma bbalCond_eqs: forall (s t:BN), t ≤BN s -> s ≤BN sucBN t -> s = t \/ s = sucBN t.  (* nov-2016, C.V. *)
+Proof.
+intros.
+inversion H.
+intuition.
+inversion H0.
+intuition.
+exfalso.
+eapply not_lt_suc.
+exists s.
+intuition.
+exact H1.
+intuition.
+Qed.
