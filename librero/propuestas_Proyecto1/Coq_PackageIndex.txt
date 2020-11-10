@@ -1,0 +1,26 @@
+Los PDF son dos:
+1. Es un artículo de programación concurrente en Coq. Verifican un servidor. 
+No encontré la biblioteca pero haciendo un skim del artículo, parece que es una buena guía
+para implementar la biblioteca.
+
+2. El otro PDF es un libro que trae ejercicios interesantes de programación funcional. Sería
+un buen proyecto verificar formalmente alguna de las perlas que mencionan.
+
+Enlisto algunas bibliotecas que parecen interesantes como proyecto:
+
+1. Arreglos asociativos: https://github.com/coq-contribs/idxassoc
+Chisme de wikipedia: https://en.wikipedia.org/wiki/Associative_array
+Interesante porque la biblioteca está mas vieja que nada. Hace 7 años que nadie la toca.
+
+2. BDD: https://github.com/coq-contribs/bdds
+Chisme de wikipedia: https://en.wikipedia.org/wiki/Binary_decision_diagram
+Interesante porque tenía que sacar la casta (jaja) y porque la biblioteca presentada... está espantosa. 
+Aquí convendría hacer una nueva: Que implementen la estructura de datos y las operaciones básicas como
++,*, negación y reducción de un BDD.
+
+3. Finger Trees: Enlace de github muerto :c
+Vi el artículo del git. Podría ser un bonito proyecto implementarlos.
+
+4. BitVectors: https://github.com/mit-plv/bbv
+No sé porque el interés (casi religioso, en tono de broma) del estudio de estas estructuras. Las he visto
+en más de un área como un benchmark a tratar.
