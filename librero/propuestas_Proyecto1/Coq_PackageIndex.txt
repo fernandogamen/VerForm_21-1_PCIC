@@ -24,3 +24,16 @@ Vi el artículo del git. Podría ser un bonito proyecto implementarlos.
 4. BitVectors: https://github.com/mit-plv/bbv
 No sé porque el interés (casi religioso, en tono de broma) del estudio de estas estructuras. Las he visto
 en más de un área como un benchmark a tratar.
+
+5. Permutaciones: No hay enlace de Coq.
+
+6. Zipper: No hay enlace de Coq.
+Chisme Wikipedia: https://en.wikipedia.org/wiki/Zipper_(data_structure)
+Artículo de Huet, página 123 del compendio
+
+7. Derivación de expresiones regulares: No hay enlace de Coq
+Falta chisme
+
+8. Do we need dependent types?: No hay enlace de Coq
+Página 291 del compendio. Se ve canijo el tema, pero el artículo es muy noble. Podría ser de proyecto
+implementar lo que dice el artículo y compararlo con la versión dependiente, algo que Coq logra hacer.
