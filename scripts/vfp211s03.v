@@ -7,13 +7,16 @@ Proof.
 intros.
 destruct H1.
 - left.
-  apply H.
+  exact (H H1).
+(*   apply H.
   assumption.
-- right.
-  apply H0.
-  assumption.
+ *)- right.
+ apply (H0 H1).
+(*   apply H0.
+  assumption. *)
 Qed.
 
+Print DilemaC.
 
 Theorem DilemaC2 : (p -> q) -> (r -> s) -> p \/ r -> q \/ s. 
 Proof.
@@ -273,7 +276,7 @@ exact H2.
 Qed.
 
 
-Theorem defimp: (~p \/ q) -> p -> q.
+Theorem defimp: (~p \/ q) -> (p -> q).
 Proof.
 unfold not.
 intros.
@@ -505,17 +508,17 @@ Theorem PrenexY:  (C /\ forall x:A, P x ) <-> forall x:A, C /\ P x.
 Proof.
 unfold iff.
 split.
-intro H.
-destruct H.
-intro x0.
-split.
+- intro H.
+  destruct H.
+  intro x0.
+  split.
+  + exact H.
+  + apply H0.
+- intro K.
+split. 
++destruct K with a.
 exact H.
-apply H0.
-intro K.
-split.
-destruct K with a.
-exact H.
-intro z0.
++ intro z0.
 apply K.
 Qed.
 
@@ -578,7 +581,7 @@ apply H.
 Qed.
 
 
-Theorem PrenexImp : (exists x:A, P x) -> C <-> forall x:A, P x -> C.
+Theorem PrenexImp : ((exists x:A, P x) -> C) <-> forall x:A, P x -> C.
 Proof.
 Admitted.
 
@@ -728,16 +731,14 @@ Qed.
 
 Theorem GoedelDummet: (p -> q) \/ (q -> p).
 Proof.
-cut ((p -> q) \/ ~(p->q)).
-intro.
+enough ((p -> q) \/ ~(p->q)).
 destruct H as [I|N]. 
 left;trivial.
-cut (p /\ ~ q).
-intro.
+enough (p /\ ~ q).
 destruct H as [P NQ].
 right.
 intro.
-absurd q;trivial;trivial.
+absurd q;assumption.
 
 (* Versión cut*)
 cut (~ (p -> q) -> p /\ ~ q).
