@@ -1,0 +1,257 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb}
+%\usepackage{amssymb,amsmath,stmaryrd}
+\usepackage{mathrsfs}
+\usepackage{epsfig}
+\usepackage{verbatim}
+%\usepackage{fancyheadings}
+%\usepackage{anysize}
+\usepackage[latin1]{inputenc}
+\usepackage[spanish]{babel}
+\input{macroslc}
+
+%\marginsize{2cm}{2cm}{2cm}{2cm}
+%\pagestyle{fancyplain}
+
+\usepackage[margin=2.5cm,includefoot]{geometry}
+
+% \newcommand{\asc}[2]{#1\;\mathsf{as}\;#2}
+% \newcommand{\inte}{\mathsf{int}}
+% \newcommand{\float}{\mathsf{float}}
+
+%\input{deflpp81}
+%\input{macrosleng}
+
+\title{L\'ogica Computacional 2016-2\\
+Bolet\'in de ejercicios 4}
+\author{Profesor: Dr. Favio Ezequiel Miranda Perea \\ Ayudante teor\'ia: Susana Hahn\\ Facultad de Ciencias UNAM}
+\date{\today}
+
+
+\begin{document}
+\maketitle
+	
+%\noindent {\bf Sistemas de deducci\'on natural}
+\begin{enumerate}
+\item Decidir mediante deducci\'on natural.
+\begin{itemize}
+\item $P \to Q, Q \to R \vdash P \to Q \land R$
+\item $P \to Q \vdash (Q \to R) \to (P \to R)$
+\item $(A \lor (B \to A)) \land B \vdash A$
+\item $A \to B \vdash (A \land B \to A) \land (A \to A \lor B)$
+\item $A \land (B \lor C) \vdash (A \land B) \lor (A \land C)$
+\item $\vdash_{m} \lnot \lnot (A \land B) \to \lnot \lnot A \land \lnot \lnot B $
+\item $\vdash_{m} \lnot \lnot \forall x A \to \forall x \lnot \lnot A$
+\item $\vdash_{i} ((P \to Q)\to P) \to P$
+\item $\forall x(P x \to \exists y Qxy \to \exists yRyx), \exists xQax \vdash_{i}
+\exists x(P x \to \exists yRyx)$
+\item $P \to Q, \lnot Q \vdash_{i} \lnot P$
+\item $L \land M \to P, I \to P, M, I \vdash_{i} \lnot L$
+\item $P \lor Q, \lnot P \vdash_{i} Q$
+\item $A \leftrightarrow B \vdash (A \land B) \lor (\lnot A \land \lnot B)$
+\item $P \to Q, \lnot Q \vdash_{m} \lnot P$
+\item $Pa , Qa \vdash \exists x(Px \land Qx) $ 
+
+\end{itemize}
+%\end{enumerate}
+
+
+
+
+
+\item Realizar las siguientes derivaciones en lógica {\bf
+    minimal}.
+  \be
+ % \item $\vdash \neg\neg(A\lor\neg A)$
+  \item $\vdash \neg\neg\neg A \iff \neg A$
+  \item      $\vdash \neg\neg(A\land B)\imp \neg\neg
+   A\land\neg\neg B$
+  \item $\neg\neg\fa x A\imp \fa x \neg\neg A$
+   \ee
+ \item En este ejercicio se pide verificar la validez de la
+   equivalencia lógica \beqs\neg\neg(A\imp B)\iff \neg\neg A\imp\neg\neg
+   B\eeqs en la lógica {\bf intuicionista}, de la siguiente manera:
+   \be
+    \item $\vdash_{m} \neg\neg(A\imp B)\imp\neg\neg A\imp\neg\neg
+   B$. \\ \emph{Sugerencia:} pruebe previamente y utilice el lema: 
+   $\neg\neg A,\neg B\vdash \neg (A\imp B)$
+       \item $\vdash_{i}(\neg\neg A\imp\neg\neg
+   B)\imp\neg\neg(A\imp B)$. \\ \emph{Sugerencia:} primero construya
+   derivaciones de $\neg\neg A$ y $\neg B$ usando $\neg(A\imp B)$ como
+   hipótesis.
+    \ee
+
+
+\item Realizar las siguientes derivaciones indicando el sistema usado
+  $\vdash_m,\vdash_i$ ó $\vdash_c$.
+  \bi
+%  \item $\neg r\lor\neg s, p\imp r, B\imp s\vdash\neg p\lor\neg B$
+%    \item $p\imp B\lor r, B\imp r, r\imp s\vdash p\imp s$
+\item $A\imp B, \neg(A\lor C)\imp D, A\lor B\imp C\vdash \neg D\imp C$
+%       \item $\vdash (\neg p\imp p)\imp p$
+%         \item $\vdash (\neg p\imp\neg B)\imp (\neg p\imp B)\imp p$
+   %       \item $\vdash ((p\imp B)\imp p)\imp p$
+\item $A\lor B\vdash (\neg D\imp C)\land (\neg B\imp\neg A)\imp
+  (C\imp\neg B)\imp D$
+      \item $\fa x(Px\imp\neg Bx)\vdash Ra\imp\fa x(Rx\imp Bx)\imp\neg
+        Pa$
+        \item $\fa x (Px\lor Bx\imp\neg Rx),\;\fa x(Sx\imp Rx)\vdash
+          \fa x(Px\imp \neg Sx\lor Tx)$
+          \item $\vdash\fa x(Px\land \ex yBy)\imp \ex x(Px\land Bx)$
+            \item $\fa x\ex y(Px\imp Rxy)\vdash \fa x(Px\imp \ex y
+              Rxy)$
+              \item $\fa x(Px\imp\neg Bx)\vdash \neg\ex x(Px\land Bx)$
+                \item $\ex x\fa yPxy\vdash \fa y\ex x Pxy$
+  \ei
+    
+
+\item Demostrar la correctud del siguiente argumento mediante
+  deducción natural. Usar exclusivamente la siguiente signatura:
+$\{F^{(1)},V^{(1)},B^{(1)},E^{(1)},P^{(1)},L^{(1)},S^{(1)},C^{(2)}\}$
+con significados {\em ser feliz,ser vampiro,ser
+  bruja,emborracharse,pernoctar en cementerio, violar la ley, ser sepulturero, convivir,} respectivamente.
+
+\emph{Un vampiro sólo es feliz si se emborracha o pernocta en un
+  cementerio. Quien pernocta en un cementerio viola la ley o es
+  sepulturero. Una bruja sólo es feliz si convive con un vampiro
+  feliz, que no se emborracha y que no viola la ley. Hay brujas
+  felices. Por lo tanto algunos vampiros son sepultureros.}
+
+
+\item Resolver todos los ejercicios anteriores utilizando tácticas.
+
+\item Hallar un programa $t$ que tenga el tipo indicado:
+\be
+\item $\vdash t: A\imp B\imp B$
+  \item $\vdash t: (A\imp B\imp C)\imp (A\imp B)\imp (A\imp C)$
+    \item  $x:A\imp B\land C \vdash t: (A\imp B) \land (A\imp C)$
+\item $ x: (A\imp B) \lor (A\imp C) \vdash t: A\imp B\lor C$
+  \item $ x: (A\imp C) \land (B\imp C) \vdash t: A\lor B\imp C $
+    \item $x: A\lor (B\land C) \vdash t: (A\lor B)\land (A\lor C)$
+\ee
+
+
+\item Defina la regla de tipado para el operador {\sf if}. Muestre usando su regla
+que 
+\[
+x:Bool,y:Nat\vdash {\sf if}\; y < 2\;{\sf then\;not\;}x\;{\sf else\; iszero}\; y
+\]
+
+
+%\noindent {\bf Sistemas de tipos}
+\item Hallar un programa $t$ que tenga el tipo indicado.
+\begin{enumerate}
+\item $x : P \lor (Q \land R) \vdash t : (P \lor Q) \land (P \lor R)$
+
+\item $\vdash t : (P \to Q \to R) \to (P \to Q) \to (P \to R)$
+
+\item $x : P \to Q \land R \vdash t: (P \to Q) \land (P \to R)$
+\end{enumerate}
+
+% \noindent {\bf T\'acticas}
+
+% \be
+
+\ee
+
+
+\section*{Exámenes anteriores}
+%\noindent {\bf Ex\'amenes anteriores}
+\begin{enumerate}
+
+\item Mostrar las siguientes derivaciones mediante deduccion natural. Indicar en cada caso el sistema usado. En el inciso 2 la signatura es $Q^{(1)},P^{(1)},f^{(1)},g^{(1)}$
+  \begin{enumerate}
+  \item $(p\to q) \land (\neg r\lor q\to s)\vdash p\to \neg\neg s$ 
+   \item $\ex x Qx, \;\fa x (Qx \land \ex yPy \to Qfx),\;\fa z(Qz\to Qgz)\vdash Pb \to \ex w Qfgw$.
+  \end{enumerate}
+\begin{comment} 
+Decidir mediante deduccion natural.
+\begin{itemize}
+\item[a)] $\vdash_{i} A \lor B \to \lnot (\lnot A \land \lnot B)$
+\item[b)] $\forall x (A \vee \neg A) \vdash \exists x A \vee \forall x \neg A $ \\
+Sugerencia: Utilice el tercero excluido y el lema $ \neg \forall x \neg A \vdash_{c} \exists x A$ \\
+\item[c)] $\forall x (Px \rightarrow \neg Cx), \exists x (Cx \wedge Bx) \vdash \exists x (Bx \wedge \neg Px)$ \\
+Indica el sistema empleado. \\
+\end{itemize}
+\end{comment}
+
+\item Considere la siguiente expresi\'on: 
+\begin{center} $e =_{def} \; ({\sf not}\;({\sf iszero}\;({\sf suc}\; x))) \; 
+{\sf and} \;(x < y+2))$ \end{center}
+
+\begin{enumerate}
+\item Definir la regla de tipado para el operador ${\sf and}$. 
+\item Dar un contexto $\Gamma$ y un tipo ${\sf T}$ tales que se cumpla
+\[
+\Gamma \vdash e:{\sf T}
+\]
+mostrando tal derivaci\'on.
+\end{enumerate}
+
+
+\item Hallar un c\'odigo de prueba {\em t} de manera que se cumpla lo
+siguiente:
+\beqs
+z: (p\to r) \lor (q\to s)\vdash t: p\land q \to r\lor s
+\eeqs
+
+\item Hallar un c\'odigo de prueba {\em t} de manera que se cumpla lo
+siguiente:
+\beqs
+x: p\to r\; \vdash \;t: p\lor q \to r\lor q
+\eeqs
+
+\item Demuestre la correctud del siguiente argumento proposicional, mediante deducción natural, indicando el sistema utilizado (minimal,intuicionista o clásico):
+
+\bc
+{\sl Ludovico es un perico, Quique es un quelonio y Solsticio es un ratón, Si Ludovico es un perico y Solsticio es un ratón entonces
+Eulogio no es un sapo; Tiburcio es un tlacuache o Eulogio es un sapo. Luego entonces, Tiburcio es un tlacuache.}
+\ec
+
+Defina previamente el glosario a utilizar.
+
+\espc
+
+\item Muestre lo siguiente mediante una derivación por tácticas:
+
+\[
+H_1:\neg p\to q\land r,\;H_2:\neg p\lor s\to\neg t,\; H_3: u\land\neg p \vdash (u\land r)\land \neg t
+\]
+
+{\sl Sugerencia: es más fácil si inicia la derivación con {\tt destruct $H_3$}}
+
+\espc
+
+\item En este ejercicio se pide construir una derivación del siguiente secuente:
+\[
+\ex w F w \to \fa y(Gy \to Hy),\; \ex x Jx \to \ex x G x\;\vdash \fa x(Fx \land J x \to \exists zHz)
+\]
+Tiene la opción de construir una derivación directa o bien una derivación por tácticas. Adicionalmente es obligatorio contestar 
+por qué prefirió el método elegido.
+
+
+\espc
+
+\item Defina la regla de tipado para el operador ${\sf entre}(e_1,e_2,e_3)$ que decide si la expresión aritmética $e_2$ está entre $e_1$ y $e_3$, es decir, si se cumple que $e_1<e_2<e_3$. Considere la siguiente expresión:
+
+\begin{center} $e =_{def} \; {\sf not\;entre}(x+2,z,y*3)$
+\end{center}
+
+\begin{enumerate}
+\item[] Dar un contexto $\Gamma$ y un tipo ${\sf T}$ tales que se cumpla
+\[
+\Gamma \vdash e:{\sf T}
+\]
+mostrando tal derivaci\'on.
+\end{enumerate}
+
+
+\newpage
+
+
+
+
+\end{enumerate}
+
+\end{document}
+ 

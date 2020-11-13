@@ -44,7 +44,8 @@ Inductive exp_match {T} : list T -> reg_exp T -> Prop :=
                  (H2 : s2 =~ (Star re))
                : (s1 ++ s2) =~ (Star re)
   where "s =~ re" := (exp_match s re).
-  
+
+Check exp_match_ind.  
   
 Example reg_exp_ex2 : [1, 2] =~ App (Char 1) (Char 2).
 Proof.
@@ -147,33 +148,6 @@ Qed.
 
 Lemma reg_exp_of_list_spec : forall T (s1 s2 : list T),
   s1 =~ reg_exp_of_list s2 <-> s1 = s2.
-(* Proof.
-intros T s1 s2.
-  (* FILL IN HERE *)
-split.
-2:{ intro. 
-    rewrite H.
-    induction s2.
-    - simpl. constructor.
-    - simpl. change (a::s2) with ([a] ++ s2).
-      constructor.
-      + constructor.
-      +    
-
-- intro H.
-  induction s2.
-  + simpl in H. inversion H. reflexivity.
-  + simpl in H.
-    inversion H.
-    inversion H3.
-    
-    induction s1.
-    inversion H.
-    inversion H3.  
-    rewrite <- H5 in H1.
-    inversion H1.
-    inversion H.
- *)    
 Admitted.
 
 
@@ -245,12 +219,12 @@ Lemma star_app: forall T (s1 s2 : list T) (re : reg_exp T),
   s2 =~ Star re ->
   s1 ++ s2 =~ Star re.
 Proof.
-  intros T s1 s2 re H1.  (* H2. *)
-(*   inversion H1.
+  intros T s1 s2 re H1 H2.
+(*    inversion H1.
   - simpl. auto.
   - intro. 
     constructor.
- *)
+ *) 
 (*  generalize s2.  *) 
  generalize dependent s2.
   induction H1
@@ -304,18 +278,19 @@ Proof.
   - (* MApp *) discriminate.
   - (* MUnionL *) discriminate.
   - (* MUnionR *) discriminate.      
- - (* MStar0 *)
+ - (* MStar0 *) 
     (* injection Heqre' *)
-    injection Heqre' as Heqre''. intros s H. apply H.
+    injection Heqre' as Heqre''. 
+    intros s H. apply H.
   - (* MStarApp *)
-    inversion Heqre'.
-(*     injection Heqre' as Heqre''. *)
+    (* inversion Heqre'. *)
+    injection Heqre' as Heqre''.
     intros s2 H1. rewrite <- app_assoc.
     apply MStarApp.
-    + rewrite <- H0. apply Hmatch1.  (* apply Hmatch1. *)
-    + rewrite <- H0. apply IH2.
-      * assumption. (* rewrite Heqre''. reflexivity. *)
-      * rewrite H0. apply H1.  (* apply H1. *)  
+    + (* rewrite <- H0. apply Hmatch1. *)  apply Hmatch1.
+    +  apply IH2.
+      * (* assumption. *) rewrite Heqre''. reflexivity.
+      * apply H1.  (* apply H1. *)  
 Qed.       
     
 Lemma MStar'' : forall T (s : list T) (re : reg_exp T),

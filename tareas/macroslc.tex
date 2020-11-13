@@ -1,0 +1,306 @@
+\newcommand{\Q}{\ensuremath{\mathbb{Q}}}
+\newcommand{\Z}{\ensuremath{\mathbb{Z}}}
+\newcommand{\N}{\ensuremath{\mathbb{N}}}
+\newcommand{\R}{\ensuremath{\mathbb{R}}}
+%\newtheorem{lemma}{Lema}[section]
+%\newtheorem{theorem}[lemma]{Teorema}
+%\newtheorem{corollary}[lemma]{Corolario}
+%\theoremstyle{definition}
+%\newtheorem{definition}[lemma]{Definici\'on}
+\newcommand{\A}{\mathcal{A}}
+\newcommand{\E}{\ensuremath{\exists}}
+\newcommand{\iso}{\ensuremath{\cong}}
+\newcommand{\union}{\ensuremath{\cup}}
+\newcommand{\morinyec}{\ensuremath{\precapprox}}
+\newenvironment{prueba}{\vspace{-5mm}\noindent\textbf{Demostraci\'on}\\}{\noindent$\blacksquare$\\}
+\newcommand{\nin}{\ensuremath{\notin}}
+\newcommand{\tog}{\makebox[7mm][l]}
+\newcommand{\toge}{\makebox[11mm][l]}
+\newcommand{\toget}{\makebox[13mm][l]}
+\newcommand{\togeth}{\makebox[14mm][l]}
+\newcommand{\togethe}{\makebox[15mm][l]}
+\newcommand{\together}{\makebox[17mm][l]}
+\newcommand{\niso}{\ensuremath{\not \cong}}
+\renewcommand\contentsname{\'Indice}
+%\renewcommand\chaptername{Cap\'itulo}
+\renewcommand\indexname{\'Indice}
+
+%%\newcommand{\qed}{\hfill$\mathbb{Qed}$}
+%\newcommand{\qed}{\hfill$\mathsf{\boldsymbol{\dashv}}$}
+
+
+\newcommand{\Ejercicios}{\section*{Ejercicios}}
+
+ \newenvironment{manitas}{%
+      \renewcommand{\labelitemi}{\ding{44}}%
+      \vspace{-0.5cm}%
+      \begin{itemize}%
+      \setlength{\itemsep}{0pt}\setlength{\parsep}{0pt}\setlength{\topsep}{0pt}%
+      }{\end{itemize}}
+\newenvironment{malitos}{%
+      \renewcommand{\labelitemi}%
+            {\raisebox{1.5ex}{\makebox[0.3cm][l]{\begin{rotate}{-90}%
+            \ding{43}\end{rotate}}}}%
+      \vspace{-0.5cm}%
+      \begin{itemize}%
+      \setlength{\itemsep}{0pt}\setlength{\parsep}{0pt}\setlength{\topsep}{0pt}%
+      }{\end{itemize}}
+\newenvironment{ejercs}{
+     \renewcommand{\labelenumi}{\thesection.\theenumi.-}
+     \renewcommand{\labelenumii}{\theenumii)}
+     \begin{enumerate}}
+     {\end{enumerate}}
+
+   \newcommand{\bej}{\begin{ejercs}}
+\newcommand{\eej}{\end{ejercs}}
+   
+%%=================================================================================
+
+\newcommand{\bc}{\begin{center}}
+\newcommand{\ec}{\end{center}}
+\newcommand{\be}{\begin{enumerate}}
+\newcommand{\ee}{\end{enumerate}}
+\newcommand{\bi}{\begin{itemize}}
+\newcommand{\ei}{\end{itemize}}
+\newcommand{\beq}{\begin{equation}}
+\newcommand{\eeq}{\end{equation}}
+\newcommand{\beqs}{\begin{equation*}}
+\newcommand{\eeqs}{\end{equation*}}
+\newcommand{\ba}{\begin{array}}
+\newcommand{\ea}{\end{array}}
+
+\newcommand{\imp}{\rightarrow}
+\newcommand{\Imp}{\Rightarrow}
+\renewcommand{\iff}{\leftrightarrow}
+\newcommand{\Iff}{\Leftrightarrow}
+\newcommand{\G}{\Gamma}
+\newcommand{\D}{\Delta}
+\newcommand{\F}{\mathcal{F}}
+\newcommand{\Ge}{\mathcal{G}}
+\newcommand{\Pe}{\mathcal{P}}
+\newcommand{\I}{\mathcal{I}}
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\K}{\mathcal{K}}
+\newcommand{\Kb}{\mathbb{K}}
+\newcommand{\Eb}{\mathbb{E}}
+\newcommand{\Ebs}{\mathbb{E}^\star}
+\newcommand{\Ob}{\mathbb{O}}
+\newcommand{\Ib}{\mathbb{I}}
+\newcommand{\kb}{\bbkappa}
+\newcommand{\M}{\mathcal{M}}
+\newcommand{\Nc}{\mathcal{N}}
+%\newcommand{\E}{\mathcal{E}}
+%\newcommand{\R}{\mathcal{R}}
+%\newcommand{\Q}{\mathcal{Q}}
+\newcommand{\Sc}{\mathcal{S}}
+\newcommand{\Sf}{\mathsf{\Sigma}}
+\newcommand{\Te}{\mathcal{T}}
+\newcommand{\Rb}{\mathbb{R}}
+\newcommand{\Qb}{\mathbb{Q}}
+\newcommand{\Kbb}{\mathbb{K}}
+\newcommand{\T}{\mathbb{\Theta}}
+\renewcommand{\L}{\mathcal{L}}
+\newcommand{\fa}{\forall}
+\newcommand{\ex}{\exists}
+\newcommand{\inc}{\subseteq}
+\newcommand{\lb}{\lambda}
+\newcommand{\al}{\alpha}
+\newcommand{\ga}{\gamma}
+\newcommand{\Db}{\mathbb{D}}
+\newcommand{\Fb}{\mathbb{F}}
+\newcommand{\De}{\mathcal{D}}
+
+\newcommand{\mg}{\mathbb{m}}
+
+\newcommand{\cg}{\mathbb{C}}
+\newcommand{\dg}{\mathbb{D}}
+\newcommand{\jg}{\mathbb{J}}
+\newcommand{\Ha}{\mathcal{H}}
+%\newcommand{\A}{\mathcal{A}}
+\newcommand{\sg}{\mathbb{S}}
+
+\def\stackunder#1#2{\mathrel{\mathop{#2}\limits_{#1}}}
+
+
+
+%\renewcommand{\qed}{\hfill$\boldsymbol{\dashv}$}
+%\newcommand{\qed}{\hfill$\mathbb{Qed}$}
+
+\newcommand{\pt}[1]{\langle #1 \rangle}
+
+
+
+\renewcommand{\S}{\mathbb{\Sigma}}
+
+
+\newcommand{\doubt}{\Red{{\LARGE {\sf ??}}}}
+
+\newcommand{\coment}[1]{\hfill\\ \Big[{\bf Comentario Privado:} #1\Big]}
+\newcommand{\preg}[1]{\hfill\\ \BrickRed{{\bf Pregunta:} #1}}
+\newcommand{\conjet}[1]{\hfill\\ \OliveGreen{{\bf Conjecura:} #1}}
+
+
+
+
+
+
+\newcommand{\pendiente}{\BrickRed{{\sc Pendiente}}}
+\newcommand{\verifpendiente}{\BrickRed{{\sc Verificación pendiente}}}
+
+
+\newcommand{\Mg}{\mathbb{M}}
+\newcommand{\Bg}{\mathbb{B}}
+\newcommand{\Lg}{\mathbb{L}}
+\newcommand{\Tg}{\mathbb{T}}
+
+\newcommand{\sketch}{\Red{{\sc sketch}}}
+
+
+
+
+\newcommand{\B}{\mathbb{B}}
+%\newcommand{\N}{\mathbb{N}}
+
+
+
+
+%\newenvironment{leterize}{%
+%        \renewcommand{\theenumi}{\alph{enumi}}
+%        \begin{enumerate}}{\end{enumerate}}
+
+%\newenvironment{manitas}{%
+%      \renewcommand{\labelitemi}{\ding{44}}%
+%      \vspace{-0.5cm}%
+%      \begin{itemize}%
+%      \setlength{\itemsep}{0pt}\setlength{\parsep}{0pt}\setlength{\topsep}{0pt}%
+%      }{\end{itemize}}
+
+
+
+\newcommand{\Lb}{\Lambda} 
+
+
+
+\newcommand{\Om}{\Omega}
+
+\newcommand{\W}{\mathcal{W}}
+
+
+\newcommand{\Bc}{\mathcal{B}}
+\newcommand{\Df}{\mathfrak{D}}
+\newcommand{\Dc}{\mathcal{D}}
+%\newcommand{\Tc}{\mathcal{T}}
+\newcommand{\Mf}{\mathfrak{M}}
+
+\newcommand{\Sg}{\mathbb{S}}
+
+\newtheorem{theorem}{Teorema}
+\newcommand{\teo}[1]{\begin{theorem} #1 \end{theorem}}
+\newtheorem{proposition}{Proposici\'on}
+\newcommand{\prop}[1]{\begin{proposition} #1 \end{proposition}}
+\newtheorem{definition}{Definici\'on}
+\newcommand{\defin}[1]{\begin{definition} #1 \end{definition}}
+\newtheorem{corollary}{Corolario}
+\newcommand{\cor}[1]{\begin{corollary} #1 \end{corollary}}
+\newtheorem{lemma}{Lema}
+\newcommand{\lema}[1]{\begin{lemma} #1 \end{lemma}}
+\newcommand{\dem}[1]{\begin{proof} #1 \end{proof}}
+
+%\renewcommand{\qed}{\qedsymbol{$\mathbf{\dashv}$}}
+
+\newcommand{\proof}{\hfill\\\noindent\textbf{\textit{Demostraci\'on. }}}
+
+
+
+
+
+
+\newcommand{\restr}[2]{#1\!\!\boldsymbol{\restriction}\!#2}
+
+
+
+\newcommand{\vacio}{\varnothing}
+\newcommand{\done}{\ensuremath{\checkmark}}
+
+\newcommand{\ida}{$\Rightarrow \; )$ }
+\newcommand{\regr}{$\Leftarrow \; )$ }
+
+
+\newcommand{\ol}[1]{\overline{#1}}
+
+
+\newcommand{\Tsf}{\mathsf{T}}
+
+\newcommand{\inds}[1]{\index[simb]{#1}}
+
+
+
+%--------------------------------------------------------------------------
+
+\DeclareMathAlphabet{\mathpzc}{OT1}{pzc}{m}{it}
+
+%\newcommand{\case}{\mathsf{case}}
+%\renewcommand\labelitemi{$\circ$}
+%%\newcommand{\qed}{\hfill$\mathbb{Qed}$}
+\newcommand{\qed}{\hfill$\mathsf{\boldsymbol{\dashv}}$}
+
+%\newcommand{\id}{\mathsf{Id}}
+
+%\newcommand{\uc}{\mathcal{U}}
+%\newcommand{\Ic}{\mathcal{I}}
+%\newcommand{\pc}{\mathcal{P}}
+%\newcommand{\qc}{\mathcal{Q}}
+%\newcommand{\mc}{\mathcal{M}}
+\newcommand{\supc}{\supseteq}
+\newcommand{\limo}{\mathop{\mathpzc{Lim}}}
+\newcommand{\ord}{\mathsf{OR}}
+
+\newcommand{\hint}{\emph{Sugerencia: }}
+
+
+\newcounter{EjempCtr}[section]
+\newenvironment{enumrom}{\renewcommand{\theenumi}{\roman{enumi}}%
+\renewcommand{\theenumii}{\roman{enumii}}
+\renewcommand{\theenumiii}{\roman{enumiii}}
+\renewcommand{\theenumiv}{\roman{enumiv}}
+\begin{enumerate}}{\end{enumerate}}
+\newenvironment{Ejemplo}
+        {\stepcounter{EjempCtr}%
+        \begin{description}\item[Ejemplo \thesection.\arabic{EjempCtr}]}%
+        {\end{description}}
+\newenvironment{demostr}{%
+             {\em Demostración:}
+                \begin{quotation}}{\end{quotation}}
+
+   \newcommand{\beje}{\begin{Ejemplo}}
+\newcommand{\eeje}{\end{Ejemplo}}
+
+\newcommand{\propo}{\ensuremath{\mathsf{PROP}}}
+\newcommand{\atom}{\ensuremath{\mathsf{ATOM}}}
+\newcommand{\vphi}{\varphi}
+\newcommand{\vp}{\varphi}
+
+\newcommand{\dn}{\mathsf{DN}}
+\newcommand{\dnC}{\mathsf{DN_C}}
+\newcommand{\dnM}{\mathsf{DN_M}}
+\newcommand{\dnp}{\mathsf{DN_p}}
+\newcommand{\dnm}{\mathsf{DN_p^M}}
+\newcommand{\dnc}{\mathsf{DN_p^C}}
+
+\newtheorem{eje}{Ejemplo}[section]
+\newcommand{\ejem}[1]{\begin{eje}\normalfont #1 \end{eje}}
+
+\newcommand{\vx}{\vec{x}}
+\newcommand{\vy}{\vec{y}}
+\newcommand{\vz}{\vec{z}}
+\newcommand{\vt}{\vec{t}}
+\newcommand{\vf}{\vec{f}}
+\newcommand{\term}{\ensuremath{\mathsf{TERM}}}
+\newcommand{\form}{\mathsf{FORM}}
+
+\newcommand{\true}{\mathop{\mathsf{true}}}
+\newcommand{\espc}{\vspace{.3cm}}
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: t
+%%% End: 

@@ -1,0 +1,214 @@
+%%%%% Examen1 Lenguajes de programacion 2011-2
+\documentclass[letterpaper, 11 pt]{article}
+\usepackage{amssymb,amsmath}
+\usepackage{mathrsfs}
+\usepackage{anysize}
+\usepackage{verbatim}
+\usepackage{hyperref}
+\usepackage[latin1]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{mathpartir}
+
+\input{macrosef}
+% \newcommand{\G}{\Gamma}
+% \newcommand{\D}{\Delta}
+\newcommand{\ectx}{\cdot}
+
+\title{Especificación Formal 2019-II, ejercicio 3\\
+Posgrado en Ciencia e Ingeniería de la Computación UNAM}
+\author{Favio E. Miranda Perea}
+\date{\today\\ Fecha de entrega: mi 10 de abril a las 2359hrs}
+
+
+\begin{document}
+\maketitle
+La entrega será en un archivo de script con el nombre {\tt ej03vf192\_apellido\_nombre.v}
+
+\medskip
+
+El objetivo de este ejercicio es reforzar el uso de las tácticas en lógica
+  clásica (importando la biblioteca {\tt Classical}) discutidas en clase. Queda prohibido usar la
+  definición de negación mediante unfold, así como exfalso.
+
+\begin{enumerate}
+\item En el estudio filosófico del condicional surgen las situaciones
+contrafácticas formalizadas por las lógicas del mismo nombre. Un operador
+relevante en estas lógicas es el de cotenabilidad. Decimos que $A$ es
+cotenable con $B$, denotado $A\circ B$ si y sólo si no es el caso que si $A$
+fuera verdadero, entonces B sería falso. Es decir, $A$ no excluye a $B$. \\
+Para nuestros propósitos, definimos al operador de cotenabilidad como
+\[
+A\circ B =_{def} \neg (A\to \neg B)
+\] 
+Con esta definición verifique las siguientes propiedades, utilizando el razonamiento clásico disponible con las tácticas
+y propiedades discutidas en clase.
+
+\begin{enumerate}
+  \item Conmutatividad: 
+  $A\circ B \leftrightarrow B\circ A$
+  \item Asociatividad: 
+  $A\circ (B\circ C) \leftrightarrow (A\circ B)\circ C$
+  \item Distributividad: 
+  $(A\circ B)\lor (A\circ C) \leftrightarrow A\circ (B\lor C)$
+  \item Fusion: 
+  $(A\to B\to C) \leftrightarrow A\circ B \to C$ 
+  \item Definición de implicación: 
+  $(A\to B)\leftrightarrow \neg (A\circ \neg B)$
+\end{enumerate}
+
+\item  Verificar cada
+  argumento lógico mediante una proposición en Coq.  
+  \begin{enumerate}
+  \item $\ex x(Ax \land Bx)\to\fa x(Bx\to Cx),\; Ba\land\neg Ca \vdash \neg\fa
+    x A x$
+  \item $\ex x(Ax\land Bx)\to \fa x(Cx\land Dx),\; \fa x((Ax\lor Ex)\land
+    (Bx\lor Fx)),\;\neg\fa xDx\vdash \fa x(Ex\lor Fx)$
+  \item $\ex x(\neg Bxm\land \fa y(Cy\to\neg Gxy)),\;
+         \fa z(\neg\fa y(Wy\to Gzy)\to Bzm)\vdash \fa x(Cx\to\neg Wx)$
+  \item $\neg\fa x(\neg Px\lor \neg Hx)\to \fa x(Cx \land \fa y(Ly\to Axy)),\;
+         \ex x(Hx \land \fa y(Ly\to Axy))\to \fa x(Rx \land \fa yBxy)\;\vdash
+         \neg\fa x\fa yBxy\to \fa x(\neg Px\lor \neg Hx)$
+  \item $\fa x\fa y(Axy\to Bx\land Cy),\;\fa x\fa y(Bx\lor Dy\to \neg
+    Axy)\;\vdash \neg\ex x\ex yAxy$
+  \end{enumerate}
+
+
+\end{enumerate}
+
+% Considere la siguiente definición relacional no determinista para permutaciones de una lista
+
+% \begin{mathpar}
+% \inferrule*[right=(Ins-head)]{
+%   }{
+% {\sf Insert}\,x\;\ell\;(x::\ell)
+% }
+
+% \inferrule*[right=(Ins-rec)]{
+%   {\sf Insert}\, x\;\ell\;\ell'
+%   }{
+%   {\sf Insert}\, x\;(y::\ell)\;(y::\ell')
+%   }
+% \end{mathpar}
+
+% \begin{mathpar}
+% \inferrule*[right=(Perm-empty)]{
+%   }{
+%   {\sf Perm}\,[\,]\;[\,]
+%   }
+
+%   \inferrule*[right=(Perm-snoc)]{
+%   {\sf Perm}\,\ell\;\ell_p\;  \and {\sf Insert}\, x\;\ell_p\;\ell'
+%   }{
+%     {\sf Perm}\,(x::\ell)\;\ell'
+%   }
+% \end{mathpar}
+
+% Implemente la definición anterior mediante predicados inductivos y demuestre
+% lo siguiente:
+
+% \begin{enumerate}
+% \item ${\sf Perm}\,\ell\;\ell' \to {\sf Perm}\,(x::\ell)\;(x::\ell')$
+% \item ${\sf Perm}\;(y::x::\ell)\;(x::y::\ell)$.
+% \item {\sf Perm} es una relación de equivalencia.
+% \item ${\sf Perm}\,\ell\;\ell'\to {\sf Perm}\,(\ell+\!\!+
+%   \;\ell_2)\;(\ell'+\!\!+\; \ell_2)$
+% \item ${\sf Perm}\,\ell\;(\ell_1 +\!\!+\;  \ell_2) \to {\sf Perm}\,(x :: l)\;
+%                                                       (\ell_1 +\!\!+\;  x :: \ell_2)$
+% \end{enumerate}
+
+% Cualquier lema adicional debe también ser demostrado.
+
+% Las funciones {\tt take} y {\tt drop} se especifican como sigue:
+
+% \begin{itemize}
+% \item {\tt take n xs} devuelve la lista con los primeros $n$ elementos de la lista $xs$.
+% \medskip
+% \item {\tt drop n xs} devuelve la lista resultante de eliminar los primeros $n$ elementos de $xs$.
+% \end{itemize}
+
+% \bigskip
+
+% Realice lo siguiente:
+
+% \begin{enumerate}
+% \item Implemente a las funciones {\tt take} y {\tt drop}. %, indicando qué clase de recursión está utilizando.
+% \medskip
+% \item Demuestre las siguientes propiedades, el punto denota a la composición
+%   de funciones:
+%   \begin{enumerate}
+%   \item {\tt xs = take n xs ++ drop n xs}\medskip
+%   \item {\tt take m . drop n = drop n . take (m+n)}\medskip
+%   \item {\tt take m . take n = take (min m n)}\medskip
+%   \item {\tt drop m . drop n = drop (m+n)} 
+%   \end{enumerate}
+% \end{enumerate}
+
+
+
+% \newcommand{\difl}{\mathop{\setminus\setminus}}
+
+% La función diferencia de listas, denotada $\difl$ se especifica como sigue:
+%   \begin{center}
+%     $xs\difl ys$ devuelve la lista de elementos de $xs$ que no figuran en $ys$.
+%   \end{center}
+% Por ejemplo: $[1,2,5,7] \difl\, [3,8,5,0,6,2] = [1,7]$
+
+% \medskip
+
+% Considere la siguiente implementación de $\difl$: % que utiliza las funciones {\tt filter} y {\tt elem} del preludio de {\sc Haskell}
+% \[
+%   {\tt xs \difl ys = filter\; (nelm\; ys)\; xs}
+% \]
+% donde {\tt filter} es la función del preludio de {\sc Haskell} cuya especificación es la siguiente:
+
+% \begin{center}
+%   {\tt filter p xs} devuelve la lista de aquellos elementos de {\tt xs} que cumplen el predicado {\tt p}.
+% \end{center}
+
+% y {\tt nelm} es un predicado que decide si un elemento no pertenece a una lista. Es decir,
+
+% \begin{center}
+%   {\tt nelm xs x = True} syss {\tt x} no pertenece a la lista {\tt xs}
+% \end{center}
+
+
+% % y {\tt notel} es una función que decide si un elemento no pertenece a una lista (la cual por supuesto se define usando la función {\tt elem} del preludio).
+
+
+
+% \medskip
+
+
+% \begin{enumerate}
+% \item Enuncie la definición recursiva de {\tt filter}.
+% \item Demuestre las siguiente propiedades de la función $\difl$ usando exclusivamente la definición recursiva de filter.
+
+% \begin{enumerate}
+% \item ${\tt (xs +\!\!\!+ \, ys) \difl zs = (xs \difl zs) +\!\!\!+\, (ys \difl zs)}$
+% \item ${\tt xs \difl (ys +\!\!\!+ \, zs) = (xs \difl ys) \difl zs}$
+% \item ${\tt (xs \difl ys) \difl zs = (xs \difl zs) \difl ys}$
+% \end{enumerate}
+
+% \end{enumerate}
+
+% \medskip
+
+% {\em Sugerencia:} Demuestre primero algunas propiedades generales de la función {\tt filter} respecto a la concatenación y respecto al predicado utilizado, en particular analizando el caso en el que dicho predicado está definido como una conjunción de dos predicados más simple. Si se hace esto con detalle las propiedades de $\difl$ son corolarios sencillos.
+
+
+% Todos los ejercicios deben resolverse en {\sc Coq} y entregarse en un archivo
+% llamado {\tt NombreT1.v}.
+
+% \be
+
+% \item (2 pts) Defina una función recursiva {\tt doble:Nat -> Nat} y demuestre que para cualquier {\tt n:Nat}, se cumple que {\tt doble n = suma n n}
+
+% \item (2.5 pts) Defina una función {\tt cuenta:\,A ->$\,$ List A -> $\,$Nat} que cuenta el número de presencias de un elemento en una lista dado. Demuestre que
+% para cualesquiera {\tt x:A, xs:List A}, se cumple que
+% \beqs
+% {\tt cuenta\; x\; xs}\; \leq\; {\tt length\; xs}
+% \eeqs
+
+
+
+\end{document}
