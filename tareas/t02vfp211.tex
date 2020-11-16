@@ -1,0 +1,267 @@
+%%%%% Examen1 Lenguajes de programacion 2011-2
+\documentclass[letterpaper, 11 pt]{article}
+\usepackage{amssymb,amsmath}
+\usepackage{mathrsfs}
+\usepackage{anysize}
+\usepackage{verbatim}
+\usepackage{hyperref}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{mathpartir}
+
+\input{macrosef}
+% \newcommand{\G}{\Gamma}
+% \newcommand{\D}{\Delta}
+\newcommand{\ectx}{\cdot}
+
+\title{Verificación Formal 2021-1, tarea 2\\
+Posgrado en Ciencia e Ingeniería de la Computación\\
+IIMAS, UNAM}
+\author{Favio E. Miranda Perea\\
+Ayudante: Fernando A. Galicia-Mendoza}
+\date{\today\\ Fecha de entrega: miércoles, 2 de diciembre}
+
+
+\begin{document}
+\maketitle
+
+\subsection*{Formato de entrega}
+Deberán subir a la plataforma de {\tt Google Classroom} un archivo de texto con el enlace a un repositorio. Dicho repositorio deberá  contener los siguientes archivos:
+\begin{itemize}
+    \item {\tt Defs\_\textlangle Sección\textrangle} En este archivo incluirán todas las definiciones no nativas de {\sf Coq}. Por ejemplo, la definición del operador de cotenabilidad del ejercicio 1 de la sección de lógica clásica. Debe haber un archivo por cada sección, es decir, {\tt Defs\_LC} para la sección de lógica clásica, {\tt Defs\_LM} para la sección de lógica minimal, etc. En caso de que no haya definiciones extra, no deberás crear el archivo {\sf Coq}.
+    \item {\tt Props\_\textlangle Sección\textrangle} En este archivo incluirán todos los resultados y sus demostraciones. Análogo a los archivos de definiciones, deberás hacer un archivo por cada sección, salvo la última sección.
+    \item {\tt Examples} En este archivo incluirán los resultados de la última sección. Deberás importar los archivos anteriores para tener acceso a la biblioteca {\tt Classical}.
+    \item {\tt README} En este archivo darás tu nombre, número de cuenta, breve explicación de como utilizar tu biblioteca y como  están constituidos los archivos.
+\end{itemize}
+
+\begin{enumerate}
+\subsection*{Lógica Minimal}
+\item Realizar las siguientes derivaciones {\bf
+    minimal}.
+  \be
+ % \item $\vdash \neg\neg(A\lor\neg A)$
+  \item $\vdash \neg\neg\neg A \iff \neg A$
+  \item      $\vdash \neg\neg(A\land B)\imp \neg\neg
+   A\land\neg\neg B$
+  \item $\neg\neg\fa x A\imp \fa x \neg\neg A$
+   \ee
+   
+\subsection*{Lógica Intuisionista}
+ \item Verifica la validez de la
+   equivalencia lógica \beqs\neg\neg(A\imp B)\iff \neg\neg A\imp\neg\neg
+   B\eeqs de la siguiente manera:
+   \be
+    \item $\vdash_{m} \neg\neg(A\imp B)\imp\neg\neg A\imp\neg\neg
+   B$. \\ \emph{Sugerencia:} pruebe previamente y utilice el lema: 
+   $\neg\neg A,\neg B\vdash \neg (A\imp B)$
+       \item $\vdash_{i}(\neg\neg A\imp\neg\neg
+   B)\imp\neg\neg(A\imp B)$. \\ \emph{Sugerencia:} primero construya
+   derivaciones de $\neg\neg A$ y $\neg B$ usando $\neg(A\imp B)$ como
+   hipótesis.
+    \ee
+
+\subsection*{Lógica Clásica}
+
+El objetivo de este ejercicio es utilizar las tácticas en lógica clásica (importando la biblioteca {\tt Classical}\footnote{\url{https://coq.inria.fr/library/Coq.Logic.Classical.html}}). Queda prohibido usar la definición de negación mediante unfold, así como exfalso.
+
+\item En el estudio filosófico del condicional surgen las situaciones
+contrafácticas formalizadas por las lógicas del mismo nombre. Un operador
+relevante en estas lógicas es el de cotenabilidad. Decimos que $A$ es
+cotenable con $B$, denotado $A\circ B$ si y sólo si no es el caso que si $A$
+fuera verdadero, entonces B sería falso. Es decir, $A$ no excluye a $B$. \\
+Para nuestros propósitos, definimos al operador de cotenabilidad como
+\[
+A\circ B =_{def} \neg (A\to \neg B)
+\] 
+Con esta definición verifique las siguientes propiedades, utilizando el razonamiento clásico disponible con las tácticas
+y propiedades discutidas en clase.
+
+\begin{enumerate}
+  \item Conmutatividad: 
+  $A\circ B \leftrightarrow B\circ A$
+  \item Asociatividad: 
+  $A\circ (B\circ C) \leftrightarrow (A\circ B)\circ C$
+  \item Distributividad: 
+  $(A\circ B)\lor (A\circ C) \leftrightarrow A\circ (B\lor C)$
+  \item Fusion: 
+  $(A\to B\to C) \leftrightarrow A\circ B \to C$ 
+  \item Definición de implicación: 
+  $(A\to B)\leftrightarrow \neg (A\circ \neg B)$
+\end{enumerate}
+
+\item  Verificar cada
+  argumento lógico mediante una proposición en Coq.  
+  \begin{enumerate}
+  \item $\ex x(Ax \land Bx)\to\fa x(Bx\to Cx),\; Ba\land\neg Ca \vdash \neg\fa
+    x A x$
+    \item $\ex x(\neg Bxm\land \fa y(Cy\to\neg Gxy)),\;
+         \fa z(\neg\fa y(Wy\to Gzy)\to Bzm)\vdash \fa x(Cx\to\neg Wx)$
+  \item $\neg\fa x(\neg Px\lor \neg Hx)\to \fa x(Cx \land \fa y(Ly\to Axy)),\;
+         \ex x(Hx \land \fa y(Ly\to Axy))\to \fa x(Rx \land \fa yBxy)\;\vdash
+         \neg\fa x\fa yBxy\to \fa x(\neg Px\lor \neg Hx)$
+  \end{enumerate}
+    
+\subsection*{Cualquier sistema}
+
+\item Realizar las siguientes derivaciones indicando qué sistema usaste. Considera que $\vdash_m,\vdash_i$ ó $\vdash_c$ es lógica minimal, intuisionista y clásica, respectivamente.
+  \bi
+%  \item $\neg r\lor\neg s, p\imp r, B\imp s\vdash\neg p\lor\neg B$
+%    \item $p\imp B\lor r, B\imp r, r\imp s\vdash p\imp s$
+\item $A\imp B, \neg(A\lor C)\imp D, A\lor B\imp C\vdash \neg D\imp C$
+%       \item $\vdash (\neg p\imp p)\imp p$
+%         \item $\vdash (\neg p\imp\neg B)\imp (\neg p\imp B)\imp p$
+   %       \item $\vdash ((p\imp B)\imp p)\imp p$
+\item $A\lor B\vdash (\neg D\imp C)\land (\neg B\imp\neg A)\imp
+  (C\imp\neg B)\imp D$
+      \item $\fa x(Px\imp\neg Bx)\vdash Ra\imp\fa x(Rx\imp Bx)\imp\neg
+        Pa$
+        \item $\fa x (Px\lor Bx\imp\neg Rx),\;\fa x(Sx\imp Rx)\vdash
+          \fa x(Px\imp \neg Sx\lor Tx)$
+          \item $\vdash\fa x(Px\land \ex yBy)\imp \ex x(Px\land Bx)$
+            \item $\fa x\ex y(Px\imp Rxy)\vdash \fa x(Px\imp \ex y
+              Rxy)$
+              \item $\fa x(Px\imp\neg Bx)\vdash \neg\ex x(Px\land Bx)$
+                \item $\ex x\fa yPxy\vdash \fa y\ex x Pxy$
+  \ei
+
+\end{enumerate}
+
+
+
+% Considere la siguiente definición relacional no determinista para permutaciones de una lista
+
+% \begin{mathpar}
+% \inferrule*[right=(Ins-head)]{
+%   }{
+% {\sf Insert}\,x\;\ell\;(x::\ell)
+% }
+
+% \inferrule*[right=(Ins-rec)]{
+%   {\sf Insert}\, x\;\ell\;\ell'
+%   }{
+%   {\sf Insert}\, x\;(y::\ell)\;(y::\ell')
+%   }
+% \end{mathpar}
+
+% \begin{mathpar}
+% \inferrule*[right=(Perm-empty)]{
+%   }{
+%   {\sf Perm}\,[\,]\;[\,]
+%   }
+
+%   \inferrule*[right=(Perm-snoc)]{
+%   {\sf Perm}\,\ell\;\ell_p\;  \and {\sf Insert}\, x\;\ell_p\;\ell'
+%   }{
+%     {\sf Perm}\,(x::\ell)\;\ell'
+%   }
+% \end{mathpar}
+
+% Implemente la definición anterior mediante predicados inductivos y demuestre
+% lo siguiente:
+
+% \begin{enumerate}
+% \item ${\sf Perm}\,\ell\;\ell' \to {\sf Perm}\,(x::\ell)\;(x::\ell')$
+% \item ${\sf Perm}\;(y::x::\ell)\;(x::y::\ell)$.
+% \item {\sf Perm} es una relación de equivalencia.
+% \item ${\sf Perm}\,\ell\;\ell'\to {\sf Perm}\,(\ell+\!\!+
+%   \;\ell_2)\;(\ell'+\!\!+\; \ell_2)$
+% \item ${\sf Perm}\,\ell\;(\ell_1 +\!\!+\;  \ell_2) \to {\sf Perm}\,(x :: l)\;
+%                                                       (\ell_1 +\!\!+\;  x :: \ell_2)$
+% \end{enumerate}
+
+% Cualquier lema adicional debe también ser demostrado.
+
+% Las funciones {\tt take} y {\tt drop} se especifican como sigue:
+
+% \begin{itemize}
+% \item {\tt take n xs} devuelve la lista con los primeros $n$ elementos de la lista $xs$.
+% \medskip
+% \item {\tt drop n xs} devuelve la lista resultante de eliminar los primeros $n$ elementos de $xs$.
+% \end{itemize}
+
+% \bigskip
+
+% Realice lo siguiente:
+
+% \begin{enumerate}
+% \item Implemente a las funciones {\tt take} y {\tt drop}. %, indicando qué clase de recursión está utilizando.
+% \medskip
+% \item Demuestre las siguientes propiedades, el punto denota a la composición
+%   de funciones:
+%   \begin{enumerate}
+%   \item {\tt xs = take n xs ++ drop n xs}\medskip
+%   \item {\tt take m . drop n = drop n . take (m+n)}\medskip
+%   \item {\tt take m . take n = take (min m n)}\medskip
+%   \item {\tt drop m . drop n = drop (m+n)} 
+%   \end{enumerate}
+% \end{enumerate}
+
+
+
+% \newcommand{\difl}{\mathop{\setminus\setminus}}
+
+% La función diferencia de listas, denotada $\difl$ se especifica como sigue:
+%   \begin{center}
+%     $xs\difl ys$ devuelve la lista de elementos de $xs$ que no figuran en $ys$.
+%   \end{center}
+% Por ejemplo: $[1,2,5,7] \difl\, [3,8,5,0,6,2] = [1,7]$
+
+% \medskip
+
+% Considere la siguiente implementación de $\difl$: % que utiliza las funciones {\tt filter} y {\tt elem} del preludio de {\sc Haskell}
+% \[
+%   {\tt xs \difl ys = filter\; (nelm\; ys)\; xs}
+% \]
+% donde {\tt filter} es la función del preludio de {\sc Haskell} cuya especificación es la siguiente:
+
+% \begin{center}
+%   {\tt filter p xs} devuelve la lista de aquellos elementos de {\tt xs} que cumplen el predicado {\tt p}.
+% \end{center}
+
+% y {\tt nelm} es un predicado que decide si un elemento no pertenece a una lista. Es decir,
+
+% \begin{center}
+%   {\tt nelm xs x = True} syss {\tt x} no pertenece a la lista {\tt xs}
+% \end{center}
+
+
+% % y {\tt notel} es una función que decide si un elemento no pertenece a una lista (la cual por supuesto se define usando la función {\tt elem} del preludio).
+
+
+
+% \medskip
+
+
+% \begin{enumerate}
+% \item Enuncie la definición recursiva de {\tt filter}.
+% \item Demuestre las siguiente propiedades de la función $\difl$ usando exclusivamente la definición recursiva de filter.
+
+% \begin{enumerate}
+% \item ${\tt (xs +\!\!\!+ \, ys) \difl zs = (xs \difl zs) +\!\!\!+\, (ys \difl zs)}$
+% \item ${\tt xs \difl (ys +\!\!\!+ \, zs) = (xs \difl ys) \difl zs}$
+% \item ${\tt (xs \difl ys) \difl zs = (xs \difl zs) \difl ys}$
+% \end{enumerate}
+
+% \end{enumerate}
+
+% \medskip
+
+% {\em Sugerencia:} Demuestre primero algunas propiedades generales de la función {\tt filter} respecto a la concatenación y respecto al predicado utilizado, en particular analizando el caso en el que dicho predicado está definido como una conjunción de dos predicados más simple. Si se hace esto con detalle las propiedades de $\difl$ son corolarios sencillos.
+
+
+% Todos los ejercicios deben resolverse en {\sc Coq} y entregarse en un archivo
+% llamado {\tt NombreT1.v}.
+
+% \be
+
+% \item (2 pts) Defina una función recursiva {\tt doble:Nat -> Nat} y demuestre que para cualquier {\tt n:Nat}, se cumple que {\tt doble n = suma n n}
+
+% \item (2.5 pts) Defina una función {\tt cuenta:\,A ->$\,$ List A -> $\,$Nat} que cuenta el número de presencias de un elemento en una lista dado. Demuestre que
+% para cualesquiera {\tt x:A, xs:List A}, se cumple que
+% \beqs
+% {\tt cuenta\; x\; xs}\; \leq\; {\tt length\; xs}
+% \eeqs
+
+
+
+\end{document}
