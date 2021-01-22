@@ -43,7 +43,8 @@ Qed.
 (* Balance condition on Braun trees *)
 Inductive bbal : BTree -> Prop:= 
  |bbalE : bbal E 
- |bbalN : forall (a: A) (s t: BTree), bbal s -> bbal t -> (bsize t) ≤BN (bsize s) -> (bsize s) ≤BN (sucBN (bsize t)) -> 
+ |bbalN : forall (a: A) (s t: BTree), bbal s -> bbal t -> (bsize t) ≤BN (bsize s) -> (
+                                      bsize s) ≤BN (sucBN (bsize t)) -> 
                                       bbal (N a s t).
 
 Check bbal_ind.
@@ -58,7 +59,9 @@ Property 0 of Hoogerwood's paper:
 bal <a,s,t> /\ #<a,s,t>=d+1 -> #s = d 'div' 2 + d 'mod' 2 /\ #t = d 'div' 2
 - - - - - - - - - - - - - - - - - - - - - - - - - - *)
 
-Lemma prop_0_U : forall (a:A) (s t:BTree) (b:BN), bbal (N a s t) -> bsize(N a s t) = U b -> bsize s = b /\ bsize t = b.
+Lemma prop_0_U : forall (a:A) (s t:BTree) (b:BN), 
+                  bbal (N a s t) -> bsize(N a s t) = U b -> 
+                  bsize s = b /\ bsize t = b.
 Proof.
 intros.
 simpl in H0.
@@ -79,7 +82,9 @@ inversion H0b.
 Qed.
 
 
-Lemma prop_0_D : forall (a:A) (s t:BTree) (b:BN), bbal (N a s t) -> bsize(N a s t) = D b -> bsize s = sucBN b /\ bsize t = b.
+Lemma prop_0_D : forall (a:A) (s t:BTree) (b:BN), bbal (N a s t) 
+                         -> bsize(N a s t) = D b -> 
+                            bsize s = sucBN b /\ bsize t = b.
 Proof.
 intros.
 simpl in H0.
@@ -99,7 +104,8 @@ rewrite <- H0.
 intuition.
 Qed.
 
-Corollary size_caseU: forall (a:A) (l r:BTree) (b:BN), bsize (N a l r) = U b -> bsize l = bsize r.
+Corollary size_caseU: forall (a:A) (l r:BTree) (b:BN), 
+                        bsize (N a l r) = U b -> bsize l = bsize r.
 Proof.
 intros.
 assert (HBal := allBal (N a l r)).
@@ -109,7 +115,9 @@ rewrite <- H1 in H0.
 intuition. intuition.
 Qed.
 
-Corollary size_caseD: forall (a:A) (l r:BTree) (b:BN), bsize (N a l r) = D b -> bsize l = sucBN (bsize r).
+Corollary size_caseD: forall (a:A) (l r:BTree) (b:BN), 
+                        bsize (N a l r) = D b 
+                           -> bsize l = sucBN (bsize r).
 Proof.
 intros.
 assert (HBal := allBal (N a l r)).
@@ -119,7 +127,9 @@ rewrite <- H1 in H0.
 intuition. intuition.
 Qed.
 
-Corollary bbal_size_r: forall (a:A) (l r:BTree), bsize (N a l r) = U (bsize r) \/ bsize (N a l r) = D (bsize r).
+Corollary bbal_size_r: forall (a:A) (l r:BTree), 
+                          bsize (N a l r) = U (bsize r) \/ 
+                          bsize (N a l r) = D (bsize r).
 Proof.
 intros.
 assert (HBal:=allBal (N a l r)).
@@ -163,35 +173,36 @@ Proof.
 intros.
 assert (HBal:=allBal (N a l r)).
 destruct (bnNonZ (bsize (N a l r))).
-simpl.
-assert (Z <> sucBN (bsize l ⊞ bsize r)).
-apply ZnotSucBN.
-intuition.
-destruct H.
-apply prop_0_U in H.
-simpl.
-destruct H.
-rewrite H.
-rewrite H0.
-rewrite plus_U.
-constructor.
-trivial.
-apply prop_0_D in H.
-simpl.
-destruct H.
+- simpl.
+  assert (Z <> sucBN (bsize l ⊞ bsize r)).
+  apply ZnotSucBN.
+  intuition.
+- destruct H.
+  + apply prop_0_U in H.
+    * simpl.
+      destruct H.
+      subst.
+      rewrite H0. 
+      rewrite plus_U.
+      constructor.
+    * assumption.
+  +  apply prop_0_D in H.
+    * simpl.
+      destruct H.
 rewrite H.
 rewrite H0.
 rewrite plus_D.
 constructor.
 constructor.
 apply lts.
-trivial.
+* trivial.
 Qed.
 
 (* ============================================= *)
           
 
-Lemma lt_U_bsize: forall (b:BN) (a:A) (t1 t2:BTree), (U b) <BN (bsize (N a t1 t2)) -> b <BN (bsize t1).
+Lemma lt_U_bsize: forall (b:BN) (a:A) (t1 t2:BTree), 
+          (U b) <BN (bsize (N a t1 t2)) -> b <BN (bsize t1).
 Proof.
 intros b a t1 t2 H.
 assert ((bsize (N a t1 t2)) ≤BN (U (bsize t1))).

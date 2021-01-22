@@ -205,6 +205,7 @@ Proof.
       apply (IH2 Hin).
 Qed.  
 
+
 Fixpoint re_not_empty {T : Type} (re : reg_exp T) : bool
   (* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
 Lemma re_not_empty_correct : forall T (re : reg_exp T),
@@ -407,7 +408,91 @@ Proof.
        | re | s1 s2 re Hmatch1 IH1 Hmatch2 IH2 ].
   - (* MEmpty *)
     simpl. intros contra. inversion contra.
-  (* FILL IN HERE *) Admitted.
+  - intros.
+    simpl in H.
+    inversion H.
+    inversion H1.
+  - intros.
+    simpl in *.  
+    admit.
+  - intros.
+    simpl in H.
+    enough(pumping_constant re1 <= length s1).
+    + apply IH in H0.
+      do 4 destruct H0. 
+      destruct H1. 
+      exists x.
+      exists x0.
+      exists x1.
+      intuition.
+      constructor.
+      intuition.
+    + admit.
+  - intros. simpl in H.
+    admit.
+  - intros.
+    simpl in H.         
+    inversion H.
+    contradict H1.
+    unfold not.
+    apply pumping_constant_0_false.
+  - intros.
+    simpl in *.
+    inversion Hmatch2.
+    + rewrite <- H0 in *.
+      admit.
+    +  
+      
+      
+      
+      
+    + exists s1.
+      exists s0.
+      exists s3.
+      split.
+      * reflexivity.
+      * split.
+      
+      
+      
+          
+    + eexists.
+      eexists.
+      eexists.
+      split.
+      * admit.
+      * split.
+        -- admit.
+        -- intro.
+           eapply (napp_star T m s0 s3) in H2.
+           2:{exact H3.
+             }
+           constructor.
+           ++ exact Hmatch1.
+           ++ exact H2.
+           
+             
+           ++ constructor.
+           exact Hmatch1.
+           exact H2.
+           exact H3.
+           
+      
+    eapply napp_star in H2.   
+      2:{exact H3.
+        }
+        
+    induction s1.
+    + admit.
+    + simpl in H.
+    
+    
+    
+    
+    
+     
+                  
+    (* FILL IN HERE *) Admitted.
     
 Lemma pumping : forall T (re : reg_exp T) s,
   s =~ re ->

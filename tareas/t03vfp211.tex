@@ -1,0 +1,197 @@
+\documentclass[letterpaper, 11 pt]{article}
+\usepackage{amssymb,amsmath}
+\usepackage{mathrsfs}
+\usepackage{anysize}
+\usepackage{verbatim}
+\usepackage{hyperref}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{mathpartir}
+
+\input{macrosef}
+% \newcommand{\G}{\Gamma}
+% \newcommand{\D}{\Delta}
+\newcommand{\ectx}{\cdot}
+
+\title{Verificación Formal 2021-1, tarea 3\\
+Posgrado en Ciencia e Ingeniería de la Computación\\
+IIMAS, UNAM}
+\author{Favio E. Miranda Perea\\
+Ayudante: Fernando A. Galicia-Mendoza}
+
+\date{\today\\ Fecha de entrega: jueves 4 de febrero de 2021, 2359hrs.}
+
+
+\begin{document}
+\maketitle
+
+% \subsection*{Formato de entrega}
+% Deberán subir a la plataforma de {\tt Google Classroom} un archivo de texto con el enlace a un repositorio. Dicho repositorio deberá  contener los siguientes archivos:
+% \begin{itemize}
+%     \item {\tt Defs\_\textlangle Sección\textrangle} En este archivo incluirán todas las definiciones no nativas de {\sf Coq}. Por ejemplo, la definición del operador de cotenabilidad del primer ejercicio de la sección de lógica clásica. Debe haber un archivo por cada sección, es decir, {\tt Defs\_LC} para la sección de lógica clásica, {\tt Defs\_LM} para la sección de lógica minimal, etc. En caso de que no haya definiciones extra, no deberás crear el archivo {\sf Coq}.
+%     \item {\tt Props\_\textlangle Sección\textrangle} En este archivo incluirán todos los resultados y sus demostraciones. Análogo a los archivos de definiciones, deberás hacer un archivo por cada sección, salvo la última sección.
+%     \item {\tt Examples} En este archivo incluirán los resultados de la última sección. Deberás importar los archivos anteriores para tener acceso a la biblioteca {\tt Classical}.
+%     \item {\tt README} En este archivo darás tu nombre, número de cuenta, breve explicación de como utilizar tu biblioteca y como  están constituidos los archivos.
+% \end{itemize}
+
+Llevar a cabo la implementación y verificación en Coq de las siguientes propiedades relativas a las funciones de remoción de elementos en arreglos flexibles implementados mediante árboles de Braun.
+\begin{itemize}
+\item {\tt lr} remueve el primer elemento de un arreglo (el de índice cero)
+\item {\tt hr} remueve el último elemento de un arreglo.
+\end{itemize}
+En cada caso deben considerarse y en su caso agregarse en
+cada enunciado las restricciones pertinentes sobre $t$ y $j$ de forma que se puedan verificar las propiedades.
+\begin{enumerate}
+\item Implementar las funciones {\tt lr} y {\tt hr}.
+\item $bsize\,(lr\,t) = pred\,(bsize\,t)$
+\item $bbal\,t \to bbal\,(lr\,t)$
+\item $lookup\;(lr\,t)\,j = lookup\;t\,(suc\,j)$
+\item $lr\;(le\; x\, t) = t$
+\item $le\;(lookup\; t\, Z)\, (lr\, t) = t$
+\item $bsize\,(hr\,t) = pred\,(bsize\,t)$
+\item $bbal\,t \to bbal\,(hr\,t)$
+\item $lookup\;(hr\,t)\,j = lookup\;t\;j$
+\item $hr\;(he\; x\, t) = t$
+\item $he\;(lookup\; t\, (pred\,(bsize\,t)))\, (hr\, t) = t$  
+  
+\end{enumerate}
+
+
+
+% Considere la siguiente definición relacional no determinista para permutaciones de una lista
+
+% \begin{mathpar}
+% \inferrule*[right=(Ins-head)]{
+%   }{
+% {\sf Insert}\,x\;\ell\;(x::\ell)
+% }
+
+% \inferrule*[right=(Ins-rec)]{
+%   {\sf Insert}\, x\;\ell\;\ell'
+%   }{
+%   {\sf Insert}\, x\;(y::\ell)\;(y::\ell')
+%   }
+% \end{mathpar}
+
+% \begin{mathpar}
+% \inferrule*[right=(Perm-empty)]{
+%   }{
+%   {\sf Perm}\,[\,]\;[\,]
+%   }
+
+%   \inferrule*[right=(Perm-snoc)]{
+%   {\sf Perm}\,\ell\;\ell_p\;  \and {\sf Insert}\, x\;\ell_p\;\ell'
+%   }{
+%     {\sf Perm}\,(x::\ell)\;\ell'
+%   }
+% \end{mathpar}
+
+% Implemente la definición anterior mediante predicados inductivos y demuestre
+% lo siguiente:
+
+% \begin{enumerate}
+% \item ${\sf Perm}\,\ell\;\ell' \to {\sf Perm}\,(x::\ell)\;(x::\ell')$
+% \item ${\sf Perm}\;(y::x::\ell)\;(x::y::\ell)$.
+% \item {\sf Perm} es una relación de equivalencia.
+% \item ${\sf Perm}\,\ell\;\ell'\to {\sf Perm}\,(\ell+\!\!+
+%   \;\ell_2)\;(\ell'+\!\!+\; \ell_2)$
+% \item ${\sf Perm}\,\ell\;(\ell_1 +\!\!+\;  \ell_2) \to {\sf Perm}\,(x :: l)\;
+%                                                       (\ell_1 +\!\!+\;  x :: \ell_2)$
+% \end{enumerate}
+
+% Cualquier lema adicional debe también ser demostrado.
+
+% Las funciones {\tt take} y {\tt drop} se especifican como sigue:
+
+% \begin{itemize}
+% \item {\tt take n xs} devuelve la lista con los primeros $n$ elementos de la lista $xs$.
+% \medskip
+% \item {\tt drop n xs} devuelve la lista resultante de eliminar los primeros $n$ elementos de $xs$.
+% \end{itemize}
+
+% \bigskip
+
+% Realice lo siguiente:
+
+% \begin{enumerate}
+% \item Implemente a las funciones {\tt take} y {\tt drop}. %, indicando qué clase de recursión está utilizando.
+% \medskip
+% \item Demuestre las siguientes propiedades, el punto denota a la composición
+%   de funciones:
+%   \begin{enumerate}
+%   \item {\tt xs = take n xs ++ drop n xs}\medskip
+%   \item {\tt take m . drop n = drop n . take (m+n)}\medskip
+%   \item {\tt take m . take n = take (min m n)}\medskip
+%   \item {\tt drop m . drop n = drop (m+n)} 
+%   \end{enumerate}
+% \end{enumerate}
+
+
+
+% \newcommand{\difl}{\mathop{\setminus\setminus}}
+
+% La función diferencia de listas, denotada $\difl$ se especifica como sigue:
+%   \begin{center}
+%     $xs\difl ys$ devuelve la lista de elementos de $xs$ que no figuran en $ys$.
+%   \end{center}
+% Por ejemplo: $[1,2,5,7] \difl\, [3,8,5,0,6,2] = [1,7]$
+
+% \medskip
+
+% Considere la siguiente implementación de $\difl$: % que utiliza las funciones {\tt filter} y {\tt elem} del preludio de {\sc Haskell}
+% \[
+%   {\tt xs \difl ys = filter\; (nelm\; ys)\; xs}
+% \]
+% donde {\tt filter} es la función del preludio de {\sc Haskell} cuya especificación es la siguiente:
+
+% \begin{center}
+%   {\tt filter p xs} devuelve la lista de aquellos elementos de {\tt xs} que cumplen el predicado {\tt p}.
+% \end{center}
+
+% y {\tt nelm} es un predicado que decide si un elemento no pertenece a una lista. Es decir,
+
+% \begin{center}
+%   {\tt nelm xs x = True} syss {\tt x} no pertenece a la lista {\tt xs}
+% \end{center}
+
+
+% % y {\tt notel} es una función que decide si un elemento no pertenece a una lista (la cual por supuesto se define usando la función {\tt elem} del preludio).
+
+
+
+% \medskip
+
+
+% \begin{enumerate}
+% \item Enuncie la definición recursiva de {\tt filter}.
+% \item Demuestre las siguiente propiedades de la función $\difl$ usando exclusivamente la definición recursiva de filter.
+
+% \begin{enumerate}
+% \item ${\tt (xs +\!\!\!+ \, ys) \difl zs = (xs \difl zs) +\!\!\!+\, (ys \difl zs)}$
+% \item ${\tt xs \difl (ys +\!\!\!+ \, zs) = (xs \difl ys) \difl zs}$
+% \item ${\tt (xs \difl ys) \difl zs = (xs \difl zs) \difl ys}$
+% \end{enumerate}
+
+% \end{enumerate}
+
+% \medskip
+
+% {\em Sugerencia:} Demuestre primero algunas propiedades generales de la función {\tt filter} respecto a la concatenación y respecto al predicado utilizado, en particular analizando el caso en el que dicho predicado está definido como una conjunción de dos predicados más simple. Si se hace esto con detalle las propiedades de $\difl$ son corolarios sencillos.
+
+
+% Todos los ejercicios deben resolverse en {\sc Coq} y entregarse en un archivo
+% llamado {\tt NombreT1.v}.
+
+% \be
+
+% \item (2 pts) Defina una función recursiva {\tt doble:Nat -> Nat} y demuestre que para cualquier {\tt n:Nat}, se cumple que {\tt doble n = suma n n}
+
+% \item (2.5 pts) Defina una función {\tt cuenta:\,A ->$\,$ List A -> $\,$Nat} que cuenta el número de presencias de un elemento en una lista dado. Demuestre que
+% para cualesquiera {\tt x:A, xs:List A}, se cumple que
+% \beqs
+% {\tt cuenta\; x\; xs}\; \leq\; {\tt length\; xs}
+% \eeqs
+
+
+
+\end{document}

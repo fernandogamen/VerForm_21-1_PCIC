@@ -36,6 +36,9 @@ inversion IHa.
 trivial.
 Qed.
 
+Create HintDb PNatDb.
+
+Hint Resolve ltBN_arefl: PNatDb.
 
 Lemma ltBN_asym: forall (a b:BN), a <BN b -> ~ b <BN a.
 Proof.
@@ -66,6 +69,7 @@ inversion IHltBN.
 trivial.
 Qed.
 
+Hint Resolve ltBN_asym: PNatDb.
 
 (*Lemma ltBN_antisym: forall (a b:BN), ltBN a b -> ltBN b a -> *)
 
@@ -136,6 +140,8 @@ apply IHltBN.
 trivial.
 Qed.
 
+Hint Resolve ltBN_tr: PNatDb.
+
 
 Lemma ltBN_trans: forall (a b c:BN), a <BN b -> b <BN c -> a <BN c.
 Proof.
@@ -144,6 +150,8 @@ eapply ltBN_tr.
 eexact H0.
 trivial.
 Qed.
+
+Hint Resolve ltBN_trans: PNatDb.
 
 Lemma lt_lteqBN_trans: forall (a b c:BN), a <BN b -> b ≤BN c -> a <BN c.
 Proof.
@@ -155,6 +163,8 @@ eapply ltBN_trans.
 eexact H.
 trivial.
 Qed.
+
+Hint Resolve lt_lteqBN_trans: PNatDb.
 
 Lemma lteqBN_trans: forall (a b c:BN), a ≤BN b -> b ≤BN c -> a ≤BN c.
 Proof.
@@ -169,6 +179,8 @@ eapply ltBN_trans.
 eexact H1.
 trivial.
 Qed.
+
+Hint Resolve lteqBN_trans: PNatDb.
 
 Lemma ltDs: forall (a:BN), (D a) <BN (U (sucBN a)).
 Proof.
@@ -185,6 +197,8 @@ constructor.
 trivial.
 Qed.
 
+Hint Resolve ltDs: PNatDb.
+
 Lemma lts: forall (a:BN), a <BN (sucBN a).
 Proof.
 intros.
@@ -196,6 +210,8 @@ simpl.
 constructor.
 trivial.
 Qed.
+
+Hint Resolve lts: PNatDb.
 
 Lemma lteqs: forall (a:BN), a ≤BN (sucBN a).
 Proof.
@@ -214,6 +230,8 @@ contradict H0.
 apply notSucBN.
 trivial.
 Qed.
+
+Hint Resolve lteqs: PNatDb.
 
 Lemma ltpred : forall (a:BN), a <> Z -> (predBN a) <BN a.
 Proof.
@@ -236,6 +254,8 @@ simpl;constructor.
 simpl.
 constructor.
 Qed.
+
+Hint Resolve ltpred: PNatDb.
 
 Lemma lt1: forall (b a:BN), a <BN (sucBN b) -> a ≤BN b.
 Proof.
@@ -273,6 +293,7 @@ constructor;constructor.
 trivial.
 Qed.
 
+Hint Resolve lt1: PNatDb.
 
 Lemma lt2: forall (b a:BN), a ≤BN b -> a <BN (sucBN b).
 Proof.
@@ -300,6 +321,8 @@ eexact H0.
 apply ltDs.
 Qed.
 
+Hint Resolve lt2: PNatDb.
+
 Lemma lteqBN_suc_pred : forall (a b:BN), a <> Z -> a ≤BN (sucBN b) -> (predBN a) ≤BN b.
 Proof.
 intros.
@@ -313,6 +336,8 @@ trivial.
 apply lt1.
 trivial.
 Qed.
+
+Hint Resolve lteqBN_suc_pred: PNatDb.
 
 
 Lemma ltaux1: forall (j:BN), Z ≤BN (D j) -> Z ≤BN j.
@@ -559,7 +584,15 @@ intuition.
 exfalso.
 eapply not_lt_suc.
 exists s.
-intuition.
+split.
 exact H1.
-intuition.
+assumption.
 Qed.
+
+
+Lemma lt_U: forall (a b:BN), a <BN b <-> (U a) <BN U b.
+Admitted.
+
+Lemma lt_D: forall (a b:BN), a <BN b <-> (D a) <BN D b.
+Admitted.
+

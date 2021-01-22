@@ -5,8 +5,8 @@ Fixpoint lookup_bn (t:BTree) (b: BN) : A :=
  match t,b with
   |E, b => undefA
   |N x s t,Z => x 
-  |N x s t, U a => lookup_bn s a
-  |N x s t, D a => lookup_bn t a
+  |N x s t, U a => lookup_bn s a   (* U a = 2a+1 *)
+  |N x s t, D a => lookup_bn t a   (* D a = 2a + 2 *) 
  end.
 
 
@@ -26,7 +26,8 @@ Check bbal_inv.
 (*Generalizable Variables t x b.*)
 
 
-Lemma bsize_upd: forall (t:BTree) (x:A) (b:BN), b <BN bsize t -> bsize t = bsize (update t b x).
+Lemma bsize_upd: forall (t:BTree) (x:A) (b:BN), 
+                  b <BN bsize t -> bsize t = bsize (update t b x).
 Proof.
 intro t.
 induction t.
@@ -77,7 +78,11 @@ Qed.
 
 
 
-Lemma elmnt_lkp_upd : forall (t:BTree) (i j:BN), i <BN (bsize t) -> j <BN (bsize t) -> i <> j -> forall (x:A), lookup_bn (update t i x) j = lookup_bn t j.
+Lemma elmnt_lkp_upd : forall (t:BTree) (i j:BN), 
+                        i <BN (bsize t) -> j <BN (bsize t) -> 
+                        i <> j -> 
+                        forall (x:A), 
+                          lookup_bn (update t i x) j = lookup_bn t j.
 Proof.
 intros t.
 induction t.
@@ -103,7 +108,7 @@ rewrite H5 in H0; rewrite H6 in H0; simpl in H0.
 inversion H0.
 (* Z = j *)
 clear H9 a0.
-rewrite <- H3 in H1; rewrite <- H7 in H1;intuition.
+rewrite <- H3 in H1; rewrite <- H7 in H1 ;intuition.
 (* U a0 = j *)
 inversion H9.
 (* D a0 = j *)
@@ -173,8 +178,9 @@ Qed.
 
 
 
-(*This property is given in the introduction as an example of why we prefer to use the numeric system BN over nat*)
-Lemma lkp_upd_BN: forall (t:BTree) (x:A) (b:BN), t <> E -> b <BN (bsize t) -> lookup_bn (update t b x) b = x.
+Lemma lkp_upd_BN: forall (t:BTree) (x:A) (b:BN), t <> E -> 
+                       b <BN (bsize t) -> 
+                       lookup_bn (update t b x) b = x.
 Proof.
 intros t x.
 assert (H:=allBal t).

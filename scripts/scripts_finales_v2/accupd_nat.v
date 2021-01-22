@@ -7,7 +7,8 @@ that has just been updated with 'x' at same index 'i',
 returns 'x' itself
 - - - - - - - - - - - - - - - - - - - -
 *)
-Lemma lkp_upd: forall (t:BTree) (x:A) (i:nat), bal t -> t <> E -> i < size t -> lookup (upd t i x) i = x.
+Lemma lkp_upd: forall (t:BTree) (x:A) (i:nat), bal t -> t <> E 
+                                               -> i < size t -> lookup (upd t i x) i = x.
 Proof.
 intros t x.
 (*Induction on t*)
