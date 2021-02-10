@@ -1,0 +1,7 @@
+Acuña, Eduardo: git clone https://gitlab.com/eduardoacye/pcic-vf-2021-1
+Benitez, Luis: git clone https://gitlab.com/LuisBLluis11/proyectovfluisblluis.git
+García, Ciro: git clone https://github.com/cigarcial/VF2020II
+Fuentes,Andrés: git clone https://andres_fuentes@bitbucket.org/andres_fuentes/coq_zipper.git
+Leyva, Zoe: git clone https://gitlab.com/Avyel18/verformal_project
+Pascual, Eduardo: git clone https://github.com/epascual93-unam/vf-pcic2021-i
+Zamora, Victor: git clone https://github.com/victorz3/CoqPatriciaTrees
